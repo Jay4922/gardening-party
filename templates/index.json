@@ -1,72 +1,5 @@
 {
   "sections": {
-    "image_banner": {
-      "type": "image-banner",
-      "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Browse our latest products",
-            "heading_size": "h0"
-          }
-        },
-        "button": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Shop all",
-            "button_link_1": "shopify://collections/all",
-            "button_style_secondary_1": true,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
-        }
-      },
-      "block_order": [
-        "heading",
-        "button"
-      ],
-      "settings": {
-        "image_overlay_opacity": 40,
-        "image_height": "large",
-        "desktop_content_position": "bottom-center",
-        "show_text_box": false,
-        "image_behavior": "none",
-        "desktop_content_alignment": "center",
-        "color_scheme": "scheme-3",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": false,
-        "show_text_below": false
-      }
-    },
-    "featured_collection": {
-      "type": "featured-collection",
-      "settings": {
-        "title": "Featured products",
-        "heading_size": "h2",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "collection": "all",
-        "products_to_show": 8,
-        "columns_desktop": 4,
-        "color_scheme": "scheme-1",
-        "full_width": false,
-        "show_view_all": true,
-        "view_all_style": "solid",
-        "enable_desktop_slider": false,
-        "swipe_on_mobile": false,
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "none",
-        "columns_mobile": "2",
-        "padding_top": 44,
-        "padding_bottom": 36
-      }
-    },
     "hero_slider": {
       "type": "custom-hero-slider",
       "blocks": {
@@ -204,13 +137,207 @@
         "padding_bottom_mobile": 80,
         "custom_class": ""
       }
+    },
+    "function_flavor": {
+      "type": "custom-function-flavor",
+      "blocks": {
+        "stat_1": {
+          "type": "stat",
+          "settings": {
+            "value": "10G",
+            "label": "Plant-Based Protein",
+            "accent_color": "#FF6F00"
+          }
+        },
+        "stat_2": {
+          "type": "stat",
+          "settings": {
+            "value": "4G",
+            "label": "Sugar",
+            "accent_color": "#D11771"
+          }
+        },
+        "stat_3": {
+          "type": "stat",
+          "settings": {
+            "value": "120",
+            "label": "Calories",
+            "accent_color": "#3E41D7"
+          }
+        }
+      },
+      "block_order": [
+        "stat_1",
+        "stat_2",
+        "stat_3"
+      ],
+      "settings": {
+        "mirror_image": true,
+        "eyebrow": "Why Ruby Rockets",
+        "heading": "Function meets flavor",
+        "body": "<p>Frozen bars that taste like a treat and bring something more to your day. Every bar has 10g of plant-based protein; choose Energy for 90mg of caffeine or Recovery for 3g of creatine.</p>",
+        "button_label": "Learn more",
+        "button_link": "",
+        "color_scheme": "scheme-3",
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 80,
+        "padding_bottom_mobile": 0,
+        "custom_class": ""
+      }
+    },
+    "community_videos": {
+      "type": "custom-community-videos",
+      "blocks": {
+        "video_1": {
+          "type": "video",
+          "settings": {
+            "handle": "NameGoesHere",
+            "handle_link": "",
+            "product": "chocolate-brownie-batter",
+            "show_product": true
+          }
+        },
+        "video_2": {
+          "type": "video",
+          "settings": {
+            "handle": "NameGoesHere",
+            "handle_link": "",
+            "product": "mocha-caffeine",
+            "show_product": true
+          }
+        },
+        "video_3": {
+          "type": "video",
+          "settings": {
+            "handle": "NameGoesHere",
+            "handle_link": "",
+            "product": "chocolate-peanut-butter-creatine",
+            "show_product": true
+          }
+        }
+      },
+      "block_order": [
+        "video_1",
+        "video_2",
+        "video_3"
+      ],
+      "settings": {
+        "eyebrow": "From the community",
+        "heading": "Rockets in the wild.",
+        "cards_per_view_desktop": 3,
+        "autoplay": false,
+        "autoplay_delay": 5,
+        "modal_show_product": true,
+        "color_scheme": "scheme-2",
+        "use_cream_fade": true,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 80,
+        "padding_bottom_mobile": 80,
+        "custom_class": ""
+      }
+    },
+    "reviews": {
+      "type": "custom-reviews",
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "My new freezer staple",
+            "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet",
+            "author": "Alex P.",
+            "verified": true,
+            "product": "chocolate-brownie-batter",
+            "tag_label": "Daily protein",
+            "tag_color": "#FF6F00"
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Exactly what I needed",
+            "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet",
+            "author": "Taylor M.",
+            "verified": true,
+            "product": "mocha-caffeine",
+            "tag_label": "Energy",
+            "tag_color": "#D11771"
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Actually tasted good",
+            "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet",
+            "author": "Jordan K.",
+            "verified": true,
+            "product": "chocolate-peanut-butter-creatine",
+            "tag_label": "Recovery",
+            "tag_color": "#45158C"
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3"
+      ],
+      "settings": {
+        "eyebrow": "Real people. Real reviews.",
+        "heading": "The word is getting out.",
+        "subheading": "See what people are saying about the coldest part of their routine.",
+        "rating_value": "5.0",
+        "rating_label": "Based on customer reviews",
+        "link_label": "Read all reviews",
+        "link_url": "",
+        "show_arrows": true,
+        "autoplay": false,
+        "autoplay_delay": 6,
+        "color_scheme": "scheme-3",
+        "show_glows": true,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 80,
+        "padding_bottom_mobile": 80,
+        "custom_class": ""
+      }
+    },
+    "cta_banner": {
+      "type": "custom-cta-banner",
+      "settings": {
+        "layout": "stacked",
+        "eyebrow": "",
+        "heading": "Low sugar, dairy-free snacks this way",
+        "heading_tag": "h2",
+        "subheading": "Functional frozen snacking is ready when you are.",
+        "button_1_label": "Shop the launch",
+        "button_1_link": "",
+        "button_1_style": "btn-outline-gradient",
+        "button_1_arrow": true,
+        "button_2_label": "Join the launch",
+        "button_2_link": "",
+        "button_2_style": "btn-dark-gradient",
+        "button_2_arrow": false,
+        "color_scheme": "scheme-6",
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 55,
+        "padding_bottom_mobile": 55,
+        "custom_class": ""
+      }
     }
   },
   "order": [
     "hero_slider",
     "benefit_marquee",
     "featured_products",
-    "image_banner",
-    "featured_collection"
+    "function_flavor",
+    "community_videos",
+    "reviews",
+    "cta_banner"
   ]
 }

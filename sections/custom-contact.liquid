@@ -1,0 +1,470 @@
+{% comment %}
+  Contact — Figma "Section 1" 3:5203 (Contact page).
+  Info column (eyebrow, heading, intro, contact_item blocks, map image) + gradient-border card with Shopify's contact form.
+  First/last name are joined into contact[name] on submit by <custom-contact-form> (assets/custom.js).
+{% endcomment %}
+{%- liquid
+  assign heading_tag = section.settings.heading_tag
+  assign map_image = section.settings.map_image
+  assign form_id = 'ContactForm-' | append: section.id
+  assign field_id = 'ContactForm-' | append: section.id | append: '-'
+-%}
+
+{%- style -%}
+  /* .contact */
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="contact section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
+  <div class="contact__inner max-w-1512 mx-auto px-20 990:px-55 1366:px-100 grid grid-cols-1 gap-40 990:grid-cols-[604fr_653fr] 1366:gap-55">
+    <div class="contact__info min-w-0 flex flex-col gap-40 990:gap-55">
+      {%- if section.settings.eyebrow != blank
+        or section.settings.heading != blank
+        or section.settings.intro != blank
+      -%}
+        <div class="contact__titles flex flex-col gap-10">
+          {%- if section.settings.eyebrow != blank -%}
+            <div class="content content-eyebrow content-eyebrow-large">
+              <p>{{ section.settings.eyebrow | escape }}</p>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <div class="ctm-title title-black">
+              <{{ heading_tag }} class="contact__heading h2">
+                {{- section.settings.heading | escape | newline_to_br -}}
+              </{{ heading_tag }}>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.intro != blank -%}
+            <div class="contact__intro content content-large content-black">
+              <p>{{ section.settings.intro | escape | newline_to_br }}</p>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <ul class="contact__details list-none m-0 p-0 flex flex-col gap-20" role="list">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign item_text = block.settings.text | strip
+              assign item_link = block.settings.link
+              if item_link == blank
+                case block.settings.icon
+                  when 'phone'
+                    assign digits = ''
+                    assign chars = item_text | split: ''
+                    for char in chars
+                      if '+0123456789' contains char
+                        assign digits = digits | append: char
+                      endif
+                    endfor
+                    if digits != blank
+                      assign item_link = 'tel:' | append: digits
+                    endif
+                  when 'email'
+                    if item_text != blank
+                      assign item_link = 'mailto:' | append: item_text
+                    endif
+                endcase
+              endif
+
+              case block.settings.icon
+                when 'email'
+                  assign icon_file = 'icon-email.svg'
+                when 'location'
+                  assign icon_file = 'icon-location.svg'
+                else
+                  assign icon_file = 'icon-phone.svg'
+              endcase
+            -%}
+            {%- if item_text != blank -%}
+              <li class="contact__detail flex items-center gap-10" {{ block.shopify_attributes }}>
+                <span class="contact__icon inline-flex shrink-0 w-20 justify-center text-black">
+                  {{- icon_file | inline_asset_content -}}
+                </span>
+                <div class="contact__detail-text min-w-0 break-words content content-contact{% if block.settings.icon == 'email' %} content-contact-accent{% endif %}">
+                  <p>
+                    {%- if item_link != blank -%}
+                      <a href="{{ item_link }}">{{ item_text | escape }}</a>
+                    {%- else -%}
+                      {{- item_text | escape -}}
+                    {%- endif -%}
+                  </p>
+                </div>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if map_image != blank -%}
+        {%- capture map_tag -%}
+          {{
+            map_image
+            | image_url: width: 1300
+            | image_tag:
+              class: 'contact__map-img absolute inset-0 img-fluid-cover',
+              widths: '375, 550, 750, 1100, 1300',
+              sizes: '(min-width: 1512px) 604px, (min-width: 990px) 45vw, 100vw',
+              loading: 'lazy',
+              alt: map_image.alt
+          }}
+        {%- endcapture -%}
+        {%- if section.settings.map_link != blank -%}
+          <a
+            href="{{ section.settings.map_link }}"
+            class="contact__map relative block min-w-0 aspect-[604/253] 990:aspect-auto 990:flex-1 990:min-h-200 rounded-10 overflow-hidden"
+            target="_blank"
+            rel="noopener"
+            aria-label="Open map in a new tab"
+          >
+            {{- map_tag -}}
+          </a>
+        {%- else -%}
+          <div class="contact__map relative min-w-0 aspect-[604/253] 990:aspect-auto 990:flex-1 990:min-h-200 rounded-10 overflow-hidden">
+            {{- map_tag -}}
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+
+    <div class="contact__card min-w-0 ctm-gradient-card">
+      <custom-contact-form class="contact__card-inner flex flex-col gap-28 p-20">
+        {%- if section.settings.form_heading != blank -%}
+          <div class="ctm-title title-black">
+            <h3 class="contact__form-heading h3">{{ section.settings.form_heading | escape }}</h3>
+          </div>
+        {%- endif -%}
+
+        {%- form 'contact', id: form_id, class: 'contact__form flex flex-col gap-28' -%}
+          {%- if form.posted_successfully? -%}
+            <div class="contact__success content content-large content-black" role="status" tabindex="-1" autofocus>
+              <p>{{ section.settings.success_message | escape }}</p>
+            </div>
+          {%- else -%}
+            {%- if form.errors -%}
+              <div class="contact__errors content content-black" role="alert">
+                {{ form.errors | default_errors }}
+              </div>
+            {%- endif -%}
+
+            <input type="hidden" name="contact[name]" value="{{ form.name | escape }}" data-contact-name>
+
+            <div class="contact__name-row grid grid-cols-1 gap-28 480:grid-cols-2 480:gap-20">
+              <div class="ctm-field">
+                <label class="ctm-label" for="{{ field_id }}first">
+                  {{- section.settings.first_name_label | escape -}}
+                </label>
+                <input
+                  class="ctm-input"
+                  type="text"
+                  id="{{ field_id }}first"
+                  name="contact[first_name]"
+                  autocomplete="given-name"
+                  placeholder="{{ section.settings.first_name_placeholder | escape }}"
+                  required
+                  data-contact-first
+                >
+              </div>
+              <div class="ctm-field">
+                <label class="ctm-label" for="{{ field_id }}last">
+                  {{- section.settings.last_name_label | escape -}}
+                </label>
+                <input
+                  class="ctm-input"
+                  type="text"
+                  id="{{ field_id }}last"
+                  name="contact[last_name]"
+                  autocomplete="family-name"
+                  placeholder="{{ section.settings.last_name_placeholder | escape }}"
+                  required
+                  data-contact-last
+                >
+              </div>
+            </div>
+
+            <div class="ctm-field">
+              <label class="ctm-label" for="{{ field_id }}email">{{ section.settings.email_label | escape }}</label>
+              <input
+                class="ctm-input"
+                type="email"
+                id="{{ field_id }}email"
+                name="contact[email]"
+                autocomplete="email"
+                spellcheck="false"
+                autocapitalize="off"
+                value="{{ form.email | escape }}"
+                placeholder="{{ section.settings.email_placeholder | escape }}"
+                required
+                {% if form.errors contains 'email' %}
+                  aria-invalid="true"
+                {% endif %}
+              >
+            </div>
+
+            <div class="ctm-field">
+              <label class="ctm-label" for="{{ field_id }}body">{{ section.settings.message_label | escape }}</label>
+              <textarea
+                class="ctm-textarea"
+                id="{{ field_id }}body"
+                name="contact[body]"
+                rows="4"
+                placeholder="{{ section.settings.message_placeholder | escape }}"
+                required
+              >
+                {{- form.body -}}
+              </textarea>
+            </div>
+
+            <div class="contact__submit flex flex-col items-center gap-10">
+              <button type="submit" class="contact__button ctm-button btn-dark-gradient ctm-button-full">
+                {{- section.settings.button_label | default: 'Send Message' | escape -}}
+                {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+              </button>
+              {%- if section.settings.form_note != blank -%}
+                <div class="contact__note content content-xsmall content-black text-center">
+                  <p>{{ section.settings.form_note | escape }}</p>
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endform -%}
+      </custom-contact-form>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Contact",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "header", "content": "Info column" },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Contact"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Press Enter to force a line break.",
+      "default": "Let’s Talk"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h2",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ]
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Intro",
+      "info": "Press Enter to force a line break.",
+      "default": "Questions, comments, or freezer thoughts?\nSend them our way"
+    },
+    {
+      "type": "image_picker",
+      "id": "map_image",
+      "label": "Map image",
+      "info": "Fills the space under the contact details (about 604 × 253px on desktop)."
+    },
+    {
+      "type": "url",
+      "id": "map_link",
+      "label": "Map link",
+      "info": "Optional, e.g. a Google Maps URL. Opens in a new tab."
+    },
+    { "type": "header", "content": "Form" },
+    {
+      "type": "text",
+      "id": "form_heading",
+      "label": "Form heading",
+      "default": "Send A Message"
+    },
+    {
+      "type": "text",
+      "id": "first_name_label",
+      "label": "First name label",
+      "default": "First Name*"
+    },
+    {
+      "type": "text",
+      "id": "first_name_placeholder",
+      "label": "First name placeholder",
+      "default": "First Name*"
+    },
+    {
+      "type": "text",
+      "id": "last_name_label",
+      "label": "Last name label",
+      "default": "Last Name*"
+    },
+    {
+      "type": "text",
+      "id": "last_name_placeholder",
+      "label": "Last name placeholder",
+      "default": "Last Name*"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email label",
+      "default": "Email*"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email placeholder",
+      "default": "Email*"
+    },
+    {
+      "type": "text",
+      "id": "message_label",
+      "label": "Message label",
+      "default": "Message*"
+    },
+    {
+      "type": "text",
+      "id": "message_placeholder",
+      "label": "Message placeholder",
+      "default": "Tell us more*"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Send Message"
+    },
+    {
+      "type": "text",
+      "id": "form_note",
+      "label": "Note under button",
+      "default": "We’ll get back to you as soon as we can"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thanks for contacting us. We’ll get back to you as soon as possible."
+    },
+    { "type": "header", "content": "Background" },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-7"
+    },
+    { "type": "header", "content": "Desktop Padding" },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    { "type": "header", "content": "Mobile Padding" },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Extra CSS Class"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "contact_item",
+      "name": "Contact detail",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Type",
+          "default": "phone",
+          "options": [
+            { "value": "phone", "label": "Phone" },
+            { "value": "email", "label": "Email" },
+            { "value": "location", "label": "Location" }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "302.499.3506"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Optional. Phone and email link automatically (tel: / mailto:) when left blank."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact",
+      "blocks": [
+        { "type": "contact_item", "settings": { "icon": "phone", "text": "302.499.3506" } },
+        { "type": "contact_item", "settings": { "icon": "email", "text": "information@greenhillbrands.com" } },
+        {
+          "type": "contact_item",
+          "settings": { "icon": "location", "text": "Kennett Square, Pennsylvania & New Castle, Delaware" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

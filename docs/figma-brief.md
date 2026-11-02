@@ -75,21 +75,21 @@ Figma line height is "normal" in codegen (≈1.2) even though styles say 100% �
 | --------------------- | ------------------- | ---------------------------------- | ---------- | ------- |
 | Announcement Bar      | `3:353`             | all (global)                       | low        | built   |
 | Header                | `3:378`             | all (global)                       | high       | built   |
-| Footer                | `3:1651` + `3:1714` | all (global)                       | medium     | pending |
+| Footer                | `3:1651` + `3:1714` | all (global)                       | medium     | built   |
 | Instagram Feed        | `3:1141`            | all in-scope pages                 | medium     | built   |
 | Page Banner           | `3:6108`            | faq, our-story, retailers, contact | low        | built   |
 | Image With Text       | `3:6631`            | our-story, retailers               | low        | built   |
-| Function Meets Flavor | `3:775`             | index, retailers                   | medium     | pending |
+| Function Meets Flavor | `3:775`             | index, retailers                   | medium     | built   |
 | CTA Banner            | `3:1115`            | index, faq, retailers              | medium     | built   |
 | Video Hero            | `3:454`             | index                              | high       | built   |
 | Benefit Marquee       | `3:611`             | index                              | medium     | built   |
 | Featured Products     | `3:652`             | index                              | high       | built   |
-| Community Videos      | `3:808`             | index                              | high       | pending |
-| Reviews               | `3:950`             | index                              | high       | pending |
+| Community Videos      | `3:808`             | index                              | high       | built   |
+| Reviews               | `3:950`             | index                              | high       | built   |
 | FAQ                   | `3:6110`            | faq                                | high       | built   |
 | Founder Story         | `3:6695`            | our-story                          | low        | built   |
 | Team                  | `3:6797`            | our-story                          | medium     | built   |
-| Partner Cards         | `3:7200`            | retailers                          | medium     | pending |
+| Partner Cards         | `3:7200`            | retailers                          | medium     | built   |
 | Contact               | `3:5203`            | contact                            | medium     | pending |
 
 ## Build order
@@ -258,12 +258,12 @@ Near match: Dawn `header` (middle-left logo layout, dropdown menu, drawer). Diff
 
 ## Footer
 
-**Status:** pending
+**Status:** built
 **Node ID:** 3:1651 (main) + 3:1714 (bottom bar); component `3:1140`
 **Figma link:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/?node-id=3-1651
 **Templates:** all (footer group)
 **Complexity:** medium
-**Section file:** _(filled in after build)_ sections/custom-footer.liquid
+**Section file:** sections/footer.liquid (Dawn, restyled) + `css/layout.css` + `custom-footer-accordion` in `assets/custom.js`
 
 ## Visual brief
 
@@ -332,6 +332,15 @@ Near match: Dawn `footer` (link_list blocks, newsletter, social icons). The layo
 - **Non-blocking suggestions:**
 
 ## Build notes
+
+- Built from Option A (restyle Dawn's footer); schema approved 2026-11-02.
+- Live Figma vs brief: 80px gap between the newsletter (440px) and the columns; the email field has a white 20% fill, 2px white border and radius 48; Subscribe is `btn-dark-gradient` (black fill); links are Inter **Medium** 16; social icons are **black** circles (28px) with white glyphs; the © and ♥ icons are 24px with a 4px gap and 20px between the two groups; the bar is py-10 px-55 on desktop and p-20 stacked on mobile; the mobile logo is 108×80.
+- Markup: newsletter moved left of the columns in `.footer__main` (the padding class moved there so the gradient bar sits outside the section padding). Link-list headings are `<h2 class="footer__menu-heading h5"><button aria-expanded>` and collapse below 990px. Dawn's bottom row was replaced by `.footer__bar`. "Powered by Shopify" was removed. Localization and payment markup is kept but off by default.
+- Schema: defaults are scheme-3 with Follow on Shop, localization, payment and policies off. Added `newsletter_placeholder`, `newsletter_button_label`, `mobile_logo` + `mobile_logo_width`, `copyright_text`, `credit_text`, `credit_link`, the 4 padding ranges (step 5) and `custom_class`. Every setting is referenced in the output.
+- `footer-group.json`: footer settings set to Figma values, plus 4 `link_list` blocks (Products / Company / Support / Legal) with no menus attached.
+- Verified before the server stopped: renders with 0 Liquid errors (newsletter, Subscribe button, © and credit line). Theme Check is clean for footer.liquid; ESLint is clean.
+- Verified after the dev-server restart: the 4 link columns render (headings + mobile toggles, `FooterMenu-*` ids), 0 Liquid errors. Social icons don't show yet because no social URLs are set (expected).
+- **Store setup:** create the 4 footer menus in admin and assign them to the blocks; add the Instagram, Facebook and X URLs in Theme settings → Social media; upload the mobile logo.
 
 ---
 
@@ -562,12 +571,12 @@ None.
 
 ## Function Meets Flavor
 
-**Status:** pending
+**Status:** built
 **Node ID:** 3:775 (also 3:7187 on Retailers; mobile 3:9144)
 **Figma link:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/?node-id=3-775
 **Templates:** index, retailers
 **Complexity:** medium
-**Section file:** _(filled in after build)_ sections/custom-function-flavor.liquid
+**Section file:** sections/custom-function-flavor.liquid
 
 ## Visual brief
 
@@ -629,6 +638,14 @@ The glow is baked into the image (transparent PNG over black). Confirm the asset
 - **Non-blocking suggestions:**
 
 ## Build notes
+
+- Option 1 (real `<img>` column + stat blocks) — user replied "Continue" to the options, taken as the recommended option; schema approved 2026-11-02.
+- Live Figma vs brief: eyebrow is Light Orange `#FF9D42` Inter Medium 24/20 (new `.content-eyebrow-light`); body Inter Medium 24/20; stat values Plus Jakarta Sans Bold 48/32 (new `.content-stat`), labels Inter Medium 20 (`.content-stat-label`); bars 60x4 desktop / 4px vertical on mobile; dividers 1px white 40% (from the Figma line asset), max 685 wide; desktop `p-100`, text column 745 starting at x 667; gaps 10 / 28 / 55.
+- Image: desktop `<img>` absolutely positioned over the left 46.84% (Figma fill layer is mirrored: negative width) — `mirror_image` (default on) flips it with `scale-x: -1`; mobile image in flow below the text at natural aspect (Figma places it at the bottom ~45% with a 250px spacer). Lazy-loaded with widths/sizes.
+- Mobile bottom padding defaults to 0 so the mobile image runs to the section edge.
+- Added to `templates/index.json` after Featured Products with Figma's 3 stats.
+- Verified: dev server renders eyebrow, 3 stats (10G/4G/120), button; 0 Liquid errors; Theme Check 0 errors.
+- **Visual diff deferred** — user will check visually later. Image to be uploaded in the customizer.
 
 ---
 
@@ -707,6 +724,7 @@ The home variant's background shows soft light streaks over the gradient. That m
 - Verified: Theme Check clean, renders on 127.0.0.1:9292, scheme-6 variables are output, and every setting is referenced in the output. Browser visual check skipped by user preference.
 - **Merchant to-do:** upload the streak texture to `texture_image` on each page. Without it the band is a plain gradient.
 - Home (`3:1115`) and Retailers (`3:7261`) versions aren't placed yet. Use `layout: stacked` with a subheading, button 2 and `decor_image` for Home, and an inline layout with a blank eyebrow for Retailers.
+- Homepage (`3:1115`) placed in `templates/index.json` after Reviews by the homepage build session: `layout: stacked`, no eyebrow, heading + subheading, "Shop the launch" (outline, arrow) + "Join the launch" (dark), scheme-6, padding 100/100 desktop, 55/55 mobile. `decor_image` / `texture_image` still to upload in the customizer.
 
 ---
 
@@ -938,12 +956,12 @@ Must render Dawn's `card-product` (team rule). Extend it with a "function" layou
 
 ## Community Videos
 
-**Status:** pending
+**Status:** built
 **Node ID:** 3:808 (mobile 3:9175)
 **Figma link:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/?node-id=3-808
 **Templates:** index
 **Complexity:** high
-**Section file:** _(filled in after build)_ sections/custom-community-videos.liquid
+**Section file:** sections/custom-community-videos.liquid + snippets/card-product.liquid (`card_style: 'mini'`) + `custom-card-slider` / `custom-video-modal` in assets/custom.js
 
 ## Visual brief
 
@@ -1002,16 +1020,27 @@ No match — build from scratch.
 
 ## Build notes
 
+- Option 2 (popup player) approved over the recommended inline play; schema approved 2026-11-02. Figma was briefly disconnected; build used the live nodes after re-auth.
+- Live Figma vs brief: cream→white fade, `p-100` / `py-80 px-20`; eyebrow Orange Inter Medium 24/20; header left-aligned desktop / centered mobile; video card 460 (desktop) / 400 x 320 (mobile), radius 20, p-20, top fade rgba(0,0,0,.8) 3.4% → transparent 27.4%; @ icon 18px + Inter Regular 16; play icon 55px; product mini-card cream, 1px black border, radius 10, p-20/p-10, 83x80 image, name Plus Jakarta Bold 20 (h5 style), price Inter Medium 16; pagination 60x6 desktop / 40x6 mobile (new `.ctm-pagination-wide`), slider at all widths.
+- Product mini-card is Dawn `card-product` with a new `card_style: 'mini'` branch (team rule: one product card snippet) — real price via money filter (`from_price_html` when prices vary).
+- Icons `assets/icon-at.svg` and `assets/icon-play-circle.svg` taken from the Figma SVG assets (fill → currentColor).
+- Popup: native `<dialog>` (built-in focus trap, Escape, top layer) instead of Dawn's `trapFocus` — deviation from the schema note, same behaviour; backdrop click / × close; video only loads when the popup opens (`<template>` per card); focus returns to the play button; scroll locked while open; slider autoplay paused while open. No popup design exists in Figma — layout invented to match the cards (flagged).
+- Play button is a real `<button>` labelled "Play video by @handle"; its ::after stretches over the card media so the whole image is clickable (handle link stays on top).
+- Cards without a video show no play button (empty state).
+- Added to `templates/index.json` after Function Meets Flavor, linked to the 3 flavor products.
+- Verified: 3 cards, 3 mini-cards with real prices, dialog present, valid Swiper JSON; 0 Liquid errors; Theme Check 0 errors; ESLint clean.
+- **Visual diff + popup/slider interaction check deferred** — user will check later; videos/posters to be uploaded in the customizer.
+
 ---
 
 ## Reviews
 
-**Status:** pending
+**Status:** built
 **Node ID:** 3:950 (mobile 3:9296)
 **Figma link:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/?node-id=3-950
 **Templates:** index
 **Complexity:** high
-**Section file:** _(filled in after build)_ sections/custom-reviews.liquid
+**Section file:** sections/custom-reviews.liquid (+ arrow support in `custom-card-slider`, assets/custom.js)
 
 ## Visual brief
 
@@ -1077,6 +1106,17 @@ No match — build from scratch.
 - **Non-blocking suggestions:**
 
 ## Build notes
+
+- Option 1 (review blocks + optional product link) approved; schema approved 2026-11-02.
+- Live Figma vs brief: black with corner glows (Figma 2637x2179 SVG → two CSS radial gradients, `show_glows`); `px-28 py-100` / `px-20 py-80`; eyebrow Light Orange; header intro pl-68 | vertical divider | summary pr-68 (5 x 28px orange stars + value, label, underlined "Read all reviews" link); mobile centered with horizontal divider and a one-row summary (1 star + value | 27px line | label).
+- Cards: cream, radius 20, p-28 / p-20, 320 wide on mobile; stars 28/18 + tag bar 28x4 / 20x2 + Inter Black 16/12 in the per-review accent (Orange / Magenta / **Deep Purple** for Recovery — differs from the Electric Blue used elsewhere); title sentence-case Plus Jakarta Bold 24 (6%) / 20 (new `.title-review`); quote Inter 20/16 (new `.content-quote`); footer divider + name | line | blue check + "Verified Buyer".
+- **Font deviation:** Figma mobile card titles use **Fredoka Bold 20** (only use in the file). Built with Plus Jakarta Sans per recommendation (user didn't choose) — flag to designer.
+- Desktop: 3 per view, 40px circle arrows (Swiper navigation, added to the shared `custom-card-slider`), no dots. Mobile: 320 centered cards + white-20% dots (new `.ctm-pagination-light`), no arrows.
+- Icons from Figma SVGs: `icon-star.svg`, `icon-circle-arrow-right.svg` (prev = rotated), `icon-check-circle.svg` (Electric Blue).
+- Tag text/colour: override → product `custom.function_name` / `custom.accent_color` → product title / Orange. Template sets the Figma labels/colours explicitly and links each review to its flavor product.
+- Added to `templates/index.json` after Community Videos. Divider colours (white 40% on dark, black 20% on cards) inferred — Figma line assets not read.
+- Verified: 3 cards, 2 arrows, verified badges, accents #FF6F00 / #D11771 / #45158C; 0 Liquid errors; Theme Check 0 errors; ESLint clean.
+- **Visual diff + arrow/slider interaction check deferred** — user will check later.
 
 ---
 
@@ -1323,19 +1363,19 @@ What "Learn more" does (link or modal) is not specified — built as a link (Opt
 
 ## Partner Cards
 
-**Status:** pending
+**Status:** built
 **Node ID:** 3:7200
 **Figma link:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/?node-id=3-7200
 **Templates:** retailers
 **Complexity:** medium
-**Section file:** _(filled in after build)_ sections/custom-partner-cards.liquid
+**Section file:** sections/custom-partner-cards.liquid
 
 ## Visual brief
 
-Cream background.
+Cream→white gradient background (`scheme-7`), `px-40 py-100`, header→cards gap 40.
 
-- **Heading:** centered eyebrow "PARTNER WITH US" (orange) and heading "BUILT FOR MORE THAN ONE AISLE." (48).
-- **Cards:** 3 horizontal cards (white, 1px grey border, radius ~10). Each card has a square image on the left, and on the right a title (Plus Jakarta Sans Bold 16 uppercase), short text and a "LEARN MORE →" outline pill.
+- **Heading:** centered eyebrow "PARTNER WITH US" (Inter Medium 24, orange) and heading "BUILT FOR MORE THAN ONE AISLE." (H2 48), 10 apart.
+- **Cards:** 3 cards, 20 apart; transparent, 2px border `rgba(0,0,0,0.2)`, radius 20, padding 20. Image fills the left half at full card height (~200×227, radius 10); right half: title (Plus Jakarta Sans Bold 20 uppercase = h5), text (Inter 16) 10 below, full-width "LEARN MORE →" outline-gradient pill ≥28 below, pinned to the card bottom.
 - **Mobile:** no frame. Stack the cards.
 
 ## Content elements
@@ -1348,8 +1388,10 @@ Cream background.
 **Section settings:**
 
 - `eyebrow` — text
-- `heading` — text
-- Mandatory trio (color scheme: cream)
+- `heading` — textarea
+- `heading_tag` — select (h2/h3)
+- `columns_desktop` — select 2/3/4 (default 3)
+- Mandatory trio (color scheme: `scheme-7`)
 
 **Blocks:**
 
@@ -1358,8 +1400,8 @@ Cream background.
 ## Design tokens used
 
 - Colors: `--color-cream`, `--color-white`, `--color-orange`
-- Typography: H2/H2-1, H5/H5-1, H5/H5-2
-- Spacing: confirm at build
+- Typography: H2/H2-1, H4.2/H4.2-1 (card title), H5/H5-2
+- Spacing: 40 side / 100 vertical, 20 card gap/padding, 10/28 internal
 
 ## Interactions & JS
 
@@ -1371,7 +1413,7 @@ No match — build from scratch.
 
 ## Dependencies & risks
 
-Card link destinations unknown.
+Card link destinations unknown — buttons stay hidden until a link is set. Card copy is lorem ipsum in Figma; real copy needed from the client.
 
 ## QA
 
@@ -1381,6 +1423,11 @@ Card link destinations unknown.
 - **Non-blocking suggestions:**
 
 ## Build notes
+
+- Built 2026-11-02, Option B (Merchant Editable).
+- **Interpolated:** 1 column below 750, 2 from 750–1198, desktop setting from 1199; below 480 the card image stacks above the text at 200:227; mobile padding 60/60; side gutter 20 below 990.
+- Created `templates/page.retailers-partners.json`: Page Banner → Image With Text ("Retailers & Partners / Let’s Stock⏎Something Better.", BECOME A PARTNER) → Function Meets Flavor (copied from `index.json`) → Partner Cards → CTA Banner (inline, "Ready to work together?", CONTACT US → /pages/contact, scheme-6).
+- Verified: Theme Check clean, no Liquid errors on `?view=retailers-partners`, all section/block settings referenced. **Visual check deferred.**
 
 ---
 

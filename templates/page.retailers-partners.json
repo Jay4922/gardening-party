@@ -1,0 +1,148 @@
+{
+  "sections": {
+    "page_banner": {
+      "type": "custom-page-banner",
+      "settings": {}
+    },
+    "image_with_text": {
+      "type": "custom-image-with-text",
+      "settings": {
+        "image_position": "left",
+        "eyebrow": "Retailers & Partners",
+        "heading": "Let’s Stock\nSomething Better.",
+        "heading_tag": "h2",
+        "body": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet Lorem ipsum consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet</p>",
+        "button_label": "Become a Partner",
+        "button_link": "",
+        "color_scheme": "scheme-7",
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60,
+        "custom_class": ""
+      }
+    },
+    "function_flavor": {
+      "type": "custom-function-flavor",
+      "blocks": {
+        "stat_1": {
+          "type": "stat",
+          "settings": {
+            "value": "10G",
+            "label": "Plant-Based Protein",
+            "accent_color": "#FF6F00"
+          }
+        },
+        "stat_2": {
+          "type": "stat",
+          "settings": {
+            "value": "4G",
+            "label": "Sugar",
+            "accent_color": "#D11771"
+          }
+        },
+        "stat_3": {
+          "type": "stat",
+          "settings": {
+            "value": "120",
+            "label": "Calories",
+            "accent_color": "#3E41D7"
+          }
+        }
+      },
+      "block_order": [
+        "stat_1",
+        "stat_2",
+        "stat_3"
+      ],
+      "settings": {
+        "mirror_image": true,
+        "eyebrow": "Why Ruby Rockets",
+        "heading": "Function meets flavor",
+        "body": "<p>Frozen bars that taste like a treat and bring something more to your day. Every bar has 10g of plant-based protein; choose Energy for 90mg of caffeine or Recovery for 3g of creatine.</p>",
+        "button_label": "Learn more",
+        "button_link": "",
+        "color_scheme": "scheme-3",
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 80,
+        "padding_bottom_mobile": 0,
+        "custom_class": ""
+      }
+    },
+    "partner_cards": {
+      "type": "custom-partner-cards",
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "title": "Retail and Distribution",
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur.",
+            "button_label": "Learn More",
+            "button_link": ""
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "title": "Campus and Workplace",
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur.",
+            "button_label": "Learn More",
+            "button_link": ""
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "title": "Foodservice",
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur.",
+            "button_label": "Learn More",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3"
+      ],
+      "settings": {
+        "eyebrow": "Partner with us",
+        "heading": "Built for more than one aisle.",
+        "heading_tag": "h2",
+        "columns_desktop": "3",
+        "color_scheme": "scheme-7",
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60,
+        "custom_class": ""
+      }
+    },
+    "cta_banner": {
+      "type": "custom-cta-banner",
+      "settings": {
+        "layout": "inline",
+        "eyebrow": "",
+        "heading": "Ready to work together?",
+        "heading_tag": "h2",
+        "button_1_label": "Contact us",
+        "button_1_link": "/pages/contact",
+        "button_1_style": "btn-outline-gradient",
+        "button_1_arrow": true,
+        "color_scheme": "scheme-6",
+        "padding_top": 55,
+        "padding_bottom": 55,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40
+      }
+    }
+  },
+  "order": [
+    "page_banner",
+    "image_with_text",
+    "function_flavor",
+    "partner_cards",
+    "cta_banner"
+  ]
+}

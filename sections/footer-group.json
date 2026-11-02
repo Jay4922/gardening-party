@@ -24,6 +24,13 @@
     },
     "footer": {
       "type": "footer",
+      "blocks": {
+        "menu_products": { "type": "link_list", "settings": { "heading": "Products" } },
+        "menu_company": { "type": "link_list", "settings": { "heading": "Company" } },
+        "menu_support": { "type": "link_list", "settings": { "heading": "Support" } },
+        "menu_legal": { "type": "link_list", "settings": { "heading": "Legal" } }
+      },
+      "block_order": ["menu_products", "menu_company", "menu_support", "menu_legal"],
       "settings": {
         "color_scheme": "scheme-3",
         "newsletter_enable": true,

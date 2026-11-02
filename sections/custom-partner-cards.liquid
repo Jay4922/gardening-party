@@ -1,0 +1,268 @@
+{% comment %}
+  Partner Cards — Figma "Section 8" 3:7200 (Retailers & Partners).
+  Centered eyebrow + heading, then bordered cards: image fills the left half, title/text/full-width button on the right.
+  Columns: 1 below 750px, 2 from 750–1198px, desktop setting from 1199px. Below 480px the card image stacks above its text.
+{% endcomment %}
+{%- liquid
+  assign heading_tag = section.settings.heading_tag
+
+  if section.settings.heading_tag == 'h3'
+    assign title_tag = 'h4'
+  else
+    assign title_tag = 'h3'
+  endif
+
+  case section.settings.columns_desktop
+    when '2'
+      assign cols_desktop = '1199:grid-cols-2'
+    when '4'
+      assign cols_desktop = '1199:grid-cols-4'
+    else
+      assign cols_desktop = '1199:grid-cols-3'
+  endcase
+-%}
+
+{%- style -%}
+  /* .partner-cards */
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="partner-cards section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
+  <div class="partner-cards__inner max-w-1512 mx-auto px-20 990:px-40 flex flex-col gap-32 990:gap-40">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+      <div class="partner-cards__header flex flex-col items-center gap-10 text-center">
+        {%- if section.settings.eyebrow != blank -%}
+          <div class="content content-eyebrow content-eyebrow-large">
+            <p>{{ section.settings.eyebrow | escape }}</p>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <div class="ctm-title title-black">
+            <{{ heading_tag }} class="partner-cards__heading h2">
+              {{- section.settings.heading | escape | newline_to_br -}}
+            </{{ heading_tag }}>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ul
+        class="partner-cards__grid list-none m-0 p-0 grid grid-cols-1 750:grid-cols-2 {{ cols_desktop }} gap-20"
+        role="list"
+      >
+        {%- for block in section.blocks -%}
+          {%- assign image = block.settings.image -%}
+          <li
+            class="partner-cards__card min-w-0 flex flex-col 480:flex-row gap-20 p-20 border-2 border-black/20 rounded-20"
+            {{ block.shopify_attributes }}
+          >
+            <div class="partner-cards__media relative min-w-0 aspect-[200/227] 480:aspect-auto 480:flex-1 480:min-h-227 rounded-10 overflow-hidden bg-black/5">
+              {%- if image != blank -%}
+                {{
+                  image
+                  | image_url: width: 600
+                  | image_tag:
+                    class: 'partner-cards__img absolute inset-0 img-fluid-cover',
+                    widths: '300, 400, 600',
+                    sizes: '(min-width: 1512px) 200px, (min-width: 1199px) 15vw, (min-width: 750px) 25vw, (min-width: 480px) 50vw, 100vw',
+                    loading: 'lazy',
+                    alt: image.alt
+                }}
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'partner-cards__placeholder absolute inset-0 w-full h-full' }}
+              {%- endif -%}
+            </div>
+
+            <div class="partner-cards__content min-w-0 480:flex-1 flex flex-col justify-between gap-28">
+              {%- if block.settings.title != blank or block.settings.text != blank -%}
+                <div class="partner-cards__copy flex flex-col gap-10">
+                  {%- if block.settings.title != blank -%}
+                    <div class="ctm-title title-black">
+                      <{{ title_tag }} class="partner-cards__title h5">
+                        {{- block.settings.title | escape -}}
+                      </{{ title_tag }}>
+                    </div>
+                  {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <div class="partner-cards__text content content-black">
+                      <p>{{ block.settings.text | escape | newline_to_br }}</p>
+                    </div>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+
+              {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
+                <a
+                  href="{{ block.settings.button_link }}"
+                  class="partner-cards__button ctm-button ctm-button-full btn-outline-gradient"
+                >
+                  {{- block.settings.button_label | escape -}}
+                  {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+                </a>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Partner Cards",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Partner with us"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Press Enter to force a line break.",
+      "default": "Built for more than one aisle."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h2",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ]
+    },
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Columns (desktop)",
+      "default": "3",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ]
+    },
+    { "type": "header", "content": "Background" },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-7"
+    },
+    { "type": "header", "content": "Desktop Padding" },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    { "type": "header", "content": "Mobile Padding" },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Extra CSS Class"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Partner card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Fills the left half of the card (about 200 × 227px on desktop). Set a focal point to control the crop."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Retail and Distribution"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "info": "Button is hidden if the label or link is blank.",
+          "default": "Learn More"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Partner Cards",
+      "blocks": [
+        { "type": "card", "settings": { "title": "Retail and Distribution" } },
+        { "type": "card", "settings": { "title": "Campus and Workplace" } },
+        { "type": "card", "settings": { "title": "Foodservice" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

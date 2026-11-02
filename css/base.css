@@ -163,6 +163,21 @@ h6,
 .content.content-label p {
   @apply m-0 text-16 font-medium whitespace-nowrap;
 }
+/* Stat value / label (Figma: Plus Jakarta Sans Bold 32 -> 48, Inter Medium 20) */
+.content.content-stat p {
+  @apply m-0 font-heading font-bold uppercase tracking-heading text-32 990:text-48 leading-figma;
+}
+.content.content-stat-label p {
+  @apply m-0 text-20 font-medium leading-figma;
+}
+/* Review card title: sentence case (Figma Plus Jakarta Sans Bold 24 / 6% desktop, 20 mobile) */
+.ctm-title.title-review h3 {
+  @apply normal-case text-20 990:text-24 leading-figma tracking-heading-wide;
+}
+/* Review quote (Figma Inter Regular 20 desktop / 16 mobile) */
+.content.content-quote p {
+  @apply text-16 990:text-20 font-normal;
+}
 /* Hero subtitle (Figma Inter Medium 32 desktop / 16 mobile) */
 .content.content-xlarge p {
   @apply text-16 768:text-20 1199:text-28 1440:text-32 font-medium;
@@ -176,6 +191,21 @@ h6,
 /* Light-orange eyebrow on dark sections (Figma "Chocolate Brownie Batter / Light Orange") */
 .content.content-eyebrow.content-eyebrow-light p {
   @apply text-light-orange;
+}
+/* Fine print (Figma H6/H6-2 Inter Regular 12) */
+.content.content-xsmall p {
+  @apply text-12 leading-figma;
+}
+/* Contact detail rows (Figma H4.2/H4.2-2 Inter Regular 20); links keep the text style, no underline */
+.content.content-contact p {
+  @apply text-16 990:text-20 mb-0 text-black;
+}
+.content.content-contact a {
+  @apply text-current no-underline hover:underline;
+}
+/* Accent row (email): Inter Medium 20, orange */
+.content.content-contact.content-contact-accent p {
+  @apply font-medium text-orange;
 }
 
 /* Container — 1512px canvas, 55px gutter on desktop (header/footer), 20px on mobile */

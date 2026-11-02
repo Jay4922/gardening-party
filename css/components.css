@@ -474,3 +474,298 @@ a.instagram-feed__link:hover .instagram-feed__img {
 .featured-products .featured-products__pagination {
   @apply relative! inset-auto! justify-center mt-40 990:hidden;
 }
+
+/* ===== Function meets flavor (sections/custom-function-flavor.liquid) — Figma 3:775 / mobile 3:9144 ===== */
+/* Desktop: image is a full-height column on the left 46.84% (Figma fill layer); mobile: below the text */
+.function-flavor__media {
+  @apply overflow-hidden pointer-events-none;
+}
+.function-flavor__media--desktop {
+  @apply hidden 990:block absolute left-0 top-0 bottom-0;
+  width: 46.84%;
+}
+.function-flavor__media--mobile {
+  @apply relative mt-20 990:hidden;
+}
+.function-flavor__media--desktop .function-flavor__image {
+  @apply w-full h-full object-cover;
+}
+.function-flavor__media--mobile .function-flavor__image {
+  @apply w-full h-auto;
+}
+.function-flavor__media--mirrored .function-flavor__image {
+  @apply -scale-x-100;
+}
+/* Stats: 1px white/40 dividers; desktop = 3 centered columns with a 60 x 4 bar, mobile = rows with a 4px left bar */
+.function-flavor__stats {
+  @apply flex flex-col gap-20 990:gap-28 w-full;
+}
+.function-flavor__divider {
+  @apply block w-full 990:max-w-685 h-px bg-white/40;
+}
+.function-flavor__stat-list {
+  @apply m-0 p-0 list-none flex flex-col gap-20 990:flex-row 990:justify-between;
+}
+.function-flavor__stat {
+  @apply flex items-stretch gap-10 990:flex-col 990:items-center 990:w-232;
+}
+.function-flavor__stat-bar {
+  @apply block shrink-0 w-4 rounded-20 990:order-last 990:w-60 990:h-4;
+  background-color: var(--stat-accent);
+}
+.function-flavor__stat-text {
+  @apply flex items-center gap-20 990:flex-col 990:gap-10 990:text-center;
+}
+
+/* Wider pagination bars on desktop (Figma 3:944: 60 x 6) */
+.ctm-pagination-wide .swiper-pagination-bullet {
+  @apply 990:w-60 990:h-6;
+}
+
+/* ===== Product card, mini style (snippets/card-product.liquid, card_style: 'mini') — Figma 3:874 / mobile 3:9224 ===== */
+.card-mini {
+  @apply flex flex-col items-center gap-20 w-full p-10 990:p-20 bg-cream border border-black rounded-10 text-black;
+}
+.card-mini__product {
+  @apply flex items-center gap-20 w-full;
+}
+.card-mini__media {
+  @apply shrink-0 w-83 h-80;
+}
+.card-mini__image {
+  @apply w-full h-full object-contain;
+}
+.card-mini__names {
+  @apply flex flex-col gap-8 min-w-0;
+}
+
+/* ===== Community videos (sections/custom-community-videos.liquid) — Figma 3:808 / mobile 3:9175 ===== */
+.community-videos__list {
+  @apply m-0 p-0 list-none;
+}
+.community-videos .swiper-slide.community-card {
+  @apply flex flex-col gap-20 w-320 990:w-auto h-auto;
+}
+.community-card__media {
+  @apply relative flex flex-col p-20 h-400 990:h-460 rounded-20 overflow-hidden;
+}
+.community-card__poster {
+  @apply absolute inset-0 w-full h-full object-cover;
+}
+/* Top fade for the handle: black 80% at 3.4% -> transparent at 27.4% */
+.community-card__media::before {
+  @apply absolute inset-0 pointer-events-none z-1;
+  content: '';
+  background: linear-gradient(180deg, rgb(0 0 0 / 0.8) 3.365%, rgb(102 102 102 / 0) 27.404%);
+}
+.community-card__handle {
+  @apply relative z-3 inline-flex items-center gap-4 w-fit font-body text-16 leading-figma text-white no-underline;
+}
+.community-card__handle svg {
+  @apply size-18 shrink-0;
+}
+/* Play button: 55px white icon, centered; its ::after makes the whole card clickable */
+.community-card__play {
+  @apply absolute z-2 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-55 p-0 border-0 bg-transparent text-white cursor-pointer transition-transform duration-300 hover:scale-110;
+}
+.community-card__play svg {
+  @apply size-55;
+}
+.community-card__play::after {
+  @apply absolute;
+  content: '';
+  inset: -1000px;
+}
+.community-videos .community-videos__pagination {
+  @apply relative! inset-auto! justify-center mt-40;
+}
+
+/* Video popup (native <dialog>): black 80% backdrop, video in a 20px-rounded frame, product card beside (desktop) or below (mobile) */
+.community-modal {
+  @apply fixed inset-0 m-0 p-0 w-full h-full max-w-none max-h-none border-0 bg-transparent;
+}
+.community-modal::backdrop {
+  @apply bg-black/80;
+}
+.community-modal__inner {
+  @apply relative flex items-center justify-center w-full h-full p-20 990:p-55;
+}
+.community-modal__close {
+  @apply absolute top-20 right-20 z-1 flex items-center justify-center size-44 p-0 border-0 bg-transparent text-white cursor-pointer;
+}
+.community-modal__close svg {
+  @apply size-24;
+}
+.community-modal__body {
+  @apply flex flex-col items-center gap-20 990:flex-row 990:items-end;
+}
+.community-modal__video {
+  @apply overflow-hidden rounded-20 bg-black;
+}
+.community-modal__video-el {
+  @apply block w-auto h-auto max-w-full;
+  max-height: 70vh;
+}
+@variant 990 {
+  .community-modal__video-el {
+    max-height: 85vh;
+  }
+}
+.community-modal__product {
+  @apply w-320;
+}
+
+/* Pagination bars on dark backgrounds (Figma 3:9442): inactive = white 20%, active = brand gradient */
+.ctm-pagination-light .swiper-pagination-bullet {
+  @apply bg-white/20 border-0;
+}
+.ctm-pagination-light .swiper-pagination-bullet-active {
+  @apply bg-transparent bg-gradient-brand;
+}
+
+/* ===== Reviews (sections/custom-reviews.liquid) — Figma 3:950 / mobile 3:9296 ===== */
+/* Corner glows (Figma "Assets" layer): orange/red bottom-left, magenta/purple top-right */
+.reviews__glows {
+  @apply absolute inset-0 pointer-events-none;
+  background:
+    radial-gradient(40% 55% at 0% 100%, rgb(228 66 54 / 0.85) 0%, rgb(214 47 79 / 0.35) 45%, transparent 75%),
+    radial-gradient(35% 50% at 100% 0%, rgb(214 47 79 / 0.6) 0%, rgb(134 33 118 / 0.35) 45%, transparent 75%);
+}
+.reviews__header {
+  @apply flex flex-col items-center gap-20 text-center 990:flex-row 990:items-stretch 990:gap-40 990:text-left;
+}
+.reviews__intro {
+  @apply flex flex-col 990:flex-1 990:pl-68 990:justify-center;
+}
+.reviews__header-divider {
+  @apply block w-full h-px bg-white/40 990:w-2 990:h-auto 990:bg-white/40;
+}
+.reviews__summary {
+  @apply flex flex-col items-center gap-20 990:items-stretch 990:justify-center 990:pr-68;
+}
+.reviews__summary-top {
+  @apply flex items-center gap-20 990:flex-col 990:items-start;
+}
+.reviews__rating-row {
+  @apply flex items-center gap-10;
+}
+.reviews__summary-stars {
+  @apply flex items-center gap-3 text-orange;
+}
+.reviews__summary-star svg {
+  @apply block size-20 990:size-28;
+}
+.reviews__summary-divider {
+  @apply block w-px h-27 bg-white/40 990:hidden;
+}
+.reviews__link {
+  @apply inline-flex items-center justify-center gap-10 py-10 border-b-2 border-white font-body font-medium text-16 leading-figma uppercase text-white no-underline hover:text-light-orange 990:w-full;
+}
+.reviews__link svg {
+  @apply size-20;
+}
+/* Track: desktop = arrow, 3 cards, arrow (28px gaps); mobile = cards only */
+.reviews__track {
+  @apply flex items-center 990:gap-28;
+}
+.reviews__swiper {
+  @apply w-full min-w-0 990:flex-1 overflow-visible 990:overflow-hidden;
+}
+.reviews__arrow {
+  @apply hidden 990:flex shrink-0 items-center justify-center size-40 p-0 border-0 bg-transparent text-white cursor-pointer transition-opacity duration-300 hover:opacity-70;
+}
+.reviews__arrow svg {
+  @apply size-40;
+}
+.reviews__arrow--prev svg {
+  @apply rotate-180;
+}
+.reviews__arrow.swiper-button-disabled {
+  @apply opacity-30 cursor-default;
+}
+.reviews__list {
+  @apply m-0 p-0 list-none;
+}
+.reviews .swiper-slide.review-card {
+  @apply flex flex-col justify-between gap-28 w-320 990:w-auto h-auto p-20 990:p-28 rounded-20 bg-cream text-left;
+}
+.review-card__body {
+  @apply flex flex-col gap-10;
+}
+.review-card__rating {
+  @apply flex items-center justify-between gap-10 mb-0 990:mb-10;
+}
+.review-card__stars {
+  @apply flex items-center gap-3;
+  color: var(--review-accent);
+}
+.review-card__star svg {
+  @apply block size-18 990:size-28;
+}
+.review-card__star.is-empty {
+  @apply opacity-25;
+}
+.review-card__tag {
+  @apply inline-flex items-center gap-10 font-body font-black text-12 990:text-16 leading-figma uppercase whitespace-nowrap;
+  color: var(--review-accent);
+}
+.review-card__tag-bar {
+  @apply block w-20 h-2 990:w-28 990:h-4 rounded-20;
+  background-color: var(--review-accent);
+}
+.review-card__footer {
+  @apply flex flex-col gap-10 990:gap-20;
+}
+.review-card__divider {
+  @apply block w-full h-px bg-black/20;
+}
+.review-card__meta {
+  @apply flex items-center gap-20;
+}
+.review-card__meta-divider {
+  @apply block self-stretch w-px bg-black/20;
+}
+.review-card__verified {
+  @apply inline-flex items-center gap-8 font-body text-16 leading-figma text-black whitespace-nowrap;
+}
+.review-card__verified svg {
+  @apply size-20 shrink-0 text-electric-blue;
+}
+.reviews .reviews__pagination {
+  @apply relative! inset-auto! justify-center mt-40 990:hidden;
+}
+
+/* Form fields (Figma contact form 3:5261): Inter Medium 16 uppercase label 10px above a 2px black pill */
+.ctm-field {
+  @apply flex flex-col gap-10 min-w-0;
+}
+.ctm-label {
+  @apply font-body font-medium text-16 leading-figma uppercase text-black;
+}
+.ctm-input,
+.ctm-textarea {
+  @apply w-full m-0 px-20 py-10 border-2 border-black bg-white/20 font-body text-16 leading-figma text-black shadow-none outline-none appearance-none transition-colors duration-300 placeholder:text-black/40 focus-visible:border-orange;
+}
+.ctm-input {
+  @apply rounded-48;
+}
+.ctm-textarea {
+  @apply rounded-18 min-h-109 resize-y;
+}
+
+/* Gradient-border card with a transparent interior (6px brand-gradient ring, radius 20) — ring is a masked ::before */
+.ctm-gradient-card {
+  @apply relative rounded-20 p-6;
+}
+.ctm-gradient-card::before {
+  @apply absolute inset-0 p-6 rounded-[inherit] pointer-events-none;
+  content: '';
+  background: var(--gradient-brand);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}

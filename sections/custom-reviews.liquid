@@ -1,0 +1,356 @@
+{%- comment -%}
+  Reviews — Figma "Section 4" 3:950 (desktop) / 3:9296 (mobile).
+  Curated review blocks in a Swiper slider (<custom-card-slider>): desktop 3 per view + circle arrows, mobile centered 320px cards + dots.
+{%- endcomment -%}
+
+{% style %}
+  /* .section-padding */
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="reviews section-padding section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient relative overflow-hidden {{ section.settings.custom_class | escape }}">
+  {%- if section.settings.show_glows -%}
+    <span class="reviews__glows" aria-hidden="true"></span>
+  {%- endif -%}
+
+  <div class="reviews__inner relative max-w-1512 mx-auto px-20 990:px-28">
+    <div class="reviews__header">
+      <div class="reviews__intro">
+        {%- if section.settings.eyebrow != blank -%}
+          <div class="content content-eyebrow content-eyebrow-large content-eyebrow-light">
+            <p>{{ section.settings.eyebrow | escape }}</p>
+          </div>
+        {%- endif -%}
+        <div class="flex flex-col gap-10">
+          {%- if section.settings.heading != blank -%}
+            <div class="ctm-title title-white">
+              <h2>{{ section.settings.heading | escape }}</h2>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.subheading != blank -%}
+            <div class="content content-white content-large">
+              <p>{{ section.settings.subheading | escape }}</p>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <span class="reviews__header-divider" aria-hidden="true"></span>
+
+      <div class="reviews__summary">
+        <div class="reviews__summary-top">
+          <div class="reviews__rating-row">
+            <span
+              class="reviews__summary-stars"
+              role="img"
+              aria-label="Rated {{ section.settings.rating_value | escape }} out of 5"
+            >
+              {%- for i in (1..5) -%}
+                <span class="reviews__summary-star{% if forloop.index > 1 %} max-990:hidden{% endif %}">
+                  {{- 'icon-star.svg' | inline_asset_content -}}
+                </span>
+              {%- endfor -%}
+            </span>
+            {%- if section.settings.rating_value != blank -%}
+              <div class="content content-white content-label" aria-hidden="true">
+                <p>{{ section.settings.rating_value | escape }}</p>
+              </div>
+            {%- endif -%}
+          </div>
+          {%- if section.settings.rating_label != blank -%}
+            <span class="reviews__summary-divider" aria-hidden="true"></span>
+            <div class="content content-white">
+              <p class="whitespace-nowrap">{{ section.settings.rating_label | escape }}</p>
+            </div>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.link_label != blank -%}
+          <a
+            href="{{ section.settings.link_url | default: routes.all_products_collection_url }}"
+            class="reviews__link"
+          >
+            {{- section.settings.link_label | escape -}}
+            {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <custom-card-slider class="reviews__slider block mt-40 990:mt-55">
+        <script type="application/json" data-swiper-config>
+          {
+            "slidesPerView": "auto",
+            "centeredSlides": true,
+            "spaceBetween": 16,
+            "breakpoints": {
+              "990": { "slidesPerView": 3, "centeredSlides": false, "spaceBetween": 20 }
+            }
+            {%- if section.settings.autoplay and section.blocks.size > 1 -%}
+              , "autoplay": { "delay": {{ section.settings.autoplay_delay | times: 1000 }}, "pauseOnMouseEnter": true, "disableOnInteraction": false }
+            {%- endif -%}
+          }
+        </script>
+        <div class="reviews__track">
+          {%- if section.settings.show_arrows -%}
+            <button
+              type="button"
+              class="reviews__arrow reviews__arrow--prev"
+              data-slider-prev
+              aria-label="Previous reviews"
+            >
+              {{- 'icon-circle-arrow-right.svg' | inline_asset_content -}}
+            </button>
+          {%- endif -%}
+
+          <div class="swiper reviews__swiper">
+            <ul class="swiper-wrapper reviews__list" role="list">
+              {%- for block in section.blocks -%}
+                {%- liquid
+                  assign tag_label = block.settings.tag_label
+                  assign tag_color = block.settings.tag_color
+                  if block.settings.product != blank
+                    if tag_label == blank
+                      assign tag_label = block.settings.product.metafields.custom.function_name.value | default: block.settings.product.title
+                    endif
+                    if tag_color == blank
+                      assign tag_color = block.settings.product.metafields.custom.accent_color.value
+                    endif
+                  endif
+                  if tag_color == blank
+                    assign tag_color = '#FF6F00'
+                  endif
+                -%}
+                <li
+                  class="swiper-slide review-card"
+                  style="--review-accent: {{ tag_color }};"
+                  {{ block.shopify_attributes }}
+                >
+                  <div class="review-card__body">
+                    <div class="review-card__rating">
+                      <span
+                        class="review-card__stars"
+                        role="img"
+                        aria-label="Rated {{ block.settings.rating }} out of 5"
+                      >
+                        {%- for i in (1..5) -%}
+                          <span class="review-card__star{% if i > block.settings.rating %} is-empty{% endif %}">
+                            {{- 'icon-star.svg' | inline_asset_content -}}
+                          </span>
+                        {%- endfor -%}
+                      </span>
+                      {%- if tag_label != blank -%}
+                        <span class="review-card__tag">
+                          <span class="review-card__tag-bar" aria-hidden="true"></span>
+                          {{- tag_label | escape -}}
+                        </span>
+                      {%- endif -%}
+                    </div>
+                    {%- if block.settings.title != blank -%}
+                      <div class="ctm-title title-black title-review">
+                        <h3>{{ block.settings.title | escape }}</h3>
+                      </div>
+                    {%- endif -%}
+                    {%- if block.settings.quote != blank -%}
+                      <div class="content content-black content-quote">
+                        <p>&ldquo;{{ block.settings.quote | escape }}&rdquo;</p>
+                      </div>
+                    {%- endif -%}
+                  </div>
+
+                  {%- if block.settings.author != blank or block.settings.verified -%}
+                    <div class="review-card__footer">
+                      <span class="review-card__divider" aria-hidden="true"></span>
+                      <div class="review-card__meta">
+                        {%- if block.settings.author != blank -%}
+                          <div class="content content-black content-label">
+                            <p>{{ block.settings.author | escape }}</p>
+                          </div>
+                        {%- endif -%}
+                        {%- if block.settings.author != blank and block.settings.verified -%}
+                          <span class="review-card__meta-divider" aria-hidden="true"></span>
+                        {%- endif -%}
+                        {%- if block.settings.verified -%}
+                          <span class="review-card__verified">
+                            {{- 'icon-check-circle.svg' | inline_asset_content -}}
+                            Verified Buyer
+                          </span>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+
+          {%- if section.settings.show_arrows -%}
+            <button
+              type="button"
+              class="reviews__arrow reviews__arrow--next"
+              data-slider-next
+              aria-label="Next reviews"
+            >
+              {{- 'icon-circle-arrow-right.svg' | inline_asset_content -}}
+            </button>
+          {%- endif -%}
+        </div>
+        <div class="swiper-pagination ctm-pagination ctm-pagination-light reviews__pagination"></div>
+      </custom-card-slider>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Reviews",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Real people. Real reviews." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The word is getting out." },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "See what people are saying about the coldest part of their routine."
+    },
+    { "type": "header", "content": "Rating summary" },
+    { "type": "text", "id": "rating_value", "label": "Average rating", "default": "5.0" },
+    { "type": "text", "id": "rating_label", "label": "Rating label", "default": "Based on customer reviews" },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "Read all reviews" },
+    { "type": "url", "id": "link_url", "label": "Link" },
+    { "type": "header", "content": "Slider" },
+    { "type": "checkbox", "id": "show_arrows", "label": "Show arrows (desktop)", "default": true },
+    { "type": "checkbox", "id": "autoplay", "label": "Auto-rotate reviews", "default": false },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Change reviews every",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 6
+    },
+    { "type": "header", "content": "Colors" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
+    { "type": "checkbox", "id": "show_glows", "label": "Show gradient glows", "default": true },
+    { "type": "header", "content": "Desktop Padding" },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    { "type": "header", "content": "Mobile Padding" },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    { "type": "text", "id": "custom_class", "label": "Extra CSS Class" }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "text", "id": "title", "label": "Title", "default": "My new freezer staple" },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Review",
+          "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur."
+        },
+        { "type": "text", "id": "author", "label": "Author", "default": "Alex P." },
+        { "type": "checkbox", "id": "verified", "label": "Verified buyer", "default": true },
+        { "type": "header", "content": "Product tag" },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Tag text and color come from the product's Function name and Accent color metafields."
+        },
+        { "type": "text", "id": "tag_label", "label": "Tag text override" },
+        { "type": "color", "id": "tag_color", "label": "Tag color override" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "title": "My new freezer staple",
+            "author": "Alex P.",
+            "tag_label": "Daily protein",
+            "tag_color": "#FF6F00"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "title": "Exactly what I needed",
+            "author": "Taylor M.",
+            "tag_label": "Energy",
+            "tag_color": "#D11771"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "title": "Actually tasted good",
+            "author": "Jordan K.",
+            "tag_label": "Recovery",
+            "tag_color": "#45158C"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

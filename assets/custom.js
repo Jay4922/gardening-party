@@ -431,3 +431,188 @@ if (!customElements.get('custom-footer-accordion')) {
     },
   );
 }
+
+/* ===== custom-card-slider ===== */
+// Generic Swiper card slider: options come from a <script data-swiper-config> tag in the section.
+if (!customElements.get('custom-card-slider')) {
+  customElements.define(
+    'custom-card-slider',
+    class extends HTMLElement {
+      connectedCallback() {
+        this.swiperEl = this.querySelector('.swiper');
+        this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        this.onSectionSelect = (event) => {
+          if (event.target.contains(this)) {
+            this.pauseAutoplay();
+          }
+        };
+        this.onSectionDeselect = (event) => {
+          if (event.target.contains(this)) {
+            this.resumeAutoplay();
+          }
+        };
+        this.onBlockSelect = (event) => {
+          const slide = event.target.closest('.swiper-slide');
+          if (slide && this.contains(slide) && this.swiper) {
+            this.swiper.slideTo(Array.from(this.swiper.slides).indexOf(slide));
+          }
+        };
+        document.addEventListener('shopify:section:select', this.onSectionSelect);
+        document.addEventListener('shopify:section:deselect', this.onSectionDeselect);
+        document.addEventListener('shopify:block:select', this.onBlockSelect);
+        this.init();
+      }
+
+      disconnectedCallback() {
+        document.removeEventListener('shopify:section:select', this.onSectionSelect);
+        document.removeEventListener('shopify:section:deselect', this.onSectionDeselect);
+        document.removeEventListener('shopify:block:select', this.onBlockSelect);
+        this.swiper?.destroy(true, true);
+        this.swiper = null;
+      }
+
+      init() {
+        if (typeof Swiper === 'undefined' || !this.swiperEl) {
+          return;
+        }
+        const config = this.readConfig();
+        const pagination = this.querySelector('.swiper-pagination');
+        if (pagination) {
+          config.pagination = { el: pagination, clickable: true };
+        }
+        const prevEl = this.querySelector('[data-slider-prev]');
+        const nextEl = this.querySelector('[data-slider-next]');
+        if (prevEl && nextEl) {
+          config.navigation = { prevEl, nextEl };
+        }
+        config.a11y = { enabled: true, ...config.a11y };
+        config.keyboard = { enabled: true, ...config.keyboard };
+        if (config.autoplay && this.reducedMotion) {
+          delete config.autoplay;
+        }
+        this.hasAutoplay = Boolean(config.autoplay);
+        this.swiper = new Swiper(this.swiperEl, config);
+      }
+
+      pauseAutoplay() {
+        this.swiper?.autoplay?.stop();
+      }
+
+      resumeAutoplay() {
+        if (this.hasAutoplay) {
+          this.swiper?.autoplay?.start();
+        }
+      }
+
+      readConfig() {
+        const tag = this.querySelector('script[data-swiper-config]');
+        try {
+          return JSON.parse(tag ? tag.textContent : '{}');
+        } catch {
+          return {};
+        }
+      }
+    },
+  );
+}
+
+/* ===== custom-video-modal ===== */
+// One native <dialog> per section; play buttons point at a <template> holding the video (loaded only on open).
+if (!customElements.get('custom-video-modal')) {
+  customElements.define(
+    'custom-video-modal',
+    class extends HTMLElement {
+      connectedCallback() {
+        this.root = this.closest('[data-section-root]') || this.parentElement;
+        this.dialog = this.querySelector('dialog');
+        this.body = this.querySelector('[data-modal-body]');
+        this.onRootClick = (event) => {
+          const trigger = event.target.closest('[data-video-template]');
+          if (trigger && this.root.contains(trigger)) {
+            this.open(trigger);
+          }
+        };
+        this.onDialogClick = (event) => {
+          if (event.target === this.dialog || event.target.closest('[data-modal-close]')) {
+            this.dialog.close();
+          }
+        };
+        this.onDialogClose = () => this.cleanup();
+        this.root.addEventListener('click', this.onRootClick);
+        this.dialog?.addEventListener('click', this.onDialogClick);
+        this.dialog?.addEventListener('close', this.onDialogClose);
+      }
+
+      disconnectedCallback() {
+        this.root?.removeEventListener('click', this.onRootClick);
+        this.dialog?.removeEventListener('click', this.onDialogClick);
+        this.dialog?.removeEventListener('close', this.onDialogClose);
+        if (this.dialog?.open) {
+          this.dialog.close();
+        }
+      }
+
+      open(trigger) {
+        const template = document.getElementById(trigger.dataset.videoTemplate);
+        if (!template || !this.dialog || !this.body) {
+          return;
+        }
+        this.trigger = trigger;
+        this.body.replaceChildren(template.content.cloneNode(true));
+        this.root.querySelector('custom-card-slider')?.pauseAutoplay?.();
+        document.body.style.overflow = 'hidden';
+        this.dialog.showModal();
+        this.body
+          .querySelector('video')
+          ?.play()
+          .catch(() => {
+            // Playback can be blocked by the browser; the controls stay available.
+          });
+      }
+
+      cleanup() {
+        this.body?.querySelector('video')?.pause();
+        this.body?.replaceChildren();
+        document.body.style.overflow = '';
+        this.root.querySelector('custom-card-slider')?.resumeAutoplay?.();
+        this.trigger?.focus();
+        this.trigger = null;
+      }
+    },
+  );
+}
+
+/* ===== custom-contact-form ===== */
+// Shopify's contact form stores one contact[name]; join the first + last name inputs into it on submit.
+if (!customElements.get('custom-contact-form')) {
+  customElements.define(
+    'custom-contact-form',
+    class extends HTMLElement {
+      connectedCallback() {
+        this.form = this.querySelector('form');
+        if (!this.form) {
+          return;
+        }
+        this.onSubmit = () => {
+          const first = this.form.querySelector('[data-contact-first]');
+          const last = this.form.querySelector('[data-contact-last]');
+          const name = this.form.querySelector('[data-contact-name]');
+          if (!first || !last || !name) {
+            return;
+          }
+          name.value = [first.value, last.value]
+            .map((value) => value.trim())
+            .filter(Boolean)
+            .join(' ');
+        };
+        this.form.addEventListener('submit', this.onSubmit);
+      }
+
+      disconnectedCallback() {
+        if (this.form && this.onSubmit) {
+          this.form.removeEventListener('submit', this.onSubmit);
+        }
+      }
+    },
+  );
+}

@@ -1,0 +1,223 @@
+{%- comment -%}
+  Function meets flavor — Figma "Section 2" 3:775 (desktop) / 3:9144 (mobile); reused on Retailers & Partners (3:7187).
+  Image is a real <img>: desktop = left 46.84% full-bleed column, mobile = below the text.
+{%- endcomment -%}
+
+{%- liquid
+  assign mobile_image = section.settings.mobile_image | default: section.settings.image
+-%}
+
+{% style %}
+  /* .section-padding */
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="function-flavor section-padding section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient relative overflow-hidden {{ section.settings.custom_class | escape }}">
+  {%- if section.settings.image != blank -%}
+    <div class="function-flavor__media function-flavor__media--desktop{% if section.settings.mirror_image %} function-flavor__media--mirrored{% endif %}">
+      {{
+        section.settings.image
+        | image_url: width: 1500
+        | image_tag:
+          class: 'function-flavor__image',
+          widths: '750, 1000, 1500',
+          sizes: '47vw',
+          loading: 'lazy',
+          alt: section.settings.image.alt
+      }}
+    </div>
+  {%- endif -%}
+
+  <div class="function-flavor__inner relative max-w-1512 mx-auto px-20 990:px-100">
+    <div class="function-flavor__content flex flex-col gap-40 990:gap-55 990:ml-auto 990:w-745 990:min-h-538 990:justify-center">
+      <div class="flex flex-col 990:gap-10">
+        {%- if section.settings.eyebrow != blank -%}
+          <div class="content content-eyebrow content-eyebrow-large content-eyebrow-light">
+            <p>{{ section.settings.eyebrow | escape }}</p>
+          </div>
+        {%- endif -%}
+        <div class="flex flex-col gap-20 990:gap-28">
+          {%- if section.settings.heading != blank -%}
+            <div class="ctm-title title-white">
+              <h2>{{ section.settings.heading | escape }}</h2>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.body != blank -%}
+            <div class="content content-white content-large">
+              {{ section.settings.body }}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="function-flavor__stats">
+          <span class="function-flavor__divider" aria-hidden="true"></span>
+          <ul class="function-flavor__stat-list" role="list">
+            {%- for block in section.blocks -%}
+              <li
+                class="function-flavor__stat"
+                style="--stat-accent: {{ block.settings.accent_color }};"
+                {{ block.shopify_attributes }}
+              >
+                <span class="function-flavor__stat-bar" aria-hidden="true"></span>
+                <div class="function-flavor__stat-text">
+                  {%- if block.settings.value != blank -%}
+                    <div class="content content-white content-stat">
+                      <p>{{ block.settings.value | escape }}</p>
+                    </div>
+                  {%- endif -%}
+                  {%- if block.settings.label != blank -%}
+                    <div class="content content-white content-stat-label">
+                      <p>{{ block.settings.label | escape }}</p>
+                    </div>
+                  {%- endif -%}
+                </div>
+              </li>
+            {%- endfor -%}
+          </ul>
+          <span class="function-flavor__divider" aria-hidden="true"></span>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <a
+          href="{{ section.settings.button_link | default: routes.all_products_collection_url }}"
+          class="ctm-button btn-dark-gradient"
+        >
+          {{- section.settings.button_label | escape -}}
+          {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if mobile_image != blank -%}
+    <div class="function-flavor__media function-flavor__media--mobile{% if section.settings.mirror_image %} function-flavor__media--mirrored{% endif %}">
+      {{
+        mobile_image
+        | image_url: width: 1100
+        | image_tag:
+          class: 'function-flavor__image',
+          widths: '400, 750, 1100',
+          sizes: '100vw',
+          loading: 'lazy',
+          alt: mobile_image.alt
+      }}
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Function meets flavor",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "header", "content": "Image" },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Hand + bar artwork with its glow. Transparent or black background works best."
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Image (mobile)",
+      "info": "Optional. Falls back to the image above."
+    },
+    { "type": "checkbox", "id": "mirror_image", "label": "Mirror image horizontally", "default": true },
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Why Ruby Rockets" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Function meets flavor" },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>Frozen bars that taste like a treat and bring something more to your day. Every bar has 10g of plant-based protein; choose Energy for 90mg of caffeine or Recovery for 3g of creatine.</p>"
+    },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Learn more" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
+    { "type": "header", "content": "Desktop Padding" },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    { "type": "header", "content": "Mobile Padding" },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    { "type": "text", "id": "custom_class", "label": "Extra CSS Class" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        { "type": "text", "id": "value", "label": "Value", "default": "10G" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Plant-Based Protein" },
+        { "type": "color", "id": "accent_color", "label": "Bar color", "default": "#FF6F00" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Function meets flavor",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": { "value": "10G", "label": "Plant-Based Protein", "accent_color": "#FF6F00" }
+        },
+        { "type": "stat", "settings": { "value": "4G", "label": "Sugar", "accent_color": "#D11771" } },
+        { "type": "stat", "settings": { "value": "120", "label": "Calories", "accent_color": "#3E41D7" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

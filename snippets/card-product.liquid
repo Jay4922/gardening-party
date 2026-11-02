@@ -16,6 +16,9 @@
   - horizontal_class: {Boolean} Add a card--horizontal class if set to true. Default: false (optional)
   - horizontal_quick_add: {Boolean} Changes the quick add button styles when set to true. Default: false (optional)
   - placeholder_image: {String} The placeholder image to use when no product exists. Default: 'product-apparel-2' (optional)
+  - card_style: {String} 'mini' renders the compact horizontal card used under community videos (Figma 3:874):
+    83x80 image, function name (custom.function_name, falls back to the title), price and a full-width link button.
+  - button_label: {String} Button text for card_style 'mini'. Default: 'Shop now' (optional)
   - card_style: {String} 'function' renders the centered Ruby Rockets card (Figma 3:664): badge, function name,
     flavor subtitle, short description and a quantity stepper + add to cart. Reads product metafields
     custom.function_name, custom.short_description, custom.badge and custom.accent_color. (optional)
@@ -31,7 +34,50 @@
   {{ 'quick-order-list.css' | asset_url | stylesheet_tag }}
   {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
 {%- endunless -%}
-{%- if card_style == 'function' -%}
+{%- if card_style == 'mini' and card_product and card_product != empty -%}
+  {%- liquid
+    assign mini_name = card_product.metafields.custom.function_name.value | default: card_product.title
+    assign mini_button = button_label | default: 'Shop now'
+  -%}
+  <div class="card-mini">
+    <div class="card-mini__product">
+      <div class="card-mini__media">
+        {%- if card_product.featured_media -%}
+          {{
+            card_product.featured_media
+            | image_url: width: 250
+            | image_tag:
+              class: 'card-mini__image',
+              widths: '83, 166, 250',
+              sizes: '83px',
+              loading: 'lazy',
+              alt: card_product.featured_media.alt
+          }}
+        {%- else -%}
+          {{ 'product-apparel-2' | placeholder_svg_tag: 'card-mini__image' }}
+        {%- endif -%}
+      </div>
+      <div class="card-mini__names">
+        <div class="ctm-title title-black">
+          <h3 class="h5">{{ mini_name | escape }}</h3>
+        </div>
+        <div class="content content-black content-label">
+          <p>
+            {%- if card_product.price_varies -%}
+              {{ 'products.product.price.from_price_html' | t: price: card_product.price_min | money }}
+            {%- else -%}
+              {{ card_product.price | money }}
+            {%- endif -%}
+          </p>
+        </div>
+      </div>
+    </div>
+    <a href="{{ card_product.url }}" class="ctm-button ctm-button-full btn-dark-gradient">
+      {{- mini_button | escape -}}
+      <span class="visually-hidden">: {{ mini_name | escape }}</span>
+    </a>
+  </div>
+{%- elsif card_style == 'function' -%}
   {%- liquid
     assign fn_has_product = false
     if card_product and card_product != empty
