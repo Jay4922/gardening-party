@@ -22,7 +22,7 @@
 {%- endstyle -%}
 
 <div class="image-with-text section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
-  <div class="image-with-text__inner max-w-1512 mx-auto px-20 990:px-55 1366:px-100 grid grid-cols-1 items-center gap-32 990:grid-cols-2 990:gap-40 1366:gap-55">
+  <div class="image-with-text__inner max-w-1512 mx-auto px-20 990:px-55 1366:px-100 d-grid grid-cols-1 items-center gap-32 990:grid-cols-2 990:gap-40 1366:gap-55">
     <div class="image-with-text__media relative min-w-0 aspect-[1257/1000] rounded-10 overflow-hidden bg-cream{% if section.settings.image_position == 'right' %} 990:order-2{% endif %}">
       {%- if image != blank -%}
         {{

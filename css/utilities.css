@@ -8,3 +8,10 @@
 .utility-bar .announcement-bar__link .icon-arrow {
   @apply mb-0;
 }
+
+/* ===== Dawn color-scheme gradients (assets/base.css .gradient) ===== */
+/* Dawn pins scheme gradients to the viewport (background-attachment: fixed), so sections below the fold only show
+   the gradient's end color (e.g. scheme-7 cream→white renders plain white). Scroll with the section instead. */
+.gradient {
+  @apply bg-scroll;
+}

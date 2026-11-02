@@ -61,6 +61,12 @@
   border-bottom-right-radius: calc(--value(integer) * 1px);
 }
 
+/* display:grid that doesn't collide with Dawn's unlayered `.grid` (a flex row in assets/base.css),
+   which beats Tailwind's layered `grid` utility. Use d-grid instead of grid in markup. */
+@utility d-grid {
+  display: grid;
+}
+
 /* Brand gradients (backgrounds) */
 @utility bg-gradient-brand {
   background-image: var(--gradient-brand);

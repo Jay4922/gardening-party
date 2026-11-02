@@ -1,6 +1,6 @@
 {%- comment -%}
   Function meets flavor — Figma "Section 2" 3:775 (desktop) / 3:9144 (mobile); reused on Retailers & Partners (3:7187).
-  Image is a real <img>: desktop = left 46.84% full-bleed column, mobile = below the text.
+  Image is a real <img>: desktop = full-width artwork behind the section (text sits on its black right side), mobile = below the text.
 {%- endcomment -%}
 
 {%- liquid
@@ -29,8 +29,8 @@
         | image_url: width: 1500
         | image_tag:
           class: 'function-flavor__image',
-          widths: '750, 1000, 1500',
-          sizes: '47vw',
+          widths: '1000, 1500, 2000, 2400',
+          sizes: '100vw',
           loading: 'lazy',
           alt: section.settings.image.alt
       }}
@@ -102,7 +102,7 @@
   </div>
 
   {%- if mobile_image != blank -%}
-    <div class="function-flavor__media function-flavor__media--mobile{% if section.settings.mirror_image %} function-flavor__media--mirrored{% endif %}">
+    <div class="function-flavor__media function-flavor__media--mobile{% if section.settings.mobile_image == blank %} function-flavor__media--fallback{% endif %}{% if section.settings.mirror_image %} function-flavor__media--mirrored{% endif %}">
       {{
         mobile_image
         | image_url: width: 1100
@@ -129,7 +129,7 @@
       "type": "image_picker",
       "id": "image",
       "label": "Image",
-      "info": "Hand + bar artwork with its glow. Transparent or black background works best."
+      "info": "Full-width artwork: bar + glow on the left, black on the right where the text sits (e.g. 2000 x 980)."
     },
     {
       "type": "image_picker",
@@ -137,7 +137,7 @@
       "label": "Image (mobile)",
       "info": "Optional. Falls back to the image above."
     },
-    { "type": "checkbox", "id": "mirror_image", "label": "Mirror image horizontally", "default": true },
+    { "type": "checkbox", "id": "mirror_image", "label": "Mirror image horizontally", "default": false },
     { "type": "header", "content": "Text" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Why Ruby Rockets" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Function meets flavor" },

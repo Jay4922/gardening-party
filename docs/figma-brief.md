@@ -71,26 +71,26 @@ Figma line height is "normal" in codegen (≈1.2) even though styles say 100% �
 
 ## Status
 
-| Section               | Node ID             | Template(s)                        | Complexity | Status  |
-| --------------------- | ------------------- | ---------------------------------- | ---------- | ------- |
-| Announcement Bar      | `3:353`             | all (global)                       | low        | built   |
-| Header                | `3:378`             | all (global)                       | high       | built   |
-| Footer                | `3:1651` + `3:1714` | all (global)                       | medium     | built   |
-| Instagram Feed        | `3:1141`            | all in-scope pages                 | medium     | built   |
-| Page Banner           | `3:6108`            | faq, our-story, retailers, contact | low        | built   |
-| Image With Text       | `3:6631`            | our-story, retailers               | low        | built   |
-| Function Meets Flavor | `3:775`             | index, retailers                   | medium     | built   |
-| CTA Banner            | `3:1115`            | index, faq, retailers              | medium     | built   |
-| Video Hero            | `3:454`             | index                              | high       | built   |
-| Benefit Marquee       | `3:611`             | index                              | medium     | built   |
-| Featured Products     | `3:652`             | index                              | high       | built   |
-| Community Videos      | `3:808`             | index                              | high       | built   |
-| Reviews               | `3:950`             | index                              | high       | built   |
-| FAQ                   | `3:6110`            | faq                                | high       | built   |
-| Founder Story         | `3:6695`            | our-story                          | low        | built   |
-| Team                  | `3:6797`            | our-story                          | medium     | built   |
-| Partner Cards         | `3:7200`            | retailers                          | medium     | built   |
-| Contact               | `3:5203`            | contact                            | medium     | pending |
+| Section               | Node ID             | Template(s)                        | Complexity | Status |
+| --------------------- | ------------------- | ---------------------------------- | ---------- | ------ |
+| Announcement Bar      | `3:353`             | all (global)                       | low        | built  |
+| Header                | `3:378`             | all (global)                       | high       | built  |
+| Footer                | `3:1651` + `3:1714` | all (global)                       | medium     | built  |
+| Instagram Feed        | `3:1141`            | all in-scope pages                 | medium     | built  |
+| Page Banner           | `3:6108`            | faq, our-story, retailers, contact | low        | built  |
+| Image With Text       | `3:6631`            | our-story, retailers               | low        | built  |
+| Function Meets Flavor | `3:775`             | index, retailers                   | medium     | built  |
+| CTA Banner            | `3:1115`            | index, faq, retailers              | medium     | built  |
+| Video Hero            | `3:454`             | index                              | high       | built  |
+| Benefit Marquee       | `3:611`             | index                              | medium     | built  |
+| Featured Products     | `3:652`             | index                              | high       | built  |
+| Community Videos      | `3:808`             | index                              | high       | built  |
+| Reviews               | `3:950`             | index                              | high       | built  |
+| FAQ                   | `3:6110`            | faq                                | high       | built  |
+| Founder Story         | `3:6695`            | our-story                          | low        | built  |
+| Team                  | `3:6797`            | our-story                          | medium     | built  |
+| Partner Cards         | `3:7200`            | retailers                          | medium     | built  |
+| Contact               | `3:5203`            | contact                            | medium     | built  |
 
 ## Build order
 
@@ -253,6 +253,7 @@ Near match: Dawn `header` (middle-left logo layout, dropdown menu, drawer). Diff
 - Store setup needed (admin/customizer, not theme code): main menu = Products (3 flavor links) / Learn / Our Story / Find Us / Retailers & Partners / Contact; upload the logo (Theme settings → Logo, width 90 — nearest step to Figma 92; CSS renders 92 desktop / 70 mobile).
 - Verified: dev server renders header (padding class, CTA desktop + drawer, scheme-3), 0 Liquid errors, Theme Check 0 errors.
 - **Visual diff at 1512 / 800 / 376 deferred** — user will check visually later.
+- **Fix (2026-11-02):** cart icon looked smaller than search/account (Dawn's cart SVGs sit in a padded 40x40 viewBox). Header now uses the Figma cart icon `assets/icon-cart-figma.svg` (tight 20x20) for both cart states.
 
 ---
 
@@ -418,6 +419,7 @@ No match — build from scratch. Can be placed in the footer group so it shows o
 - Empty image blocks render Shopify's placeholder SVG. The 4 Figma photos are not bundled (image rule), so the merchant uploads them.
 - Verified: Theme Check clean for this file, renders in the footer group on the FAQ page, and every setting is referenced in the output. Browser check skipped by user preference.
 - **Still open:** the handle (`@rubyrocketssnacks` on desktop vs `@RUBYROCKETS` on mobile) and the Instagram profile URL are needed from the client.
+- **Fix (2026-11-02, by the homepage session):** content ran edge-to-edge on wide screens; desktop padding now `max(80px, (100% - 1512px)/2 + 80px)` so it aligns with the 1512px container (CSS only, `.instagram-feed` in components.css).
 
 ---
 
@@ -646,6 +648,7 @@ The glow is baked into the image (transparent PNG over black). Confirm the asset
 - Added to `templates/index.json` after Featured Products with Figma's 3 stats.
 - Verified: dev server renders eyebrow, 3 stats (10G/4G/120), button; 0 Liquid errors; Theme Check 0 errors.
 - **Visual diff deferred** — user will check visually later. Image to be uploaded in the customizer.
+- **Change after first upload (2026-11-02):** the merchant uploads the whole composition as one wide image (bar + glow left, black right). The desktop image now spans the full section anchored left, scaled to the section **height** (`h-full w-auto`, no vertical crop — wide screens were cutting the bar top with `object-cover`), `sizes: 100vw` instead of a 46.84% column, and `mirror_image` defaults to **off** (index + retailers templates set to false). Without a mobile image, the wide image is cropped to its left part on mobile (`h-360 object-left`) so the bar stays visible.
 
 ---
 
@@ -718,7 +721,7 @@ The home variant's background shows soft light streaks over the gradient. That m
 ## Build notes
 
 - Built from Option B (one section, `layout` select inline/stacked, 2 fixed button slots, no blocks). It's in the FAQ template with "Contact us" linking to `/pages/contact`.
-- The background is a new color scheme `scheme-6` "Brand gradient" (Dawn `background_gradient` = the brand gradient, text white) in `config/settings_data.json`. `.cta-banner.gradient` resets Dawn's `background-attachment: fixed` to scroll.
+- The background is a new color scheme `scheme-6` "Brand gradient" (Dawn `background_gradient` = the brand gradient, text white) in `config/settings_data.json`. Dawn's `background-attachment: fixed` is reset globally by `.gradient { @apply bg-scroll; }` in `css/utilities.css` (added by another session).
 - The streaks are a texture image (Figma `e36a9.png`) blended with multiply. That resolves the brief's risk: it's now the `texture_image` setting and is not bundled.
 - The eyebrow uses the new global `.h-eyebrow` (Plus Jakarta Bold 20 → 24 with 6% tracking from 990px). Buttons reuse `ctm-button` + `btn-outline-gradient` / `btn-dark-gradient`; the arrow is `icon-arrow-right.svg`.
 - Verified: Theme Check clean, renders on 127.0.0.1:9292, scheme-6 variables are output, and every setting is referenced in the output. Browser visual check skipped by user preference.
@@ -802,6 +805,7 @@ Near match: Dawn `slideshow`, but the video slides and mobile split layout need 
 - Added to `templates/index.json` as the first section with 3 slides (images to be uploaded in the customizer).
 - Verified: dev server renders 3 slides, valid Swiper JSON, h2 heading, both buttons; 0 Liquid errors; Theme Check 0 errors; ESLint clean.
 - **Visual diff + slider interaction check deferred** — user will check visually later.
+- **Fix (2026-11-02):** on wide screens the copy and dots now align with the 1512px container (`padding-left: max(55px, (100% - 1512px)/2 + 55px)`), copy capped at 775px.
 
 ---
 
@@ -951,6 +955,7 @@ Must render Dawn's `card-product` (team rule). Extend it with a "function" layou
 - **Store setup needed:** product metafields `custom.function_name`, `custom.short_description`, `custom.badge`, `custom.accent_color` + values for the 3 products. Until then titles = product titles, no badges/glow.
 - Verified: dev server renders 3 cards, 3 product forms with quantity inputs, "Add to cart" buttons; 0 Liquid errors; ESLint clean.
 - **Visual diff + add-to-cart / slider interaction check deferred** — user will check later.
+- **Fix (2026-11-02):** image slot now fits the uploaded photo (square photos no longer leave ~100px of empty space: `h-auto`, max 280/360) and the quantity + add-to-cart row is pinned to the card bottom (`mt-auto`) so rows align when titles wrap.
 
 ---
 
@@ -1030,6 +1035,7 @@ No match — build from scratch.
 - Added to `templates/index.json` after Function Meets Flavor, linked to the 3 flavor products.
 - Verified: 3 cards, 3 mini-cards with real prices, dialog present, valid Swiper JSON; 0 Liquid errors; Theme Check 0 errors; ESLint clean.
 - **Visual diff + popup/slider interaction check deferred** — user will check later; videos/posters to be uploaded in the customizer.
+- **Fix (2026-11-02):** mini-cards overflowed their 410px columns (content-box inheritance inside Swiper) — fixed by the global `.swiper-slide` border-box rule. Blank posters/thumbnails in the user's full-page capture were lazy-loading in the capture tool; images are present in the HTML (`Card_8.png` etc.).
 
 ---
 
@@ -1117,6 +1123,7 @@ No match — build from scratch.
 - Added to `templates/index.json` after Community Videos. Divider colours (white 40% on dark, black 20% on cards) inferred — Figma line assets not read.
 - Verified: 3 cards, 2 arrows, verified badges, accents #FF6F00 / #D11771 / #45158C; 0 Liquid errors; Theme Check 0 errors; ESLint clean.
 - **Visual diff + arrow/slider interaction check deferred** — user will check later.
+- **Fix (2026-11-02, full-page review):** third card was clipped and cards overlapped — Swiper's `.swiper-wrapper` is content-box and Dawn's `box-sizing: inherit` made padded slides grow past their columns. Global rule in components.css forces `border-box` on `.swiper-slide` and descendants (also fixes Community Videos mini-cards and video-card heights).
 
 ---
 
@@ -1197,7 +1204,7 @@ Near match: Dawn `collapsible-content`, but the tabs and search need a custom se
 
 ## Build notes
 
-- Built from Option A (section blocks: `category` + `question`, `max_blocks: 50`). Template `templates/page.faq.json` holds the 6 tabs and the 13 Figma questions under "Products and functions". The other 5 tabs are empty until the client supplies content.
+- Built from Option A (section blocks: `category` + `question`, `max_blocks: 50`). Template `templates/page.faq.json` holds the 6 tabs and the 13 Figma questions under "Products and functions". The other 5 tabs have 5 demo placeholder questions each (`demo_question_1`–`25`, added by another session) until the client supplies real content. That's 44 of the 50-block limit.
 - Live Figma corrections to the brief: questions and numbers are 20px (16 on mobile) Plus Jakarta Bold with no tracking (new global `.h-faq`); the number is orange only when the row is open; the column is 1000px wide; dividers are black at 40%; eyebrow and subheading are 24 → 20 on mobile (new `.content-eyebrow-large` and the existing `.content-large`).
 - Tabs: gradient-bordered pills on desktop (wrap and center below 1441px, spread across the width from 1441px); below 990px a gradient dropdown toggle. Native `<details>`; keyboard support for the tabs (arrows, Home/End, Esc).
 - Search filters every category at once and keeps each row's original number. Clicking a tab clears the search.
@@ -1433,27 +1440,29 @@ Card link destinations unknown — buttons stay hidden until a link is set. Card
 
 ## Contact
 
-**Status:** pending
+**Status:** built
 **Node ID:** 3:5203
 **Figma link:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/?node-id=3-5203
 **Templates:** contact
 **Complexity:** medium
-**Section file:** _(filled in after build)_ sections/custom-contact.liquid
+**Section file:** sections/custom-contact.liquid
 
 ## Visual brief
 
-Cream background, two columns.
+Cream→white gradient (`scheme-7`), `p-100`, two columns 604 / 653 with a 55 gap.
 
 - **Left:**
   - Eyebrow "CONTACT" (orange) and heading "LET'S TALK" (48)
-  - Intro text (Inter Medium 20)
-  - Three icon rows: phone "302.499.3506", email "information@greenhillbrands.com" (orange link), address "Kennett Square, Pennsylvania & New Castle, Delaware"
-  - A greyscale map image (radius ~10)
-- **Right:** a form card with a 4px brand-gradient border and radius ~20, titled "SEND A MESSAGE" (32), containing:
+  - Intro text (Inter Medium 24, forced break after "freezer thoughts?"), 10 under the heading
+  - Three icon rows: phone "302.499.3506", email "information@greenhillbrands.com" (Inter Medium 20 orange link), address "Kennett Square, Pennsylvania & New Castle, Delaware"
+  - Rows: Inter Regular 20, icons 20 (pin 19×25), 10 icon gap, 20 row gap
+  - A greyscale map image (radius 10) filling the remaining column height (604×253 at 1512); 55 between title block, rows and map
+- **Right:** a form card with a 6px brand-gradient border (measured), radius 20, padding 20, titled "SEND A MESSAGE" (H3 32), containing:
   - First and last name side by side, then email and message
-  - Pill inputs with a black 2px border; the message is a rounded textarea
+  - Labels Inter Medium 16 uppercase 10 above the field; pill inputs (radius 48, 2px black border, white/20 fill, placeholder black/40); message textarea radius 18, ~109 tall; field groups 28 apart, name pair 20 apart
   - A full-width black "SEND MESSAGE →" pill, and the note "We’ll get back to you as soon as we can"
   - reCAPTCHA (Shopify adds it automatically)
+  - A hidden "What can we help with?" select exists in Figma (not built)
 - **Mobile:** no frame. Stack the columns, info first.
 
 ## Content elements
@@ -1507,3 +1516,9 @@ Near match: Dawn `contact-form` (reuse its form handling), but with a new two-co
 - **Non-blocking suggestions:**
 
 ## Build notes
+
+- Built 2026-11-02, Option B (Merchant Editable): `contact_item` blocks (phone / email / location, auto `tel:`/`mailto:`), fixed four-field `form 'contact'` with editable labels/placeholders/button/note/success message.
+- New shared pieces: `.ctm-field` / `.ctm-label` / `.ctm-input` / `.ctm-textarea` and `.ctm-gradient-card` (masked ring, transparent interior) in `css/components.css`; `.content-xsmall`, `.content-contact`, `.content-contact-accent` in `css/base.css`; icons `icon-phone.svg`, `icon-email.svg`, `icon-location.svg` (from Figma, currentColor); `<custom-contact-form>` in `assets/custom.js` joins first + last name into `contact[name]` on submit (first/last also post as their own fields).
+- **Interpolated:** stacked below 990 (info → rows → map at 604:253 → form); name fields stacked below 480; gap 40 → 55 from 1366; mobile padding 60/60.
+- `templates/page.contact.json` replaced: Page Banner → Contact (Dawn `main-page` + `contact-form` removed from the template; their files untouched).
+- Verified: Theme Check clean, ESLint clean, no Liquid errors on `/pages/contact`, tel/mailto links and all `contact[...]` fields render, all settings referenced. Test submission not sent (would email the store). **Visual check deferred.**

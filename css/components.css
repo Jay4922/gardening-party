@@ -44,6 +44,15 @@
 .page-banner {
   @apply px-20 990:px-55 relative overflow-hidden flex items-start justify-center text-center 990:items-center 990:justify-start 990:text-left;
 }
+/* Above the 1512 canvas, keep the title on the same 1512 container edge as the header and other sections */
+@variant 1512 {
+  .page-banner {
+    padding-inline: calc((100% - 1512px) / 2 + 55px);
+  }
+  .page-banner__product {
+    right: calc((100% - 1512px) / 2);
+  }
+}
 .page-banner__media {
   @apply absolute inset-0 pointer-events-none;
 }
@@ -224,11 +233,15 @@
 .cta-banner {
   @apply relative overflow-hidden px-20 990:px-55;
 }
-.cta-banner.gradient {
-  background-attachment: scroll;
-}
 .cta-banner__texture {
   @apply absolute inset-0 w-full h-full object-cover mix-blend-multiply pointer-events-none;
+}
+/* "Show gradient background" off: solid scheme color instead of the scheme gradient; texture shown unblended */
+.cta-banner--no-gradient.gradient {
+  background: rgb(var(--color-background));
+}
+.cta-banner--no-gradient .cta-banner__texture {
+  @apply mix-blend-normal;
 }
 .cta-banner__decor {
   @apply absolute right-0 bottom-0 h-3/5 max-w-2/5 pointer-events-none 990:h-full 990:max-w-1/4;
@@ -289,6 +302,15 @@
     );
 }
 
+/* Swiper sets .swiper-wrapper to content-box and Dawn makes everything inherit it, so padded slides and
+   their children would grow past their column. Force border-box inside every slide. */
+.swiper-slide,
+.swiper-slide *,
+.swiper-slide *::before,
+.swiper-slide *::after {
+  @apply box-border;
+}
+
 /* Slider pagination bars (Swiper): 40px bars, 8px apart; active = brand gradient with a 2px white border */
 .ctm-pagination.swiper-pagination {
   @apply flex items-center gap-8 w-auto;
@@ -325,7 +347,7 @@
 }
 /* Mobile text panel: black with the orange/purple glow from the Figma "Assets" layer */
 .hero-slide__content {
-  @apply absolute left-0 right-0 bottom-0 flex flex-col gap-20 p-20 pb-46 bg-black overflow-hidden 990:relative 990:h-full 990:justify-center 990:gap-40 990:p-55 990:bg-transparent 990:max-w-830;
+  @apply absolute left-0 right-0 bottom-0 flex flex-col gap-20 p-20 pb-46 bg-black overflow-hidden 990:relative 990:h-full 990:justify-center 990:gap-40 990:p-55 990:bg-transparent;
 }
 .hero-slide__content::before {
   @apply absolute inset-0 pointer-events-none 990:hidden;
@@ -339,6 +361,15 @@
 }
 .hero-slider .ctm-pagination.swiper-pagination {
   @apply left-20 bottom-20 990:left-28 990:bottom-29;
+}
+/* Wide screens: align the hero copy and dots with the 1512px container instead of the viewport edge */
+@variant 990 {
+  .hero-slide__content {
+    padding-left: max(55px, calc((100% - 1512px) / 2 + 55px));
+  }
+  .hero-slider .ctm-pagination.swiper-pagination {
+    left: max(28px, calc((100% - 1512px) / 2 + 28px));
+  }
 }
 
 /* ===== Benefit marquee (sections/custom-benefit-marquee.liquid) — Figma 3:611 / mobile 3:9019 ===== */
@@ -359,6 +390,12 @@
 /* Instagram feed (sections/custom-instagram-feed.liquid) — Figma 3:1141 / mobile 3:9459 */
 .instagram-feed {
   @apply flex flex-col gap-20 px-20 990:px-80;
+}
+/* Wide screens: keep the content inside the 1512px container like every other section */
+@variant 990 {
+  .instagram-feed {
+    padding-inline: max(80px, calc((100% - 1512px) / 2 + 80px));
+  }
 }
 .instagram-feed__header {
   @apply flex flex-col items-center gap-20 text-center 990:flex-row 990:justify-between 990:text-left;
@@ -404,7 +441,7 @@ a.instagram-feed__link:hover .instagram-feed__img {
   @apply absolute z-1 left-0 top-0 990:left-20 990:top-15 px-14 py-4 rounded-22 bg-rocket-red font-body font-black text-12 leading-figma uppercase text-white;
 }
 .card-function__media {
-  @apply relative flex items-center justify-center w-200 h-280 990:w-260 990:h-360;
+  @apply relative flex items-end justify-center w-200 990:w-260;
 }
 /* Mobile-only glow in the product's accent color (Figma "Ellipse 11–13") */
 .card-function__media::before {
@@ -414,11 +451,17 @@ a.instagram-feed__link:hover .instagram-feed__img {
   background: radial-gradient(closest-side, var(--card-accent), transparent);
   opacity: 0.6;
 }
+/* Fits square photos (200/260 square) and tall cut-outs (up to 280/360) without empty space */
 .card-function__image {
-  @apply relative w-full h-full object-contain;
+  @apply relative w-full h-auto max-h-280 990:max-h-360 object-contain;
 }
 .card-function__copy {
-  @apply flex flex-col items-center gap-20 w-full;
+  @apply flex flex-1 flex-col items-center gap-20 w-full;
+}
+/* Keep quantity + add to cart on one line across cards even when titles wrap differently */
+.card-function__copy > .card-function__form,
+.card-function__copy > .ctm-button:last-child {
+  @apply mt-auto;
 }
 .card-function__names {
   @apply flex flex-col gap-4 w-full;
@@ -476,22 +519,26 @@ a.instagram-feed__link:hover .instagram-feed__img {
 }
 
 /* ===== Function meets flavor (sections/custom-function-flavor.liquid) — Figma 3:775 / mobile 3:9144 ===== */
-/* Desktop: image is a full-height column on the left 46.84% (Figma fill layer); mobile: below the text */
+/* Desktop: the uploaded artwork fills the section height, anchored left (bar + glow left, black right behind the text); mobile: below the text */
 .function-flavor__media {
   @apply overflow-hidden pointer-events-none;
 }
 .function-flavor__media--desktop {
-  @apply hidden 990:block absolute left-0 top-0 bottom-0;
-  width: 46.84%;
+  @apply hidden 990:block absolute inset-0;
 }
 .function-flavor__media--mobile {
   @apply relative mt-20 990:hidden;
 }
+/* Scale to the section height (never crop the bar top/bottom); the black section background fills any width left over */
 .function-flavor__media--desktop .function-flavor__image {
-  @apply w-full h-full object-cover;
+  @apply block h-full w-auto max-w-none object-contain object-left;
 }
 .function-flavor__media--mobile .function-flavor__image {
   @apply w-full h-auto;
+}
+/* No mobile image: crop the wide desktop artwork to its left part, where the bar is */
+.function-flavor__media--fallback .function-flavor__image {
+  @apply h-360 object-cover object-left;
 }
 .function-flavor__media--mirrored .function-flavor__image {
   @apply -scale-x-100;

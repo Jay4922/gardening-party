@@ -28,7 +28,7 @@
   }
 {%- endstyle -%}
 
-<div class="cta-banner cta-banner--{{ section.settings.layout }} section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
+<div class="cta-banner cta-banner--{{ section.settings.layout }}{% unless section.settings.show_gradient %} cta-banner--no-gradient{% endunless %} section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
   {%- if section.settings.texture_image != blank -%}
     {{
       section.settings.texture_image
@@ -183,6 +183,13 @@
       "id": "texture_image",
       "label": "Background texture",
       "info": "Blended over the background with multiply, which gives the soft light streaks."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_gradient",
+      "label": "Show gradient background",
+      "info": "Turn off to show the background texture as uploaded (no gradient, no blend). Without a texture, the color scheme's solid background shows.",
+      "default": true
     },
     {
       "type": "image_picker",

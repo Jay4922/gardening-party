@@ -57,7 +57,7 @@
 
     {%- if section.blocks.size > 0 -%}
       <ul
-        class="partner-cards__grid list-none m-0 p-0 grid grid-cols-1 750:grid-cols-2 {{ cols_desktop }} gap-20"
+        class="partner-cards__grid list-none m-0 p-0 d-grid grid-cols-1 750:grid-cols-2 {{ cols_desktop }} gap-20"
         role="list"
       >
         {%- for block in section.blocks -%}
@@ -101,9 +101,13 @@
                 </div>
               {%- endif -%}
 
-              {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
+              {%- if block.settings.button_label != blank -%}
                 <a
-                  href="{{ block.settings.button_link }}"
+                  {% if block.settings.button_link != blank %}
+                    href="{{ block.settings.button_link }}"
+                  {% else %}
+                    role="link" aria-disabled="true"
+                  {% endif %}
                   class="partner-cards__button ctm-button ctm-button-full btn-outline-gradient"
                 >
                   {{- block.settings.button_label | escape -}}

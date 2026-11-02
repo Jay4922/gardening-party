@@ -228,10 +228,14 @@
   @apply bg-gradient-brand;
 }
 .footer .footer__bar-inner {
-  @apply flex flex-col items-center gap-20 p-20 990:flex-row 990:justify-between 990:px-55 990:py-10;
+  @apply flex flex-col items-center gap-20 p-20 990:mx-auto 990:max-w-1512 990:flex-row 990:justify-between 990:px-55 990:py-10;
 }
 .footer .footer__list-social.list-social {
   @apply m-0 flex gap-10 p-0;
+}
+/* Figma order is Instagram, Facebook, X; Dawn's social-icons snippet lists Facebook first */
+.footer .footer__list-social .list-social__item:has(.icon-instagram) {
+  @apply -order-1;
 }
 .footer .footer__list-social .list-social__link {
   @apply flex size-28 items-center justify-center rounded-full bg-black p-0 text-white;

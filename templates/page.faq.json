@@ -1,8 +1,31 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "page_banner": {
       "type": "custom-page-banner",
-      "settings": {}
+      "settings": {
+        "heading": "",
+        "heading_tag": "h1",
+        "background_image": "shopify://shop_images/IP_Header.png",
+        "show_gradient": false,
+        "overlay_opacity": 100,
+        "height_desktop": 400,
+        "height_mobile": 400,
+        "bg_color": "#000000",
+        "padding_top": 55,
+        "padding_bottom": 55,
+        "padding_top_mobile": 80,
+        "padding_bottom_mobile": 55,
+        "custom_class": ""
+      }
     },
     "faq": {
       "type": "custom-faq",
@@ -110,10 +133,80 @@
             "title": "Ingredients and nutrition"
           }
         },
+        "demo_question_1": {
+          "type": "question",
+          "settings": {
+            "question": "How much protein is in each bar?",
+            "answer": "<p>Every Ruby Rockets bar has 10g of plant-based protein, so you get a real protein boost from a frozen treat.</p>"
+          }
+        },
+        "demo_question_2": {
+          "type": "question",
+          "settings": {
+            "question": "How much sugar is in each bar?",
+            "answer": "<p>Each bar has just 4g of sugar. We keep it low without using artificial sweeteners.</p>"
+          }
+        },
+        "demo_question_3": {
+          "type": "question",
+          "settings": {
+            "question": "How many calories are in a bar?",
+            "answer": "<p>Each bar is 120 calories, an easy fit for a snack between meals or after a workout.</p>"
+          }
+        },
+        "demo_question_4": {
+          "type": "question",
+          "settings": {
+            "question": "What's the difference between Energy and Recovery?",
+            "answer": "<p>Energy (Mocha) adds 90mg of caffeine for a lift. Recovery (Chocolate Peanut Butter) adds 3g of creatine to support your post-workout routine.</p>"
+          }
+        },
+        "demo_question_5": {
+          "type": "question",
+          "settings": {
+            "question": "Do you use artificial colors or preservatives?",
+            "answer": "<p>No. We use real ingredients you can pronounce, with no chemicals, artificial colors or preservatives.</p>"
+          }
+        },
         "category_3": {
           "type": "category",
           "settings": {
             "title": "Allergens and dietary attributes"
+          }
+        },
+        "demo_question_6": {
+          "type": "question",
+          "settings": {
+            "question": "Are your bars dairy-free?",
+            "answer": "<p>Yes. All of our bars are made without dairy, using a plant-based protein blend instead.</p>"
+          }
+        },
+        "demo_question_7": {
+          "type": "question",
+          "settings": {
+            "question": "Do your products contain nuts?",
+            "answer": "<p>Our Recovery bar contains peanuts. All bars are made on equipment that also processes tree nuts, so please check the label if you have a nut allergy.</p>"
+          }
+        },
+        "demo_question_8": {
+          "type": "question",
+          "settings": {
+            "question": "Are your bars gluten-free?",
+            "answer": "<p>Yes, our bars are made without wheat or gluten-containing ingredients.</p>"
+          }
+        },
+        "demo_question_9": {
+          "type": "question",
+          "settings": {
+            "question": "Are your bars soy-free?",
+            "answer": "<p>Our bars are made on shared equipment that processes soy. Check the ingredient list on each box for full details.</p>"
+          }
+        },
+        "demo_question_10": {
+          "type": "question",
+          "settings": {
+            "question": "Are your products suitable for a vegan diet?",
+            "answer": "<p>Our bars are plant-based and contain no dairy or eggs. Some ingredients may not meet every vegan standard, so check the label for details.</p>"
           }
         },
         "category_4": {
@@ -122,16 +215,121 @@
             "title": "Usage and storage"
           }
         },
+        "demo_question_11": {
+          "type": "question",
+          "settings": {
+            "question": "How should I store my bars?",
+            "answer": "<p>Keep your bars in the freezer at 0°F (-18°C) or colder until you're ready to enjoy them.</p>"
+          }
+        },
+        "demo_question_12": {
+          "type": "question",
+          "settings": {
+            "question": "Can I refreeze a bar that has thawed?",
+            "answer": "<p>For the best taste and texture, we don't recommend refreezing a bar once it has fully thawed.</p>"
+          }
+        },
+        "demo_question_13": {
+          "type": "question",
+          "settings": {
+            "question": "How long do the bars last in the freezer?",
+            "answer": "<p>Unopened bars keep their best quality until the date printed on the box when stored frozen.</p>"
+          }
+        },
+        "demo_question_14": {
+          "type": "question",
+          "settings": {
+            "question": "How long should I wait before eating a bar?",
+            "answer": "<p>Let it sit for a minute or two after taking it out of the freezer for the creamiest bite.</p>"
+          }
+        },
+        "demo_question_15": {
+          "type": "question",
+          "settings": {
+            "question": "When is the best time to have a bar?",
+            "answer": "<p>Anytime! Grab Energy for a morning or afternoon lift, Recovery after a workout, or Daily Protein whenever a craving hits.</p>"
+          }
+        },
         "category_5": {
           "type": "category",
           "settings": {
             "title": "Availability and purchasing"
           }
         },
+        "demo_question_16": {
+          "type": "question",
+          "settings": {
+            "question": "Where can I buy Ruby Rockets?",
+            "answer": "<p>You can order online from our store or find us in the freezer aisle at participating retailers. Check our store locator for the nearest location.</p>"
+          }
+        },
+        "demo_question_17": {
+          "type": "question",
+          "settings": {
+            "question": "Do you ship frozen products?",
+            "answer": "<p>Yes. Orders ship in insulated packaging with cold packs so your bars arrive frozen.</p>"
+          }
+        },
+        "demo_question_18": {
+          "type": "question",
+          "settings": {
+            "question": "Which areas do you ship to?",
+            "answer": "<p>We currently ship within the continental United States. We'll announce new areas as we expand.</p>"
+          }
+        },
+        "demo_question_19": {
+          "type": "question",
+          "settings": {
+            "question": "Do you offer a subscription?",
+            "answer": "<p>Subscriptions are coming soon. Join the launch list to be the first to know.</p>"
+          }
+        },
+        "demo_question_20": {
+          "type": "question",
+          "settings": {
+            "question": "What if my order arrives thawed or damaged?",
+            "answer": "<p>Contact us within 48 hours of delivery with a photo of your order and we'll make it right.</p>"
+          }
+        },
         "category_6": {
           "type": "category",
           "settings": {
             "title": "Retailer and partner questions"
+          }
+        },
+        "demo_question_21": {
+          "type": "question",
+          "settings": {
+            "question": "How do I become a Ruby Rockets retailer?",
+            "answer": "<p>Fill out the form on our Retailers & Partners page and our team will get back to you with next steps.</p>"
+          }
+        },
+        "demo_question_22": {
+          "type": "question",
+          "settings": {
+            "question": "Do you offer wholesale pricing?",
+            "answer": "<p>Yes. Wholesale pricing is available for approved retail, foodservice, campus and workplace partners.</p>"
+          }
+        },
+        "demo_question_23": {
+          "type": "question",
+          "settings": {
+            "question": "Is there a minimum order for wholesale?",
+            "answer": "<p>Minimum order quantities depend on your channel and location. Our team will share details when you get in touch.</p>"
+          }
+        },
+        "demo_question_24": {
+          "type": "question",
+          "settings": {
+            "question": "Do you supply campuses and workplaces?",
+            "answer": "<p>Yes. We partner with campus dining, corporate cafeterias and micro-markets to bring better frozen snacks on-site.</p>"
+          }
+        },
+        "demo_question_25": {
+          "type": "question",
+          "settings": {
+            "question": "Do you provide marketing support for retailers?",
+            "answer": "<p>Approved partners get product imagery, shelf talkers and launch support to help Ruby Rockets stand out in store.</p>"
           }
         }
       },
@@ -151,17 +349,77 @@
         "question_12",
         "question_13",
         "category_2",
+        "demo_question_1",
+        "demo_question_2",
+        "demo_question_3",
+        "demo_question_4",
+        "demo_question_5",
         "category_3",
+        "demo_question_6",
+        "demo_question_7",
+        "demo_question_8",
+        "demo_question_9",
+        "demo_question_10",
         "category_4",
+        "demo_question_11",
+        "demo_question_12",
+        "demo_question_13",
+        "demo_question_14",
+        "demo_question_15",
         "category_5",
-        "category_6"
+        "demo_question_16",
+        "demo_question_17",
+        "demo_question_18",
+        "demo_question_19",
+        "demo_question_20",
+        "category_6",
+        "demo_question_21",
+        "demo_question_22",
+        "demo_question_23",
+        "demo_question_24",
+        "demo_question_25"
       ],
-      "settings": {}
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading": "We’ve got answers.",
+        "heading_tag": "h2",
+        "subheading": "Find what you need fast.",
+        "show_search": true,
+        "search_placeholder": "Search",
+        "no_results_text": "No questions match your search.",
+        "open_first": true,
+        "color_scheme": "",
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 100,
+        "padding_bottom_mobile": 100,
+        "custom_class": ""
+      }
     },
     "cta_banner": {
       "type": "custom-cta-banner",
       "settings": {
-        "button_1_link": "/pages/contact"
+        "layout": "inline",
+        "eyebrow": "Still have questions?",
+        "heading": "Let’s talk",
+        "heading_tag": "h2",
+        "subheading": "",
+        "button_1_label": "Contact us",
+        "button_1_link": "/pages/contact",
+        "button_1_style": "btn-outline-gradient",
+        "button_1_arrow": true,
+        "button_2_label": "",
+        "button_2_link": "",
+        "button_2_style": "btn-dark-gradient",
+        "button_2_arrow": false,
+        "texture_image": "shopify://shop_images/Section_5_67965e58-59ce-40ef-8138-02ee8cc792ae.png",
+        "show_gradient": false,
+        "color_scheme": "",
+        "padding_top": 55,
+        "padding_bottom": 55,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40,
+        "custom_class": ""
       }
     }
   },

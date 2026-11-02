@@ -14,29 +14,101 @@
     "instagram_feed": {
       "type": "custom-instagram-feed",
       "blocks": {
-        "image_1": { "type": "image", "settings": {} },
-        "image_2": { "type": "image", "settings": {} },
-        "image_3": { "type": "image", "settings": {} },
-        "image_4": { "type": "image", "settings": {} }
+        "image_1": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Card_8_92f05970-8fa0-4d60-9379-4eee2eef753b.png",
+            "link": ""
+          }
+        },
+        "image_4": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/image.png",
+            "link": ""
+          }
+        },
+        "image_2": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/image_1.png",
+            "link": ""
+          }
+        },
+        "image_3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/image_2.png",
+            "link": ""
+          }
+        }
       },
-      "block_order": ["image_1", "image_2", "image_3", "image_4"],
-      "settings": {}
+      "block_order": [
+        "image_1",
+        "image_4",
+        "image_2",
+        "image_3"
+      ],
+      "settings": {
+        "heading": "Follow the frozen revolution.",
+        "heading_tag": "h2",
+        "handle": "@rubyrocketssnacks",
+        "handle_link": "",
+        "button_label": "Follow us",
+        "button_link": "",
+        "color_scheme": "",
+        "padding_top": 50,
+        "padding_bottom": 50,
+        "padding_top_mobile": 50,
+        "padding_bottom_mobile": 50,
+        "custom_class": ""
+      }
     },
     "footer": {
       "type": "footer",
       "blocks": {
-        "menu_products": { "type": "link_list", "settings": { "heading": "Products" } },
-        "menu_company": { "type": "link_list", "settings": { "heading": "Company" } },
-        "menu_support": { "type": "link_list", "settings": { "heading": "Support" } },
-        "menu_legal": { "type": "link_list", "settings": { "heading": "Legal" } }
+        "menu_products": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Products",
+            "menu": "footer"
+          }
+        },
+        "menu_company": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Company",
+            "menu": "footer"
+          }
+        },
+        "menu_support": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Support",
+            "menu": "footer"
+          }
+        },
+        "menu_legal": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Legal",
+            "menu": "footer"
+          }
+        }
       },
-      "block_order": ["menu_products", "menu_company", "menu_support", "menu_legal"],
+      "block_order": [
+        "menu_products",
+        "menu_company",
+        "menu_support",
+        "menu_legal"
+      ],
       "settings": {
         "color_scheme": "scheme-3",
         "newsletter_enable": true,
         "newsletter_heading": "Join our newsletter",
         "newsletter_placeholder": "Email*",
         "newsletter_button_label": "Subscribe",
+        "mobile_logo_width": 120,
         "enable_follow_on_shop": false,
         "show_social": true,
         "enable_country_selector": false,
@@ -45,11 +117,13 @@
         "show_policy": false,
         "copyright_text": "2026 Ruby’s Naturals Inc.",
         "credit_text": "// TECHYSCOUTS",
+        "credit_link": "",
         "margin_top": 0,
         "padding_top": 55,
         "padding_bottom": 55,
         "padding_top_mobile": 40,
-        "padding_bottom_mobile": 40
+        "padding_bottom_mobile": 40,
+        "custom_class": ""
       }
     }
   },

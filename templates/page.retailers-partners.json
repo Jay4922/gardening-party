@@ -1,12 +1,36 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "page_banner": {
       "type": "custom-page-banner",
-      "settings": {}
+      "settings": {
+        "heading": "",
+        "heading_tag": "h1",
+        "background_image": "shopify://shop_images/IP_Header_1.png",
+        "show_gradient": false,
+        "overlay_opacity": 100,
+        "height_desktop": 400,
+        "height_mobile": 400,
+        "bg_color": "#000000",
+        "padding_top": 55,
+        "padding_bottom": 55,
+        "padding_top_mobile": 80,
+        "padding_bottom_mobile": 55,
+        "custom_class": ""
+      }
     },
     "image_with_text": {
       "type": "custom-image-with-text",
       "settings": {
+        "image": "shopify://shop_images/Rectangle_51_2.png",
         "image_position": "left",
         "eyebrow": "Retailers & Partners",
         "heading": "Let’s Stock\nSomething Better.",
@@ -30,7 +54,7 @@
           "settings": {
             "value": "10G",
             "label": "Plant-Based Protein",
-            "accent_color": "#FF6F00"
+            "accent_color": "#ff6f00"
           }
         },
         "stat_2": {
@@ -38,7 +62,7 @@
           "settings": {
             "value": "4G",
             "label": "Sugar",
-            "accent_color": "#D11771"
+            "accent_color": "#d11771"
           }
         },
         "stat_3": {
@@ -46,7 +70,7 @@
           "settings": {
             "value": "120",
             "label": "Calories",
-            "accent_color": "#3E41D7"
+            "accent_color": "#3e41d7"
           }
         }
       },
@@ -56,7 +80,8 @@
         "stat_3"
       ],
       "settings": {
-        "mirror_image": true,
+        "image": "shopify://shop_images/Section_6.png",
+        "mirror_image": false,
         "eyebrow": "Why Ruby Rockets",
         "heading": "Function meets flavor",
         "body": "<p>Frozen bars that taste like a treat and bring something more to your day. Every bar has 10g of plant-based protein; choose Energy for 90mg of caffeine or Recovery for 3g of creatine.</p>",
@@ -76,6 +101,7 @@
         "card_1": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/Rectangle_61.png",
             "title": "Retail and Distribution",
             "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur.",
             "button_label": "Learn More",
@@ -85,6 +111,7 @@
         "card_2": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/Rectangle_61_1.png",
             "title": "Campus and Workplace",
             "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur.",
             "button_label": "Learn More",
@@ -94,6 +121,7 @@
         "card_3": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/Rectangle_61_2.png",
             "title": "Foodservice",
             "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur.",
             "button_label": "Learn More",
@@ -126,15 +154,23 @@
         "eyebrow": "",
         "heading": "Ready to work together?",
         "heading_tag": "h2",
+        "subheading": "",
         "button_1_label": "Contact us",
         "button_1_link": "/pages/contact",
         "button_1_style": "btn-outline-gradient",
         "button_1_arrow": true,
+        "button_2_label": "",
+        "button_2_link": "",
+        "button_2_style": "btn-dark-gradient",
+        "button_2_arrow": false,
+        "texture_image": "shopify://shop_images/Section_5_67965e58-59ce-40ef-8138-02ee8cc792ae.png",
+        "show_gradient": false,
         "color_scheme": "scheme-6",
         "padding_top": 55,
         "padding_bottom": 55,
         "padding_top_mobile": 40,
-        "padding_bottom_mobile": 40
+        "padding_bottom_mobile": 40,
+        "custom_class": ""
       }
     }
   },

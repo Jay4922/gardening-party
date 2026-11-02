@@ -19,6 +19,9 @@
   /* .page-banner__media */
   .page-banner__media-{{ section.id }}::after {
     opacity: {{ overlay_opacity }};
+    {%- unless section.settings.show_gradient %}
+      display: none;
+    {%- endunless %}
   }
   @media screen and (max-width: 989px) {
     .section-{{ section.id }}-padding {
@@ -98,6 +101,13 @@
       "type": "image_picker",
       "id": "background_image",
       "label": "Background image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_gradient",
+      "label": "Show gradient overlay",
+      "info": "Turn off to show the background image without the brand gradient and dark scrim.",
+      "default": true
     },
     {
       "type": "range",

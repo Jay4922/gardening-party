@@ -1,36 +1,42 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "page_banner": {
       "type": "custom-page-banner",
-      "settings": {}
+      "settings": {
+        "heading": "",
+        "heading_tag": "h1",
+        "background_image": "shopify://shop_images/IP_Header.png",
+        "show_gradient": false,
+        "overlay_opacity": 100,
+        "height_desktop": 400,
+        "height_mobile": 400,
+        "bg_color": "#000000",
+        "padding_top": 55,
+        "padding_bottom": 55,
+        "padding_top_mobile": 80,
+        "padding_bottom_mobile": 55,
+        "custom_class": ""
+      }
     },
     "image_with_text_story": {
       "type": "custom-image-with-text",
       "settings": {
+        "image": "shopify://shop_images/Rectangle_51.png",
         "image_position": "left",
         "eyebrow": "Our Story",
         "heading": "We Are on a Mission.",
         "heading_tag": "h2",
         "body": "<p>We came together to make delicious, healthy snacks we love to eat. We are passionate about organic, non-GMO, real food, made with ingredients you can pronounce. It’s that simple. No chemicals, sweeteners, or artificial anything.</p>",
         "button_label": "Why We Do It",
-        "button_link": "",
-        "color_scheme": "scheme-7",
-        "padding_top": 100,
-        "padding_bottom": 100,
-        "padding_top_mobile": 60,
-        "padding_bottom_mobile": 60,
-        "custom_class": ""
-      }
-    },
-    "image_with_text_mission": {
-      "type": "custom-image-with-text",
-      "settings": {
-        "image_position": "left",
-        "eyebrow": "Our Mission",
-        "heading": "Why We Do\nWhat We Do",
-        "heading_tag": "h2",
-        "body": "<p>We believe in real food that tastes as good as it is good for you. We believe in products with ingredients you can pronounce. We believe that the best food is simple with no chemicals or artificial anything. We believe that it is possible for fruits &amp; veggies to be delicious.</p>",
-        "button_label": "Collaborate",
         "button_link": "",
         "color_scheme": "scheme-7",
         "padding_top": 100,
@@ -48,11 +54,31 @@
         "heading_tag": "h2",
         "quote": "“I was on a mission to eat healthier.”",
         "attribution": "WENDY MAKKENA, FOUNDER",
+        "image": "shopify://shop_images/Rectangle_59.png",
         "statement": "A simple idea sparked a bigger purpose - to make snacks that fuel brighter days.",
         "show_statement_line": true,
         "color_scheme": "scheme-3",
         "padding_top": 80,
         "padding_bottom": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60,
+        "custom_class": ""
+      }
+    },
+    "image_with_text_mission": {
+      "type": "custom-image-with-text",
+      "settings": {
+        "image": "shopify://shop_images/Rectangle_51_1.png",
+        "image_position": "left",
+        "eyebrow": "Our Mission",
+        "heading": "Why We Do\nWhat We Do",
+        "heading_tag": "h2",
+        "body": "<p>We believe in real food that tastes as good as it is good for you. We believe in products with ingredients you can pronounce. We believe that the best food is simple with no chemicals or artificial anything. We believe that it is possible for fruits & veggies to be delicious.</p>",
+        "button_label": "Collaborate",
+        "button_link": "",
+        "color_scheme": "scheme-7",
+        "padding_top": 100,
+        "padding_bottom": 100,
         "padding_top_mobile": 60,
         "padding_bottom_mobile": 60,
         "custom_class": ""
@@ -64,6 +90,7 @@
         "member_1": {
           "type": "member",
           "settings": {
+            "image": "shopify://shop_images/Rectangle_52.png",
             "name": "Name Goes Here",
             "position": "Position Goes Here",
             "bio": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.",
@@ -74,6 +101,7 @@
         "member_2": {
           "type": "member",
           "settings": {
+            "image": "shopify://shop_images/Rectangle_52_1.png",
             "name": "Name Goes Here",
             "position": "Position Goes Here",
             "bio": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.",
@@ -84,6 +112,7 @@
         "member_3": {
           "type": "member",
           "settings": {
+            "image": "shopify://shop_images/Rectangle_52_2.png",
             "name": "Name Goes Here",
             "position": "Position Goes Here",
             "bio": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.",
