@@ -1,0 +1,22 @@
+node_modules
+package-lock.json
+.claude
+.shopify
+
+# Generated
+assets/application.css.liquid
+
+# Dawn originals stay untouched — only team-authored custom* files are formatted
+assets/*
+!assets/custom.js
+!assets/custom-*
+sections/*
+!sections/custom-*
+snippets/*
+!snippets/custom-*
+layout/
+templates/
+config/
+locales/
+LICENSE.md
+release-notes.md

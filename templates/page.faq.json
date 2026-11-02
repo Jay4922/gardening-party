@@ -1,0 +1,173 @@
+{
+  "sections": {
+    "page_banner": {
+      "type": "custom-page-banner",
+      "settings": {}
+    },
+    "faq": {
+      "type": "custom-faq",
+      "blocks": {
+        "category_1": {
+          "type": "category",
+          "settings": {
+            "title": "Products and functions"
+          }
+        },
+        "question_1": {
+          "type": "question",
+          "settings": {
+            "question": "Where can I find your products?",
+            "answer": "<p>We want to make your experience with Ruby Rockets as convenient as we can, so you can order our Frozen Pops and our Dairy Free Yogurt Alternatives on our site or you can find a carrier near you with our <a href=\"/pages/store-locator\" title=\"Store locator\">store locator.</a></p>"
+          }
+        },
+        "question_2": {
+          "type": "question",
+          "settings": {
+            "question": "Are you gluten free?",
+            "answer": "<p>Yes, we don’t use any wheat products in our Frozen Pops or in our Dairy Free Yogurt Alternatives.</p>"
+          }
+        },
+        "question_3": {
+          "type": "question",
+          "settings": {
+            "question": "Are you dairy free?",
+            "answer": "<p>Yes.</p>"
+          }
+        },
+        "question_4": {
+          "type": "question",
+          "settings": {
+            "question": "Are you vegan?",
+            "answer": "<p>The ingredients in our Frozen Pops and Dairy Free Yogurt Alternatives are derived from plants. Our Coconut Milk Better Bars are not considered vegan.</p>"
+          }
+        },
+        "question_5": {
+          "type": "question",
+          "settings": {
+            "question": "Do you use eggs as an ingredient in your products?",
+            "answer": "<p>No.</p>"
+          }
+        },
+        "question_6": {
+          "type": "question",
+          "settings": {
+            "question": "Love the Far Out Fudge Pop, but do you use Fair Trade Cocoa?",
+            "answer": "<p>Absolutely. We are committed to making this world a better, more ethical place, and we deliver on that commitment through our products.</p>"
+          }
+        },
+        "question_7": {
+          "type": "question",
+          "settings": {
+            "question": "What are the natural flavors you use in your pops?",
+            "answer": "<p>The natural flavors in our Frozen Pops and Dairy Free Yogurt Alternatives are derived from fruit and vegetable oils. These flavors are non-GMO and Whole Foods Market compliant, but the specific makeup of the natural flavors is proprietary to Ruby Rockets.</p>"
+          }
+        },
+        "question_8": {
+          "type": "question",
+          "settings": {
+            "question": "Do your products use high fructose corn syrup?",
+            "answer": "<p>We don’t use high fructose corn syrup or any other unnatural sweetener in our products.</p>"
+          }
+        },
+        "question_9": {
+          "type": "question",
+          "settings": {
+            "question": "Are your pops kosher? Where do you get your certification?",
+            "answer": "<p>Yes, our frozen pops are certified kosher pareve and receive our certification from KOF-K. The dairy-free yogurt is certified by OU.</p>"
+          }
+        },
+        "question_10": {
+          "type": "question",
+          "settings": {
+            "question": "Where are your Frozen Pops made?",
+            "answer": "<p>All of our pops are made in Southern California.</p>"
+          }
+        },
+        "question_11": {
+          "type": "question",
+          "settings": {
+            "question": "Where are your Dairy Free Yogurt Alternatives made?",
+            "answer": "<p>Our Dairy Free Yogurt Alternatives are made in Canada.</p>"
+          }
+        },
+        "question_12": {
+          "type": "question",
+          "settings": {
+            "question": "Are your Dairy Free Yogurt Alternatives filled in BPA-free packaging?",
+            "answer": "<p>Yes. Our Dairy Free Yogurt Alternatives are packaged in BPA-free tubes.</p>"
+          }
+        },
+        "question_13": {
+          "type": "question",
+          "settings": {
+            "question": "The box says your Frozen Pops are made on equipment that processes milk, soy, and tree nuts. What allergen information do I need to know before having one of your Frozen Pops and/or Non-Dairy Yogurt Alternatives?",
+            "answer": "<p>Yes, the equipment we use to make our Frozen Pops processes milk, soy, coconut, and tree nuts, such as: almonds, walnuts, pecans, pistachios, hazelnuts, and macadamia. However, our facilities have strict daily cleaning procedures, and they have yearly, third party audits to ensure we are compliant. And, for peace of mind, we do additional audits through third parties to test our products for milk, soy, tree nuts, and even gluten. Our Dairy Free Yogurt Alternatives are made in an allergen free facility, but coconut is one of the primary ingredients.</p>"
+          }
+        },
+        "category_2": {
+          "type": "category",
+          "settings": {
+            "title": "Ingredients and nutrition"
+          }
+        },
+        "category_3": {
+          "type": "category",
+          "settings": {
+            "title": "Allergens and dietary attributes"
+          }
+        },
+        "category_4": {
+          "type": "category",
+          "settings": {
+            "title": "Usage and storage"
+          }
+        },
+        "category_5": {
+          "type": "category",
+          "settings": {
+            "title": "Availability and purchasing"
+          }
+        },
+        "category_6": {
+          "type": "category",
+          "settings": {
+            "title": "Retailer and partner questions"
+          }
+        }
+      },
+      "block_order": [
+        "category_1",
+        "question_1",
+        "question_2",
+        "question_3",
+        "question_4",
+        "question_5",
+        "question_6",
+        "question_7",
+        "question_8",
+        "question_9",
+        "question_10",
+        "question_11",
+        "question_12",
+        "question_13",
+        "category_2",
+        "category_3",
+        "category_4",
+        "category_5",
+        "category_6"
+      ],
+      "settings": {}
+    },
+    "cta_banner": {
+      "type": "custom-cta-banner",
+      "settings": {
+        "button_1_link": "/pages/contact"
+      }
+    }
+  },
+  "order": [
+    "page_banner",
+    "faq",
+    "cta_banner"
+  ]
+}

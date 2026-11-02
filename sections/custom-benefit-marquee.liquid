@@ -1,0 +1,147 @@
+{%- comment -%}
+  Benefit marquee — Figma "Scrolling Benefit Marquee" 3:611 (desktop) / 3:9019 (mobile).
+  Continuous Swiper ticker initialised by <custom-benefit-marquee> in assets/custom.js.
+  The list is rendered 3 times so the loop is seamless on wide screens; copies 2–3 are aria-hidden.
+{%- endcomment -%}
+
+{% style %}
+  /* .section-padding */
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+{%- if section.blocks.size > 0 -%}
+  <div class="benefit-marquee section-padding section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient overflow-hidden {{ section.settings.custom_class | escape }}">
+    <custom-benefit-marquee class="block">
+      <script type="application/json" data-marquee-config>
+        {
+          "speed": {{ section.settings.speed | times: 1000 }},
+          "reverse": {{ section.settings.reverse_direction }},
+          "pauseOnHover": {{ section.settings.pause_on_hover }},
+          "allowDrag": {{ section.settings.allow_drag }}
+        }
+      </script>
+      <div class="swiper benefit-marquee__swiper">
+        <ul class="swiper-wrapper benefit-marquee__list" role="list">
+          {%- for copy in (1..3) -%}
+            {%- for block in section.blocks -%}
+              {%- if block.settings.text != blank -%}
+                <li
+                  class="swiper-slide benefit-marquee__item"
+                  {% if copy == 1 %}
+                    {{ block.shopify_attributes }}
+                  {% else %}
+                    aria-hidden="true"
+                  {% endif %}
+                >
+                  <span class="benefit-marquee__bar" aria-hidden="true"></span>
+                  <div class="content content-white content-label">
+                    <p>{{ block.settings.text | escape }}</p>
+                  </div>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </custom-benefit-marquee>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Benefit marquee",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "header", "content": "Scrolling" },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Speed per item",
+      "min": 2,
+      "max": 15,
+      "step": 1,
+      "unit": "s",
+      "default": 6,
+      "info": "Time each item takes to scroll past. Higher is slower."
+    },
+    { "type": "checkbox", "id": "reverse_direction", "label": "Scroll left to right", "default": false },
+    { "type": "checkbox", "id": "pause_on_hover", "label": "Pause on hover", "default": true },
+    { "type": "checkbox", "id": "allow_drag", "label": "Allow drag / swipe", "default": true },
+    { "type": "header", "content": "Colors" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
+    { "type": "header", "content": "Desktop Padding" },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    { "type": "header", "content": "Mobile Padding" },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    { "type": "text", "id": "custom_class", "label": "Extra CSS Class" }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "10G Plant-Based Protein" }]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Benefit marquee",
+      "blocks": [
+        { "type": "benefit", "settings": { "text": "10G Plant-Based Protein" } },
+        { "type": "benefit", "settings": { "text": "4G Sugar" } },
+        { "type": "benefit", "settings": { "text": "120 Calories" } },
+        { "type": "benefit", "settings": { "text": "Dairy-Free" } },
+        { "type": "benefit", "settings": { "text": "No Added Sugar" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

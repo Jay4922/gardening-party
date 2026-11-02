@@ -1,0 +1,216 @@
+{
+  "sections": {
+    "image_banner": {
+      "type": "image-banner",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Browse our latest products",
+            "heading_size": "h0"
+          }
+        },
+        "button": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Shop all",
+            "button_link_1": "shopify://collections/all",
+            "button_style_secondary_1": true,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "button"
+      ],
+      "settings": {
+        "image_overlay_opacity": 40,
+        "image_height": "large",
+        "desktop_content_position": "bottom-center",
+        "show_text_box": false,
+        "image_behavior": "none",
+        "desktop_content_alignment": "center",
+        "color_scheme": "scheme-3",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": false,
+        "show_text_below": false
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Featured products",
+        "heading_size": "h2",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "collection": "all",
+        "products_to_show": 8,
+        "columns_desktop": 4,
+        "color_scheme": "scheme-1",
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "enable_desktop_slider": false,
+        "swipe_on_mobile": false,
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "columns_mobile": "2",
+        "padding_top": 44,
+        "padding_bottom": 36
+      }
+    },
+    "hero_slider": {
+      "type": "custom-hero-slider",
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "heading": "Fuel your gains, not your guilt",
+            "subheading": "Functional frozen snacking has arrived.",
+            "button_1_label": "Shop the launch",
+            "button_1_link": "",
+            "button_2_label": "Join the launch",
+            "button_2_link": ""
+          }
+        },
+        "slide_2": {
+          "type": "slide",
+          "settings": {
+            "heading": "Fuel your gains, not your guilt",
+            "subheading": "Functional frozen snacking has arrived.",
+            "button_1_label": "Shop the launch",
+            "button_1_link": "",
+            "button_2_label": "Join the launch",
+            "button_2_link": ""
+          }
+        },
+        "slide_3": {
+          "type": "slide",
+          "settings": {
+            "heading": "Fuel your gains, not your guilt",
+            "subheading": "Functional frozen snacking has arrived.",
+            "button_1_label": "Shop the launch",
+            "button_1_link": "",
+            "button_2_label": "Join the launch",
+            "button_2_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2",
+        "slide_3"
+      ],
+      "settings": {
+        "autoplay": true,
+        "autoplay_delay": 5,
+        "loop": true,
+        "show_pagination": true,
+        "height_desktop": 640,
+        "height_mobile": 700,
+        "heading_tag": "h2",
+        "above_the_fold": true,
+        "color_scheme": "scheme-3",
+        "show_gradient_overlay": true,
+        "overlay_opacity": 100,
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "padding_top_mobile": 0,
+        "padding_bottom_mobile": 0,
+        "custom_class": ""
+      }
+    },
+    "benefit_marquee": {
+      "type": "custom-benefit-marquee",
+      "blocks": {
+        "benefit_1": {
+          "type": "benefit",
+          "settings": {
+            "text": "10G Plant-Based Protein"
+          }
+        },
+        "benefit_2": {
+          "type": "benefit",
+          "settings": {
+            "text": "4G Sugar"
+          }
+        },
+        "benefit_3": {
+          "type": "benefit",
+          "settings": {
+            "text": "120 Calories"
+          }
+        },
+        "benefit_4": {
+          "type": "benefit",
+          "settings": {
+            "text": "Dairy-Free"
+          }
+        },
+        "benefit_5": {
+          "type": "benefit",
+          "settings": {
+            "text": "No Added Sugar"
+          }
+        }
+      },
+      "block_order": [
+        "benefit_1",
+        "benefit_2",
+        "benefit_3",
+        "benefit_4",
+        "benefit_5"
+      ],
+      "settings": {
+        "speed": 6,
+        "reverse_direction": false,
+        "pause_on_hover": true,
+        "allow_drag": true,
+        "color_scheme": "scheme-3",
+        "padding_top": 20,
+        "padding_bottom": 20,
+        "padding_top_mobile": 20,
+        "padding_bottom_mobile": 20,
+        "custom_class": ""
+      }
+    },
+    "featured_products": {
+      "type": "custom-featured-products",
+      "settings": {
+        "heading": "Find your function.",
+        "subheading": "Three flavors. Three ways to make your freezer work harder.",
+        "button_label": "Shop all products",
+        "button_link": "",
+        "products": [
+          "chocolate-brownie-batter",
+          "mocha-caffeine",
+          "chocolate-peanut-butter-creatine"
+        ],
+        "quick_add": "standard",
+        "mobile_slider": true,
+        "color_scheme": "scheme-2",
+        "use_cream_fade": true,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 80,
+        "padding_bottom_mobile": 80,
+        "custom_class": ""
+      }
+    }
+  },
+  "order": [
+    "hero_slider",
+    "benefit_marquee",
+    "featured_products",
+    "image_banner",
+    "featured_collection"
+  ]
+}

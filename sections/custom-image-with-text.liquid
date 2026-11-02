@@ -1,0 +1,206 @@
+{% comment %}
+  Image With Text — Figma "Section 1" 3:6631 / "Section 6" 3:6732 (Our Story), 3:7123 (Retailers & Partners).
+  Image column + eyebrow, heading (textarea, line breaks kept), body and gradient-border pill button.
+{% endcomment %}
+{%- liquid
+  assign heading_tag = section.settings.heading_tag
+  assign image = section.settings.image
+-%}
+
+{%- style -%}
+  /* .image-with-text */
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="image-with-text section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
+  <div class="image-with-text__inner max-w-1512 mx-auto px-20 990:px-55 1366:px-100 grid grid-cols-1 items-center gap-32 990:grid-cols-2 990:gap-40 1366:gap-55">
+    <div class="image-with-text__media relative min-w-0 aspect-[1257/1000] rounded-10 overflow-hidden bg-cream{% if section.settings.image_position == 'right' %} 990:order-2{% endif %}">
+      {%- if image != blank -%}
+        {{
+          image
+          | image_url: width: 1300
+          | image_tag:
+            class: 'image-with-text__img absolute inset-0 img-fluid-cover',
+            widths: '375, 550, 750, 1100, 1300',
+            sizes: '(min-width: 1512px) 629px, (min-width: 990px) 50vw, 100vw',
+            loading: 'lazy',
+            alt: image.alt
+        }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'image-with-text__placeholder absolute inset-0 w-full h-full' }}
+      {%- endif -%}
+    </div>
+
+    <div class="image-with-text__copy min-w-0 flex flex-col items-start gap-28">
+      {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+        <div class="image-with-text__titles flex flex-col gap-10 w-full">
+          {%- if section.settings.eyebrow != blank -%}
+            <div class="content content-eyebrow content-eyebrow-large">
+              <p>{{ section.settings.eyebrow | escape }}</p>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <div class="ctm-title title-black">
+              <{{ heading_tag }} class="image-with-text__heading h2">
+                {{- section.settings.heading | escape | newline_to_br -}}
+              </{{ heading_tag }}>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.body != blank -%}
+        <div class="image-with-text__body content content-black">
+          {{ section.settings.body }}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <a
+          {% if section.settings.button_link != blank %}
+            href="{{ section.settings.button_link }}"
+          {% else %}
+            role="link" aria-disabled="true"
+          {% endif %}
+          class="image-with-text__button ctm-button btn-dark-gradient"
+        >
+          {{- section.settings.button_label | escape -}}
+          {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image With Text",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Image" },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Displayed 628 × 500px on desktop. Set a focal point to control the crop."
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position (desktop)",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    { "type": "header", "content": "Content" },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Our Story"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Press Enter to force a line break.",
+      "default": "We Are on a Mission."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h2",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>We came together to make delicious, healthy snacks we love to eat. We are passionate about organic, non-GMO, real food, made with ingredients you can pronounce. It’s that simple. No chemicals, sweeteners, or artificial anything.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "info": "Leave blank to hide the button.",
+      "default": "Why We Do It"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    { "type": "header", "content": "Background" },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-7"
+    },
+    { "type": "header", "content": "Desktop Padding" },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    { "type": "header", "content": "Mobile Padding" },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Extra CSS Class"
+    }
+  ],
+  "presets": [{ "name": "Image With Text" }]
+}
+{% endschema %}

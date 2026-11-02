@@ -1,0 +1,17 @@
+node_modules/
+css/
+package.json
+package-lock.json
+.prettierrc
+.prettierignore
+.shopifyignore
+.theme-check.yml
+.gitignore
+README.md
+LICENSE.md
+release-notes.md
+eslint.config.mjs
+.husky/
+.claude/
+CLAUDE.md
+docs/

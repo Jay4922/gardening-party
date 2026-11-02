@@ -1,0 +1,70 @@
+@import 'tailwindcss';
+@import './base.css';
+@import './components.css';
+@import './layout.css';
+@import './utilities.css';
+
+/* Only scan theme files for classes, not docs or Claude skill files */
+@source not "../.claude";
+@source not "../docs";
+
+@theme {
+  /* Pixel-based spacing: px-10 = 10px */
+  --spacing: 1px;
+
+  /* Breakpoints — the only allowed set; register any new width here before using it */
+  --breakpoint-1920: 1921px;
+  --breakpoint-1600: 1601px;
+  --breakpoint-1512: 1513px;
+  --breakpoint-1440: 1441px;
+  --breakpoint-1366: 1367px;
+  --breakpoint-1199: 1200px;
+  --breakpoint-1024: 1025px;
+  --breakpoint-992: 993px;
+  --breakpoint-768: 769px;
+  --breakpoint-750: 750px;
+  --breakpoint-640: 641px;
+  --breakpoint-576: 577px;
+  --breakpoint-480: 480px;
+  --breakpoint-425: 426px;
+  --breakpoint-375: 376px;
+  --breakpoint-990: 990px;
+
+  /* Fonts (Figma: Plus Jakarta Sans Bold for headings, Inter for body) */
+  --font-heading: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Colors (Figma color styles) */
+  --color-cream: #fff8f0;
+  --color-rocket-red: #ef1207;
+  --color-orange: #ff6f00;
+  --color-light-orange: #ff9d42;
+  --color-magenta: #d11771;
+  --color-electric-blue: #3e41d7;
+  --color-deep-purple: #45158c;
+
+  /* Letter spacing / line height (Figma: 4% and 6% tracking, "normal" line height) */
+  --tracking-heading: 0.04em;
+  --tracking-heading-wide: 0.06em;
+  --leading-figma: normal;
+}
+
+/* Pixel utilities: text-32 = 32px font-size, rounded-5 = 5px radius */
+@utility text-* {
+  font-size: calc(--value(integer) * 1px);
+}
+@utility rounded-* {
+  border-radius: calc(--value(integer) * 1px);
+}
+@utility rounded-b-* {
+  border-bottom-left-radius: calc(--value(integer) * 1px);
+  border-bottom-right-radius: calc(--value(integer) * 1px);
+}
+
+/* Brand gradients (backgrounds) */
+@utility bg-gradient-brand {
+  background-image: var(--gradient-brand);
+}
+@utility bg-gradient-cream {
+  background-image: var(--gradient-cream);
+}

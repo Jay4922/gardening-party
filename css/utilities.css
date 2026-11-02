@@ -1,0 +1,10 @@
+/* Utility/helper classes and Dawn default-section overrides only. */
+
+/* ===== Dawn announcement bar (sections/announcement-bar.liquid) — Figma 3:353 ===== */
+/* Section padding replaces Dawn's message padding; message uses Inter Medium, not the .h5 heading style */
+.utility-bar .announcement-bar__message {
+  @apply p-0 m-0 min-h-0 font-body font-medium text-12 990:text-16 leading-figma tracking-normal normal-case text-center;
+}
+.utility-bar .announcement-bar__link .icon-arrow {
+  @apply mb-0;
+}

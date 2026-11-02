@@ -1,0 +1,31 @@
+{
+  "name": "gardening-party",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gardening Party Shopify theme (Dawn 16.0.0 + Tailwind CSS)",
+  "scripts": {
+    "build": "npx @tailwindcss/cli -i css/application.css -o assets/application.css.liquid -w -m",
+    "theme": "shopify theme dev --store jp-dev-07.myshopify.com",
+    "format": "prettier --write css/ assets/ sections/ snippets/",
+    "lint": "eslint .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix --no-warn-ignored",
+      "prettier --write"
+    ],
+    "*.{css,md,liquid,json}": "prettier --write"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@shopify/prettier-plugin-liquid": "^1.11.3",
+    "@tailwindcss/cli": "^4.3.3",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "tailwindcss": "^4.3.3"
+  }
+}

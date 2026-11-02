@@ -1,0 +1,262 @@
+/* Header, footer, nav, global layout wrappers, grid/flex helpers. */
+
+/* ===== Dawn header (sections/header.liquid) — Figma 3:378, states 3:11654, mobile 3:8748 / 3:11934 ===== */
+/* Dawn loads header CSS inside the section (after this file), so every rule is scoped under .header-wrapper. */
+
+/* Gutter: 20 mobile, 55 desktop (Dawn forces 5rem at 990+) */
+.header-wrapper .header.page-width {
+  @apply px-20 990:px-55;
+}
+
+/* Logo: 70 x 55 mobile, 92 x 73 desktop */
+.header-wrapper .header__heading-logo-wrapper {
+  @apply w-70 990:w-92;
+}
+
+/* Desktop menu: 55px after the logo, 27px between links, 10px link padding, Inter Medium 16 */
+.header-wrapper .header--middle-left .header__inline-menu {
+  @apply ml-55;
+}
+.header-wrapper .header__inline-menu .list-menu--inline {
+  @apply gap-27;
+}
+.header-wrapper .header__inline-menu > .list-menu > li > .header__menu-item,
+.header-wrapper .header__inline-menu > .list-menu > li > header-menu > details > .header__menu-item {
+  @apply relative p-10 font-body font-medium text-16 leading-figma no-underline;
+  color: rgb(var(--color-foreground));
+}
+.header-wrapper .header__inline-menu .header__menu-item .icon-caret {
+  @apply hidden;
+}
+.header-wrapper .header__active-menu-item {
+  @apply no-underline;
+}
+
+/* Active / hover / open: 4px brand-gradient bar under the link */
+.header-wrapper .header__inline-menu > .list-menu > li > .header__menu-item::after,
+.header-wrapper .header__inline-menu > .list-menu > li > header-menu > details > .header__menu-item::after {
+  @apply absolute left-0 right-0 bottom-0 h-4 opacity-0 transition-opacity duration-300;
+  content: '';
+  background: var(--gradient-brand);
+}
+.header-wrapper .header__inline-menu .header__menu-item:hover::after,
+.header-wrapper .header__inline-menu details[open] > .header__menu-item::after,
+.header-wrapper .header__inline-menu .header__menu-item:has(.header__active-menu-item)::after {
+  @apply opacity-100;
+}
+
+/* Products dropdown: black, 280 wide, bottom corners 20, 13px between centered links */
+.header-wrapper .header__inline-menu .header__submenu.list-menu--disclosure {
+  @apply left-1/2 -translate-x-1/2 mt-20 w-280 min-w-0 flex flex-col gap-13 pt-10 pb-28 px-28 border-0 shadow-none rounded-b-20;
+}
+.header-wrapper .header__submenu .header__menu-item {
+  @apply p-0 justify-center text-center font-body font-medium text-16 leading-figma no-underline;
+  color: rgb(var(--color-foreground));
+}
+.header-wrapper .header__submenu .header__menu-item:hover {
+  @apply text-orange;
+}
+
+/* Icons: CTA, 28px gap, then 28px icons with 10px gaps (desktop); 20px icons, 12px apart (mobile) */
+.header-wrapper .header__icons {
+  @apply items-center gap-0 990:gap-10 pr-0;
+}
+.header-wrapper .header-cta {
+  @apply mr-18;
+}
+.header-wrapper .header__icon,
+.header-wrapper .header__icon--cart {
+  @apply size-32 990:size-28 m-0;
+}
+.header-wrapper .header__icon .svg-wrapper {
+  @apply size-32 990:size-28;
+}
+.header-wrapper .header__icon .icon,
+.header-wrapper .header__icon svg {
+  @apply size-20 990:size-28;
+}
+.header-wrapper details[open] > .header__icon--search {
+  @apply text-orange;
+}
+
+/* Search panel: black, right-aligned under the icons, bottom corners 20, 440px pill input */
+.header-wrapper .search-modal.modal__content {
+  @apply top-full left-0 right-0 990:left-auto w-full 990:w-496 h-auto min-h-0 border-0 rounded-b-20;
+}
+.header-wrapper .search-modal__content {
+  @apply relative p-20 990:p-28 justify-start;
+}
+.header-wrapper .search-modal__form {
+  @apply w-full 990:w-440;
+}
+.header-wrapper .search-modal .field::before,
+.header-wrapper .search-modal .field::after {
+  @apply hidden;
+}
+.header-wrapper .search-modal .field__input {
+  @apply h-44 rounded-48 border-2 border-white bg-white/20 pl-50 pr-50 font-body text-16 text-white shadow-none;
+}
+.header-wrapper .search-modal .field__label {
+  @apply left-50 font-body text-16 text-white;
+}
+.header-wrapper .search-modal .search__button {
+  @apply absolute left-20 right-auto top-1/2 -translate-y-1/2 size-20 text-white;
+}
+.header-wrapper .search-modal .reset__button {
+  @apply hidden;
+}
+.header-wrapper .search-modal__close-button {
+  @apply right-40 990:right-48 top-1/2 -translate-y-1/2 size-20 text-white;
+}
+
+/* Mobile drawer (3:11934): white list, 20px gutter, Products opens in place as a cream accordion */
+.header-wrapper .menu-drawer__navigation {
+  @apply p-0;
+}
+.header-wrapper .menu-drawer__menu-item {
+  @apply px-20 py-19 font-body font-medium text-16 leading-figma no-underline;
+  color: rgb(var(--color-foreground));
+}
+.header-wrapper .menu-drawer__menu-item--active {
+  @apply bg-transparent;
+}
+.header-wrapper .menu-drawer__menu-item > .svg-wrapper:first-of-type {
+  @apply hidden;
+}
+.header-wrapper .menu-drawer details[open] > .menu-drawer__menu-item .icon-caret {
+  @apply rotate-180;
+}
+.js .header-wrapper .menu-drawer .menu-drawer__submenu {
+  @apply static hidden translate-x-0 visible z-auto bg-cream;
+}
+.js .header-wrapper .menu-drawer details[open] > .menu-drawer__submenu {
+  @apply block;
+}
+.js .header-wrapper .menu-drawer__navigation .submenu-open {
+  @apply visible;
+}
+.header-wrapper .menu-drawer__submenu .menu-drawer__close-button {
+  @apply hidden;
+}
+.header-wrapper .menu-drawer__submenu .menu-drawer__menu-item {
+  @apply px-30 border-b border-black;
+}
+.header-wrapper .menu-drawer__cta {
+  @apply sticky bottom-0 p-20;
+}
+
+/* ===== Dawn footer (sections/footer.liquid) — Figma 3:1651 + bar 3:1714, mobile 3:9884 / 3:9973 ===== */
+/* Dawn loads section-footer.css inside the section (after this file), so every rule is scoped under .footer. */
+.footer {
+  @apply border-t-0 p-0;
+}
+.footer .footer__main.page-width {
+  @apply flex flex-col items-center gap-40 px-20 990:items-stretch 990:px-55;
+}
+.footer .footer__mobile-logo {
+  @apply w-full 990:hidden;
+}
+.footer .footer__mobile-logo img {
+  @apply block w-full h-auto;
+}
+.footer .footer__content-top {
+  @apply flex w-full flex-col gap-40 p-0 990:flex-row 990:items-start 990:gap-80;
+}
+
+/* Newsletter: 440 wide; 20 gap heading → field → button (10 field → button on mobile) */
+.footer .footer-block--newsletter {
+  @apply m-0 flex w-full flex-col items-start gap-20 990:w-440 990:shrink-0;
+}
+.footer .footer-block__newsletter {
+  @apply w-full;
+}
+.footer .footer__newsletter-heading {
+  @apply mb-20 text-white;
+}
+.footer .footer__newsletter.newsletter-form {
+  @apply m-0 flex w-full max-w-none flex-col items-start gap-10 990:gap-20;
+}
+.footer .newsletter-form__field-wrapper {
+  @apply w-full max-w-none;
+}
+.footer .footer__newsletter-input {
+  @apply block w-full h-44 px-20 rounded-48 border-2 border-white bg-white/20 font-body text-16 text-white placeholder:text-white outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange;
+}
+.footer .footer__newsletter-button {
+  @apply m-0;
+}
+
+/* Link columns: spread across the remaining width; Plus Jakarta Bold 20 headings, Inter Medium 16 links, 20 gap */
+.footer .footer__blocks-wrapper {
+  @apply flex w-full flex-col gap-20 990:flex-1 990:flex-row 990:justify-between 990:gap-40;
+}
+.footer .footer-block {
+  @apply m-0 w-full 990:w-auto;
+}
+.footer .footer__menu-heading {
+  @apply m-0 text-white;
+}
+.footer .footer-block__toggle {
+  @apply flex w-full items-center justify-between gap-10 p-0 border-0 bg-transparent text-left text-inherit uppercase cursor-pointer 990:cursor-default 990:pointer-events-none;
+  font: inherit;
+  letter-spacing: inherit;
+}
+.footer .footer-block__toggle svg {
+  @apply size-20 shrink-0 transition-transform duration-300 990:hidden;
+}
+.footer .footer-block__toggle[aria-expanded='true'] svg {
+  @apply rotate-180;
+}
+.footer .footer-block__details-content {
+  @apply m-0 mt-20 flex flex-col gap-20;
+}
+.footer .footer__menu-heading:has(.footer-block__toggle[aria-expanded='false']) + .footer-block__details-content {
+  @apply hidden;
+}
+.footer .footer-block__details-content li {
+  @apply m-0;
+}
+.footer .footer-block__details-content .list-menu__item--link {
+  @apply p-0 font-body font-medium text-16 leading-figma text-white no-underline hover:underline;
+}
+.footer .footer-block__details-content .list-menu__item--active {
+  @apply underline;
+}
+
+/* Gradient bottom bar: socials left, © + credit right (stacked and centered on mobile) */
+.footer .footer__bar {
+  @apply bg-gradient-brand;
+}
+.footer .footer__bar-inner {
+  @apply flex flex-col items-center gap-20 p-20 990:flex-row 990:justify-between 990:px-55 990:py-10;
+}
+.footer .footer__list-social.list-social {
+  @apply m-0 flex gap-10 p-0;
+}
+.footer .footer__list-social .list-social__link {
+  @apply flex size-28 items-center justify-center rounded-full bg-black p-0 text-white;
+}
+.footer .footer__list-social .svg-wrapper {
+  @apply size-16;
+}
+.footer .footer__list-social .svg-wrapper svg {
+  @apply size-16;
+}
+.footer .footer__credits {
+  @apply flex flex-col items-center gap-20 990:flex-row;
+}
+.footer .footer__credit {
+  @apply m-0 flex items-center gap-4 font-body font-medium text-16 leading-figma text-white no-underline;
+}
+.footer a.footer__credit {
+  @apply hover:underline;
+}
+.footer .footer__credit svg {
+  @apply size-24 shrink-0;
+}
+.footer .policies {
+  @apply m-0 flex flex-wrap justify-center gap-20 p-0;
+}
+.footer .policies li::before {
+  @apply hidden;
+}

@@ -1,0 +1,476 @@
+/* Reusable UI components only: buttons, inputs, cards, badges, tabs, accordions, pagination. */
+
+/* Pill button (Figma "Button 1–4"): Inter Medium 16, uppercase, 2px border, radius 80 */
+.ctm-button {
+  @apply inline-flex items-center justify-center gap-10 w-fit px-28 py-10 rounded-80 border-2 border-transparent font-body font-medium text-16 leading-figma uppercase whitespace-nowrap no-underline cursor-pointer transition-all duration-300 ease-in-out;
+}
+.ctm-button svg {
+  @apply size-20 shrink-0;
+}
+.ctm-button-full {
+  @apply w-full;
+}
+
+/* Gradient-border variants — the border is the brand gradient painted under a solid fill */
+.btn-outline-gradient {
+  @apply text-black hover:text-white;
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    var(--gradient-brand) border-box;
+}
+.btn-outline-gradient:hover {
+  background:
+    linear-gradient(#000000, #000000) padding-box,
+    var(--gradient-brand) border-box;
+}
+.btn-dark-gradient {
+  @apply text-white hover:text-black;
+  background:
+    linear-gradient(#000000, #000000) padding-box,
+    var(--gradient-brand) border-box;
+}
+.btn-dark-gradient:hover {
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    var(--gradient-brand) border-box;
+}
+
+/* Solid variant for gradient CTA bands */
+.btn-white {
+  @apply bg-white text-black hover:bg-black hover:text-white;
+}
+
+/* Page banner (sections/custom-page-banner.liquid) — Figma "IP Header" 3:6108 / mobile 3:10069 */
+.page-banner {
+  @apply px-20 990:px-55 relative overflow-hidden flex items-start justify-center text-center 990:items-center 990:justify-start 990:text-left;
+}
+.page-banner__media {
+  @apply absolute inset-0 pointer-events-none;
+}
+.page-banner__bg {
+  @apply absolute inset-0 w-full h-full object-cover;
+}
+/* Brand gradient (alpha-tapered toward the middle) over a black scrim */
+.page-banner__media::after {
+  @apply absolute inset-0;
+  content: '';
+  background:
+    linear-gradient(
+      100deg,
+      rgb(251 139 48) 2.28%,
+      rgb(249 91 29 / 0.4) 19.17%,
+      rgb(228 66 54 / 0.2) 39.73%,
+      rgb(214 47 79 / 0.2) 59.2%,
+      rgb(134 33 118 / 0.4) 79.39%,
+      rgb(63 27 125) 98.69%
+    ),
+    linear-gradient(
+      270deg,
+      rgb(0 0 0 / 0.6) 12.98%,
+      rgb(0 0 0 / 0.42) 40.87%,
+      rgb(0 0 0 / 0.42) 59.62%,
+      rgb(0 0 0 / 0.6) 86.06%
+    );
+}
+@variant 990 {
+  .page-banner__media::after {
+    background:
+      linear-gradient(
+        120.27deg,
+        rgb(251 139 48) 0.63%,
+        rgb(249 91 29 / 0.4) 17.83%,
+        rgb(228 66 54 / 0.2) 38.77%,
+        rgb(214 47 79 / 0.2) 58.58%,
+        rgb(134 33 118 / 0.4) 79.14%,
+        rgb(63 27 125) 98.79%
+      ),
+      linear-gradient(
+        270deg,
+        rgb(0 0 0 / 0.6) 12.98%,
+        rgb(0 0 0 / 0.42) 40.87%,
+        rgb(0 0 0 / 0.42) 59.62%,
+        rgb(0 0 0 / 0.6) 86.06%
+      );
+  }
+}
+/* Mobile: centered under the title, 349 x 226 slot flush with the bottom edge. Desktop: right/bottom-anchored 659-wide slot (43.6% of the 1512 canvas). */
+.page-banner__product {
+  @apply absolute bottom-0 left-1/2 -translate-x-1/2 w-[calc(100%-26px)] max-w-349 h-[56.5%] pointer-events-none 990:left-auto 990:right-0 990:translate-x-0 990:w-[43.6%] 990:max-w-659 990:h-full;
+}
+.page-banner__product-img {
+  @apply w-full h-full object-contain object-bottom 990:object-right-bottom;
+  filter: drop-shadow(0 4px 20px rgb(0 0 0 / 0.4));
+}
+.page-banner__copy {
+  @apply relative w-full 990:max-w-1062;
+}
+
+/* FAQ (sections/custom-faq.liquid) — Figma 3:6110 / mobile 3:10092 */
+.faq {
+  @apply block;
+}
+.faq__header {
+  @apply flex flex-col items-center gap-10 text-center;
+}
+.faq__subheading {
+  @apply mt-10 990:mt-18;
+}
+/* Search — 410 x 40 pill, 2px black border, 20% white fill */
+.faq__search {
+  @apply relative mx-auto mt-40 w-full 768:max-w-410;
+}
+.faq__search-icon {
+  @apply absolute left-20 top-1/2 -translate-y-1/2 size-20 flex text-black pointer-events-none;
+}
+.faq__search-input {
+  @apply block w-full h-40 pl-50 pr-20 rounded-48 border-2 border-black bg-white/20 font-body text-16 text-black placeholder:text-black outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange;
+  -webkit-appearance: none;
+}
+.faq__search-input::-webkit-search-cancel-button {
+  @apply cursor-pointer;
+}
+/* Tabs — pills on desktop, gradient dropdown on mobile */
+.faq__tabs {
+  @apply relative mt-28;
+}
+.faq__dropdown-toggle {
+  @apply flex w-full h-40 items-center justify-between px-28 rounded-100 border-0 bg-gradient-brand text-white font-body font-medium text-12 uppercase cursor-pointer 990:hidden;
+}
+.faq__dropdown-toggle svg {
+  @apply size-20 shrink-0 transition-transform duration-300;
+}
+.faq__tabs.is-open .faq__dropdown-toggle svg {
+  @apply rotate-180;
+}
+.faq__tablist {
+  @apply hidden absolute left-0 right-0 top-full z-10 mt-4 flex-col items-center gap-10 py-12 rounded-21 bg-white shadow-md 990:static 990:z-auto 990:mt-0 990:flex 990:flex-row 990:flex-wrap 990:justify-center 990:gap-10 990:p-0 990:rounded-none 990:bg-transparent 990:shadow-none 1440:flex-nowrap 1440:justify-between 1440:gap-5;
+}
+.faq__tabs.is-open .faq__tablist {
+  @apply flex;
+}
+.faq__tab {
+  @apply px-20 py-5 border-0 bg-transparent font-body font-medium text-12 leading-15 uppercase text-black whitespace-nowrap cursor-pointer 990:py-10 990:rounded-100 990:border-2 990:border-transparent;
+}
+.faq__tab[aria-selected='true'] {
+  @apply max-990:hidden;
+}
+@variant 990 {
+  .faq__tab {
+    background:
+      linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
+      var(--gradient-brand) border-box;
+  }
+  .faq__tab[aria-selected='true'] {
+    @apply text-white;
+    background: var(--gradient-brand) border-box;
+  }
+}
+.faq__tab:focus-visible,
+.faq__dropdown-toggle:focus-visible {
+  @apply outline-2 outline-offset-2 outline-orange;
+}
+/* Accordion — 1000px column; number 40 | question | 28px icon */
+.faq__panels {
+  @apply mx-auto mt-28 max-w-1000;
+}
+.faq__panel {
+  @apply flex flex-col gap-20;
+}
+.faq__panel[hidden],
+.faq__item[hidden] {
+  @apply hidden;
+}
+.faq__item {
+  @apply pb-20 border-b border-black/40;
+}
+.faq__summary {
+  @apply grid grid-cols-[40px_1fr_28px] items-center gap-10 list-none cursor-pointer 990:gap-20;
+}
+.faq__summary::-webkit-details-marker {
+  display: none;
+}
+.faq__summary:focus-visible {
+  @apply outline-2 outline-offset-4 outline-orange;
+}
+.faq__number {
+  @apply font-heading font-bold text-16 leading-20 uppercase text-black 990:text-20 990:leading-25;
+}
+.faq__item[open] .faq__number {
+  @apply text-orange;
+}
+.faq__icon {
+  @apply flex size-28 items-center justify-center rounded-full border-2 border-black text-black transition-colors duration-300;
+}
+.faq__icon svg {
+  @apply size-28 shrink-0;
+}
+.faq__item[open] .faq__icon {
+  @apply border-0 bg-gradient-brand text-white;
+}
+.faq__item[open] .faq-toggle-v {
+  @apply hidden;
+}
+.faq__answer {
+  @apply pt-20 pl-50 pr-38 990:pl-60 990:pr-48;
+}
+.faq__answer a {
+  @apply font-bold no-underline hover:underline;
+}
+.faq__empty {
+  @apply mx-auto mt-28 max-w-1000 text-center;
+}
+
+/* CTA banner (sections/custom-cta-banner.liquid) — Figma 3:6341 (FAQ), 3:1115 (home), 3:7261 (retailers), mobile 3:10332 */
+.cta-banner {
+  @apply relative overflow-hidden px-20 990:px-55;
+}
+.cta-banner.gradient {
+  background-attachment: scroll;
+}
+.cta-banner__texture {
+  @apply absolute inset-0 w-full h-full object-cover mix-blend-multiply pointer-events-none;
+}
+.cta-banner__decor {
+  @apply absolute right-0 bottom-0 h-3/5 max-w-2/5 pointer-events-none 990:h-full 990:max-w-1/4;
+}
+.cta-banner__decor img {
+  @apply h-full w-auto max-w-full object-contain object-right-bottom;
+}
+.cta-banner__inner {
+  @apply relative flex flex-col items-center gap-20 text-center;
+}
+.cta-banner__row {
+  @apply flex flex-col items-center gap-40;
+}
+.cta-banner--inline .cta-banner__row {
+  @apply 990:flex-row;
+}
+.cta-banner__text {
+  @apply flex flex-col items-center gap-10;
+}
+.cta-banner__buttons {
+  @apply flex flex-wrap justify-center gap-20;
+}
+
+/* Translucent dark pill with gradient border (Figma hero "Join the launch": 48% black fill) */
+.btn-glass-gradient {
+  @apply text-white;
+  background:
+    linear-gradient(rgb(0 0 0 / 0.48), rgb(0 0 0 / 0.48)) padding-box,
+    var(--gradient-brand) border-box;
+}
+.btn-glass-gradient:hover {
+  background:
+    linear-gradient(#000000, #000000) padding-box,
+    var(--gradient-brand) border-box;
+}
+
+/* Brand-gradient photo overlay (shared look of the hero and page banner): gradient tapered toward the middle over a dark scrim */
+.overlay-brand-photo::after {
+  @apply absolute inset-0 pointer-events-none;
+  content: '';
+  opacity: var(--overlay-opacity, 1);
+  background:
+    linear-gradient(
+      100deg,
+      rgb(251 139 48) 2.28%,
+      rgb(249 91 29 / 0.4) 19.17%,
+      rgb(228 66 54 / 0.2) 39.73%,
+      rgb(214 47 79 / 0.2) 59.2%,
+      rgb(134 33 118 / 0.4) 79.39%,
+      rgb(63 27 125) 98.69%
+    ),
+    linear-gradient(
+      270deg,
+      rgb(0 0 0 / 0.6) 12.98%,
+      rgb(0 0 0 / 0.42) 40.87%,
+      rgb(0 0 0 / 0.42) 59.62%,
+      rgb(0 0 0 / 0.6) 86.06%
+    );
+}
+
+/* Slider pagination bars (Swiper): 40px bars, 8px apart; active = brand gradient with a 2px white border */
+.ctm-pagination.swiper-pagination {
+  @apply flex items-center gap-8 w-auto;
+}
+.ctm-pagination .swiper-pagination-bullet {
+  @apply m-0! w-40 h-6 990:h-4 rounded-30 bg-white opacity-100 box-border;
+}
+.ctm-pagination .swiper-pagination-bullet-active {
+  @apply border-2 border-white bg-gradient-brand;
+}
+
+/* ===== Hero slider (sections/custom-hero-slider.liquid) — Figma 3:454 / mobile 3:8808 ===== */
+.hero-slide__media {
+  @apply absolute inset-0 overflow-hidden;
+}
+.hero-slide__bg {
+  @apply absolute inset-0 w-full h-full object-cover;
+}
+/* Product boxes: mobile 323 x 209 at x 60 / y 197 on the 376 frame; desktop 760 x 492 anchored bottom-right */
+.hero-slide__product {
+  @apply absolute pointer-events-none top-197 990:top-auto 990:right-0 990:-bottom-22;
+  left: 16%;
+  width: 86%;
+  filter: drop-shadow(0 4px 20px rgb(0 0 0 / 0.4));
+}
+@variant 990 {
+  .hero-slide__product {
+    left: auto;
+    width: min(760px, 50.3%);
+  }
+}
+.hero-slide__product img {
+  @apply w-full h-auto object-contain;
+}
+/* Mobile text panel: black with the orange/purple glow from the Figma "Assets" layer */
+.hero-slide__content {
+  @apply absolute left-0 right-0 bottom-0 flex flex-col gap-20 p-20 pb-46 bg-black overflow-hidden 990:relative 990:h-full 990:justify-center 990:gap-40 990:p-55 990:bg-transparent 990:max-w-830;
+}
+.hero-slide__content::before {
+  @apply absolute inset-0 pointer-events-none 990:hidden;
+  content: '';
+  background:
+    radial-gradient(60% 70% at 100% 100%, rgb(249 91 29 / 0.55) 0%, transparent 70%),
+    radial-gradient(70% 60% at 0% 0%, rgb(134 33 118 / 0.45) 0%, transparent 70%);
+}
+.hero-slide__content > * {
+  @apply relative;
+}
+.hero-slider .ctm-pagination.swiper-pagination {
+  @apply left-20 bottom-20 990:left-28 990:bottom-29;
+}
+
+/* ===== Benefit marquee (sections/custom-benefit-marquee.liquid) — Figma 3:611 / mobile 3:9019 ===== */
+.benefit-marquee__swiper {
+  --swiper-wrapper-transition-timing-function: linear;
+}
+.benefit-marquee__list {
+  @apply m-0 p-0 list-none;
+}
+.benefit-marquee .swiper-slide.benefit-marquee__item {
+  @apply flex items-center gap-28 w-auto;
+}
+/* 3 x 20 brand-gradient bar before each item */
+.benefit-marquee__bar {
+  @apply block w-3 h-20 shrink-0 rounded-20 bg-gradient-brand;
+}
+
+/* Instagram feed (sections/custom-instagram-feed.liquid) — Figma 3:1141 / mobile 3:9459 */
+.instagram-feed {
+  @apply flex flex-col gap-20 px-20 990:px-80;
+}
+.instagram-feed__header {
+  @apply flex flex-col items-center gap-20 text-center 990:flex-row 990:justify-between 990:text-left;
+}
+.instagram-feed__title {
+  @apply flex flex-col items-center gap-10 990:items-start;
+}
+.instagram-feed__handle {
+  @apply no-underline hover:underline;
+}
+.instagram-feed__grid {
+  @apply grid grid-cols-2 gap-16 m-0 p-0 list-none 990:grid-cols-4 990:gap-20;
+}
+.instagram-feed__tile {
+  @apply min-w-0;
+}
+.instagram-feed__link {
+  @apply block aspect-square overflow-hidden rounded-20 bg-black/5;
+}
+.instagram-feed__img {
+  @apply block w-full h-full object-cover transition-transform duration-300 ease-in-out;
+}
+a.instagram-feed__link:hover .instagram-feed__img {
+  @apply scale-105;
+}
+.instagram-feed__placeholder {
+  @apply fill-black/20;
+}
+
+/* Pagination bars on light backgrounds (Figma 3:9137): inactive = black 20%, active = brand gradient */
+.ctm-pagination-dark .swiper-pagination-bullet {
+  @apply bg-black/20 border-0;
+}
+.ctm-pagination-dark .swiper-pagination-bullet-active {
+  @apply bg-transparent bg-gradient-brand;
+}
+
+/* ===== Product card, function style (snippets/card-product.liquid, card_style: 'function') — Figma 3:664 / mobile 3:9052 ===== */
+.card-function {
+  @apply relative flex flex-col items-center gap-20 h-full text-center;
+}
+.card-function__badge {
+  @apply absolute z-1 left-0 top-0 990:left-20 990:top-15 px-14 py-4 rounded-22 bg-rocket-red font-body font-black text-12 leading-figma uppercase text-white;
+}
+.card-function__media {
+  @apply relative flex items-center justify-center w-200 h-280 990:w-260 990:h-360;
+}
+/* Mobile-only glow in the product's accent color (Figma "Ellipse 11–13") */
+.card-function__media::before {
+  @apply absolute pointer-events-none 990:hidden w-180 h-154 top-85 left-15;
+  content: '';
+  filter: blur(40px);
+  background: radial-gradient(closest-side, var(--card-accent), transparent);
+  opacity: 0.6;
+}
+.card-function__image {
+  @apply relative w-full h-full object-contain;
+}
+.card-function__copy {
+  @apply flex flex-col items-center gap-20 w-full;
+}
+.card-function__names {
+  @apply flex flex-col gap-4 w-full;
+}
+.card-function__title {
+  @apply max-990:tracking-heading-wide;
+}
+.card-function__link {
+  @apply text-current no-underline hover:text-orange;
+}
+.card-function__actions {
+  @apply flex items-start justify-center gap-10;
+}
+/* Quantity stepper: white pill, 2px black border, 20px icons */
+.card-function .card-function__qty {
+  @apply flex items-center gap-20 px-20 py-10 rounded-50 border-2 border-black bg-white;
+}
+.card-function .card-function__qty-button {
+  @apply flex items-center justify-center size-20 min-w-0 p-0 m-0 border-0 bg-transparent text-black cursor-pointer;
+}
+.card-function .card-function__qty-button > * {
+  @apply pointer-events-none;
+}
+.card-function .card-function__qty-button.disabled {
+  @apply opacity-30;
+}
+.card-function .card-function__qty-button svg {
+  @apply size-20;
+}
+.card-function .card-function__qty-input {
+  @apply w-20 p-0 m-0 border-0 bg-transparent text-center font-heading font-bold text-16 leading-figma text-black;
+  appearance: textfield;
+}
+.card-function .card-function__qty-input::-webkit-outer-spin-button,
+.card-function .card-function__qty-input::-webkit-inner-spin-button {
+  @apply m-0;
+  appearance: none;
+}
+
+/* ===== Featured products (sections/custom-featured-products.liquid) — Figma 3:652 / mobile 3:9020 ===== */
+.featured-products__list {
+  @apply m-0 p-0 list-none;
+}
+/* Desktop: 3 x 410 columns spread across the 1312 content width (41px gaps) */
+@variant 990 {
+  .featured-products .featured-products__list {
+    @apply grid grid-cols-3 gap-x-41 gap-y-55 transform-none;
+  }
+  .featured-products .featured-products__item {
+    @apply w-auto;
+  }
+}
+.featured-products .featured-products__pagination {
+  @apply relative! inset-auto! justify-center mt-40 990:hidden;
+}

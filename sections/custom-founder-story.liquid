@@ -1,0 +1,214 @@
+{% comment %}
+  Founder Story — Figma "Section 2" 3:6695 (Our Story).
+  Three columns on desktop: eyebrow/heading/quote/attribution, image, statement with gradient underline.
+  990–1199px: text + image side by side, statement below. Below 990px everything stacks.
+{% endcomment %}
+{%- liquid
+  assign heading_tag = section.settings.heading_tag
+  assign image = section.settings.image
+
+  assign has_text = false
+  if section.settings.eyebrow != blank or section.settings.heading != blank
+    assign has_text = true
+  endif
+  if section.settings.quote != blank or section.settings.attribution != blank
+    assign has_text = true
+  endif
+-%}
+
+{%- style -%}
+  /* .founder-story */
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="founder-story section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
+  <div class="founder-story__inner max-w-1512 mx-auto px-20 990:px-55 1366:px-80 grid grid-cols-1 items-center gap-32 990:grid-cols-2 990:gap-40 1199:grid-cols-[500fr_505fr_235fr] 1366:gap-56">
+    {%- if has_text -%}
+      <div class="founder-story__text min-w-0 flex flex-col gap-10">
+        {%- if section.settings.eyebrow != blank -%}
+          <div class="content content-eyebrow content-eyebrow-large content-eyebrow-light">
+            <p>{{ section.settings.eyebrow | escape }}</p>
+          </div>
+        {%- endif -%}
+        <div class="founder-story__titles flex flex-col gap-28">
+          {%- if section.settings.heading != blank -%}
+            <div class="ctm-title title-white">
+              <{{ heading_tag }} class="founder-story__heading h2">
+                {{- section.settings.heading | escape | newline_to_br -}}
+              </{{ heading_tag }}>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.quote != blank -%}
+            <div class="founder-story__quote content content-large content-white">
+              <p>{{ section.settings.quote | escape }}</p>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.attribution != blank -%}
+            <div class="founder-story__attribution content content-large content-white">
+              <p>{{ section.settings.attribution | escape }}</p>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="founder-story__media relative min-w-0 aspect-[505/333] rounded-20 overflow-hidden bg-white/10">
+      {%- if image != blank -%}
+        {{
+          image
+          | image_url: width: 1100
+          | image_tag:
+            class: 'founder-story__img absolute inset-0 img-fluid-cover',
+            widths: '375, 550, 750, 1100',
+            sizes: '(min-width: 1512px) 505px, (min-width: 1199px) 34vw, (min-width: 990px) 50vw, 100vw',
+            loading: 'lazy',
+            alt: image.alt
+        }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'founder-story__placeholder absolute inset-0 w-full h-full' }}
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.statement != blank -%}
+      <div class="founder-story__statement min-w-0 flex flex-col gap-20 990:col-span-2 990:max-w-500 1199:col-span-1 1199:max-w-none">
+        <div class="content content-large content-white">
+          <p>{{ section.settings.statement | escape | newline_to_br }}</p>
+        </div>
+        {%- if section.settings.show_statement_line -%}
+          <span class="founder-story__line block w-full h-2 bg-gradient-brand" aria-hidden="true"></span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Founder Story",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Text column" },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "How It Started"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Press Enter to force a line break.",
+      "default": "One small idea. A much bigger mission."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h2",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "quote",
+      "label": "Quote",
+      "default": "“I was on a mission to eat healthier.”"
+    },
+    {
+      "type": "text",
+      "id": "attribution",
+      "label": "Attribution",
+      "default": "WENDY MAKKENA, FOUNDER"
+    },
+    { "type": "header", "content": "Image" },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Displayed 505 × 333px on desktop. Set a focal point to control the crop."
+    },
+    { "type": "header", "content": "Statement" },
+    {
+      "type": "textarea",
+      "id": "statement",
+      "label": "Statement",
+      "info": "Leave blank to hide the right column.",
+      "default": "A simple idea sparked a bigger purpose - to make snacks that fuel brighter days."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_statement_line",
+      "label": "Show gradient underline",
+      "default": true
+    },
+    { "type": "header", "content": "Background" },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-3"
+    },
+    { "type": "header", "content": "Desktop Padding" },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    { "type": "header", "content": "Mobile Padding" },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Extra CSS Class"
+    }
+  ],
+  "presets": [{ "name": "Founder Story" }]
+}
+{% endschema %}

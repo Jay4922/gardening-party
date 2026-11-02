@@ -1,0 +1,339 @@
+{% comment %}
+  FAQ — Figma "Section 1" 3:6110 (desktop), 3:10092 (mobile).
+  Category blocks become tabs; each Question block belongs to the nearest Category block above it.
+  Questions placed before any Category form a "General" group. Behaviour: <custom-faq> in assets/custom.js.
+{% endcomment %}
+{%- liquid
+  assign heading_tag = section.settings.heading_tag
+  assign question_count = section.blocks | where: 'type', 'question' | size
+-%}
+
+{%- style -%}
+  /* .faq */
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{%- endstyle -%}
+
+<custom-faq class="faq section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
+  <div class="page-width">
+    {%- if section.settings.eyebrow != blank
+      or section.settings.heading != blank
+      or section.settings.subheading != blank
+    -%}
+      <div class="faq__header">
+        {%- if section.settings.eyebrow != blank -%}
+          <div class="content content-eyebrow content-eyebrow-large">
+            <p>{{ section.settings.eyebrow | escape }}</p>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <div class="ctm-title title-black">
+            <{{ heading_tag }} class="h2">{{ section.settings.heading | escape }}</{{ heading_tag }}>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <div class="faq__subheading content content-large content-black">
+            <p>{{ section.settings.subheading | escape }}</p>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.show_search and question_count > 0 -%}
+      <div class="faq__search">
+        <label class="visually-hidden" for="FaqSearch-{{ section.id }}">
+          {{- section.settings.search_placeholder | default: 'Search' | escape -}}
+        </label>
+        <span class="faq__search-icon">{{ 'icon-faq-search.svg' | inline_asset_content }}</span>
+        <input
+          class="faq__search-input"
+          id="FaqSearch-{{ section.id }}"
+          type="search"
+          placeholder="{{ section.settings.search_placeholder | escape }}"
+          autocomplete="off"
+          data-faq-search
+        >
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="faq__tabs" data-faq-tabs>
+        <button
+          type="button"
+          class="faq__dropdown-toggle"
+          aria-expanded="false"
+          aria-controls="FaqTablist-{{ section.id }}"
+          data-faq-toggle
+        >
+          <span data-faq-toggle-label>&#8203;</span>
+          {{ 'icon-faq-caret.svg' | inline_asset_content }}
+        </button>
+
+        <div
+          class="faq__tablist"
+          id="FaqTablist-{{ section.id }}"
+          role="tablist"
+          aria-label="FAQ categories"
+        >
+          {%- assign tab_index = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign starts_group = false
+              if block.type == 'category'
+                assign starts_group = true
+                assign tab_label = block.settings.title | default: 'Category'
+              elsif forloop.first
+                assign starts_group = true
+                assign tab_label = 'General'
+              endif
+            -%}
+            {%- if starts_group -%}
+              <button
+                type="button"
+                class="faq__tab"
+                id="FaqTab-{{ section.id }}-{{ tab_index }}"
+                role="tab"
+                aria-controls="FaqPanel-{{ section.id }}-{{ tab_index }}"
+                {% if tab_index == 0 %}
+                  aria-selected="true" tabindex="0"
+                {% else %}
+                  aria-selected="false" tabindex="-1"
+                {% endif %}
+                data-faq-tab="{{ tab_index }}"
+                {% if block.type == 'category' %}
+                  {{ block.shopify_attributes }}
+                {% endif %}
+              >
+                {{- tab_label | escape -}}
+              </button>
+              {%- assign tab_index = tab_index | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="faq__panels">
+        {%- assign last_group = tab_index | minus: 1 -%}
+        {%- for group in (0..last_group) -%}
+          <div
+            class="faq__panel"
+            id="FaqPanel-{{ section.id }}-{{ group }}"
+            role="tabpanel"
+            aria-labelledby="FaqTab-{{ section.id }}-{{ group }}"
+            data-faq-panel="{{ group }}"
+            {% if group > 0 %}
+              hidden
+            {% endif %}
+          >
+            {%- assign current_group = -1 -%}
+            {%- assign question_index = 0 -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'category' or forloop.first -%}
+                {%- assign current_group = current_group | plus: 1 -%}
+              {%- endif -%}
+              {%- if current_group > group -%}
+                {%- break -%}
+              {%- endif -%}
+              {%- if current_group == group and block.type == 'question' -%}
+                {%- assign question_index = question_index | plus: 1 -%}
+                <details
+                  class="faq__item"
+                  data-faq-item
+                  {% if section.settings.open_first and question_index == 1 %}
+                    open
+                  {% endif %}
+                  {{ block.shopify_attributes }}
+                >
+                  <summary class="faq__summary ctm-title title-black">
+                    <span class="faq__number" aria-hidden="true">
+                      {%- if question_index < 10 -%}0{%- endif -%}
+                      {{- question_index -}}
+                    </span>
+                    <h3 class="faq__question h-faq">{{ block.settings.question | escape }}</h3>
+                    <span class="faq__icon">{{ 'icon-faq-toggle.svg' | inline_asset_content }}</span>
+                  </summary>
+                  {%- if block.settings.answer != blank -%}
+                    <div class="faq__answer content content-black">
+                      {{ block.settings.answer }}
+                    </div>
+                  {%- endif -%}
+                </details>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if section.settings.show_search -%}
+        <div class="faq__empty content content-black" role="status" hidden data-faq-empty>
+          <p>{{ section.settings.no_results_text | escape }}</p>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</custom-faq>
+
+{%- if question_count > 0 -%}
+  {%- liquid
+    assign faq_entities = ''
+    assign separator = ''
+    for block in section.blocks
+      if block.type == 'question' and block.settings.question != blank
+        if block.settings.answer != blank
+          assign answer_text = block.settings.answer | strip_html | strip
+          capture entity
+            echo '{"@type":"Question","name":'
+            echo block.settings.question | json
+            echo ',"acceptedAnswer":{"@type":"Answer","text":'
+            echo answer_text | json
+            echo '}}'
+          endcapture
+          assign faq_entities = faq_entities | append: separator | append: entity
+          assign separator = ','
+        endif
+      endif
+    endfor
+  -%}
+  {%- if faq_entities != blank -%}
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{{ faq_entities }}]}
+    </script>
+  {%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 50,
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "FAQ" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "We’ve got answers." },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h2",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" }
+      ]
+    },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Find what you need fast." },
+    { "type": "header", "content": "Search" },
+    { "type": "checkbox", "id": "show_search", "label": "Show search", "default": true },
+    { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Search" },
+    {
+      "type": "text",
+      "id": "no_results_text",
+      "label": "No results message",
+      "default": "No questions match your search."
+    },
+    { "type": "header", "content": "Accordion" },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Open first question in each category",
+      "default": true
+    },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" },
+    { "type": "header", "content": "Desktop Padding" },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    { "type": "header", "content": "Mobile Padding" },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    { "type": "text", "id": "custom_class", "label": "Extra CSS Class" }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Tab title", "default": "Products and functions" },
+        {
+          "type": "paragraph",
+          "content": "Add Question blocks directly below this category. Every question up to the next Category block appears under this tab."
+        }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Where can I find your products?" },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>We want to make your experience with Ruby Rockets as convenient as we can, so you can order our Frozen Pops and our Dairy Free Yogurt Alternatives on our site or you can find a carrier near you with our <a href=\"/pages/store-locator\" title=\"Store locator\">store locator.</a></p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        { "type": "category", "settings": { "title": "Products and functions" } },
+        { "type": "question" },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Are you gluten free?",
+            "answer": "<p>Yes, we don’t use any wheat products in our Frozen Pops or in our Dairy Free Yogurt Alternatives.</p>"
+          }
+        },
+        { "type": "category", "settings": { "title": "Ingredients and nutrition" } },
+        { "type": "question", "settings": { "question": "Are you dairy free?", "answer": "<p>Yes.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

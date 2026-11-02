@@ -1,0 +1,187 @@
+/* Global typography, container, root vars, HTML elements, Dawn typography overrides. */
+
+:root {
+  --gradient-brand: linear-gradient(
+    90deg,
+    #fb8b30 0%,
+    #f95b1d 17.52%,
+    #e44236 38.85%,
+    #d62f4f 59.04%,
+    #862176 79.99%,
+    #3f1b7d 100%
+  );
+  --gradient-cream: linear-gradient(180deg, #fff8f0 0%, #ffffff 100%);
+}
+
+::before,
+::after {
+  @apply box-border;
+}
+html,
+body {
+  @apply !scroll-smooth;
+}
+body {
+  @apply font-body text-16 leading-figma tracking-normal;
+  -webkit-font-smoothing: auto;
+}
+a {
+  @apply transition-all duration-300 ease-in-out cursor-pointer;
+}
+p {
+  @apply font-body text-16 leading-figma font-normal;
+}
+img {
+  @apply overflow-hidden select-none;
+}
+.img-fluid-cover {
+  @apply w-full h-full object-cover;
+}
+.img-fluid-none {
+  @apply w-full h-full object-none;
+}
+
+/* Headings — Plus Jakarta Sans Bold, uppercase, 4% tracking. Mobile sizes from the 376 Figma frames. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h0,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+.h-banner,
+.h-faq,
+.h-eyebrow {
+  @apply m-0 outline-0! text-current font-heading font-bold uppercase tracking-heading break-words;
+}
+.h0,
+h1,
+.h1 {
+  @apply text-32 leading-40 768:text-48 768:leading-58 1199:text-64 1199:leading-80 1440:text-80 1440:leading-100;
+}
+h2,
+.h2 {
+  @apply text-32 leading-40 768:text-36 768:leading-45 1199:text-42 1199:leading-52 1440:text-48 1440:leading-60;
+}
+h3,
+.h3 {
+  @apply text-24 leading-30 1199:text-28 1199:leading-35 1440:text-32 1440:leading-40;
+}
+h4,
+.h4 {
+  @apply text-24 leading-30 tracking-heading-wide;
+}
+h5,
+.h5 {
+  @apply text-20 leading-25 tracking-normal;
+}
+h6,
+.h6 {
+  @apply text-16 leading-20 tracking-normal;
+}
+/* Page banner title — Figma "For Header Desktop" 80 on desktop, H2/H2-1 48 on the 376 mobile frame */
+.h-banner {
+  @apply text-48 leading-60 1199:text-64 1199:leading-80 1440:text-80 1440:leading-100;
+}
+/* FAQ question — Figma H5/H5-1 16 on mobile, H4.2/H4.2-1 20 on desktop; no tracking */
+.h-faq {
+  @apply text-16 leading-20 tracking-normal 990:text-20 990:leading-25;
+}
+/* Eyebrow in heading font — Figma H4.1/H4.1-1 24 / 6% tracking; H4.2-1 20 on mobile */
+.h-eyebrow {
+  @apply text-20 leading-25 tracking-normal 990:text-24 990:leading-30 990:tracking-heading-wide;
+}
+.caption {
+  @apply font-body text-12 leading-figma font-medium;
+}
+
+/* Text wrappers: apply .content / .ctm-title on the wrapping div, never style p/h* in a section. */
+.ctm-title {
+  @apply font-heading;
+}
+.title-black h1,
+.title-black h2,
+.title-black h3,
+.title-black h4,
+.title-black h5,
+.title-black h6 {
+  @apply text-black;
+}
+.title-white h1,
+.title-white h2,
+.title-white h3,
+.title-white h4,
+.title-white h5,
+.title-white h6 {
+  @apply text-white;
+}
+.title-orange h1,
+.title-orange h2,
+.title-orange h3,
+.title-orange h4,
+.title-orange h5,
+.title-orange h6,
+.title-orange p,
+.title-orange a {
+  @apply text-orange;
+}
+.content p strong {
+  @apply font-bold;
+}
+.content a {
+  @apply text-orange underline hover:text-black;
+}
+.content ol,
+.content ul {
+  @apply list-disc pl-20 space-y-10;
+}
+.content p {
+  @apply mb-16 last:mb-0;
+}
+.content.content-white p {
+  @apply text-white;
+}
+.content.content-black p {
+  @apply text-black;
+}
+.content.content-small p {
+  @apply text-14 leading-figma;
+}
+.content.content-medium p {
+  @apply text-16 990:text-20 font-medium;
+}
+.content.content-large p {
+  @apply text-20 990:text-24 font-medium;
+}
+/* Single-line label (Figma Inter Medium 16, e.g. marquee items) */
+.content.content-label p {
+  @apply m-0 text-16 font-medium whitespace-nowrap;
+}
+/* Hero subtitle (Figma Inter Medium 32 desktop / 16 mobile) */
+.content.content-xlarge p {
+  @apply text-16 768:text-20 1199:text-28 1440:text-32 font-medium;
+}
+.content.content-eyebrow p {
+  @apply text-16 990:text-20 font-medium uppercase text-orange mb-0;
+}
+.content.content-eyebrow.content-eyebrow-large p {
+  @apply text-20 990:text-24;
+}
+/* Light-orange eyebrow on dark sections (Figma "Chocolate Brownie Batter / Light Orange") */
+.content.content-eyebrow.content-eyebrow-light p {
+  @apply text-light-orange;
+}
+
+/* Container — 1512px canvas, 55px gutter on desktop (header/footer), 20px on mobile */
+.page-width {
+  @apply px-20 990:px-55;
+}
+.custom-container {
+  @apply max-w-1512 mx-auto px-20 990:px-55;
+}

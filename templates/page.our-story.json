@@ -1,0 +1,122 @@
+{
+  "sections": {
+    "page_banner": {
+      "type": "custom-page-banner",
+      "settings": {}
+    },
+    "image_with_text_story": {
+      "type": "custom-image-with-text",
+      "settings": {
+        "image_position": "left",
+        "eyebrow": "Our Story",
+        "heading": "We Are on a Mission.",
+        "heading_tag": "h2",
+        "body": "<p>We came together to make delicious, healthy snacks we love to eat. We are passionate about organic, non-GMO, real food, made with ingredients you can pronounce. It’s that simple. No chemicals, sweeteners, or artificial anything.</p>",
+        "button_label": "Why We Do It",
+        "button_link": "",
+        "color_scheme": "scheme-7",
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60,
+        "custom_class": ""
+      }
+    },
+    "image_with_text_mission": {
+      "type": "custom-image-with-text",
+      "settings": {
+        "image_position": "left",
+        "eyebrow": "Our Mission",
+        "heading": "Why We Do\nWhat We Do",
+        "heading_tag": "h2",
+        "body": "<p>We believe in real food that tastes as good as it is good for you. We believe in products with ingredients you can pronounce. We believe that the best food is simple with no chemicals or artificial anything. We believe that it is possible for fruits &amp; veggies to be delicious.</p>",
+        "button_label": "Collaborate",
+        "button_link": "",
+        "color_scheme": "scheme-7",
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60,
+        "custom_class": ""
+      }
+    },
+    "founder_story": {
+      "type": "custom-founder-story",
+      "settings": {
+        "eyebrow": "How It Started",
+        "heading": "One small idea. A much bigger mission.",
+        "heading_tag": "h2",
+        "quote": "“I was on a mission to eat healthier.”",
+        "attribution": "WENDY MAKKENA, FOUNDER",
+        "statement": "A simple idea sparked a bigger purpose - to make snacks that fuel brighter days.",
+        "show_statement_line": true,
+        "color_scheme": "scheme-3",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60,
+        "custom_class": ""
+      }
+    },
+    "team": {
+      "type": "custom-team",
+      "blocks": {
+        "member_1": {
+          "type": "member",
+          "settings": {
+            "name": "Name Goes Here",
+            "position": "Position Goes Here",
+            "bio": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.",
+            "button_label": "Learn More",
+            "button_link": ""
+          }
+        },
+        "member_2": {
+          "type": "member",
+          "settings": {
+            "name": "Name Goes Here",
+            "position": "Position Goes Here",
+            "bio": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.",
+            "button_label": "Learn More",
+            "button_link": ""
+          }
+        },
+        "member_3": {
+          "type": "member",
+          "settings": {
+            "name": "Name Goes Here",
+            "position": "Position Goes Here",
+            "bio": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.",
+            "button_label": "Learn More",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "member_1",
+        "member_2",
+        "member_3"
+      ],
+      "settings": {
+        "heading": "Our Team",
+        "heading_tag": "h2",
+        "columns_desktop": "3",
+        "columns_mobile": "1",
+        "bio_lines": 3,
+        "color_scheme": "scheme-3",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60,
+        "custom_class": ""
+      }
+    }
+  },
+  "order": [
+    "page_banner",
+    "image_with_text_story",
+    "founder_story",
+    "image_with_text_mission",
+    "team"
+  ]
+}
