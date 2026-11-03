@@ -1686,6 +1686,7 @@ Dawn `main-page` renders `page.title` + `page.content` (rte) — near match; nee
 - Built 2026-11-03, Option C (page title + `page.content`, optional `group` blocks). Template `templates/page.legal.json` (assign it to the 4 legal pages in admin).
 - CSS: `.legal*` in `css/components.css`; new token `--color-ink: #2d2926` (Figma "Black C") in `css/application.css`. Rich text H2/H3/H4 in page content get the 24 uppercase group-heading style; 55 between groups, 20 heading→text and between paragraphs.
 - **Interpolated (no mobile frame):** title 32 → 48 (768) → 64 (1199); group heading 20 → 24 (990); gaps 40 → 55 (990); padding 60/60 mobile, 20px gutter.
+- Per-policy templates with Figma copy as `group` blocks (blank heading = intro paragraph): `page.privacy-policy.json` (intro + 3), `page.terms-conditions.json` (intro + 4), `page.accessibility-statement.json` (intro + Disclaimer + Contact Us, final copy), `page.cookie-preference-settings.json` (2). Assign each to its page and leave the page body empty (body would render above the blocks). `page.legal.json` stays as the blank shared variant.
 - Store pages not created yet (Shopify connector needed re-auth). Page bodies prepared from Figma copy (Accessibility final, others lorem ipsum).
 - Verified: Theme Check clean, 0 Liquid errors on `/pages/contact?view=legal`, all settings referenced.
 - **Visual check 2026-11-03** (1512 / 860 / 376, sample blocks): matches 23:13084/23:12915 — 1000 column at x=256, 64 title, 24 headings, 55/20 rhythm, cream gradient. No overflow.

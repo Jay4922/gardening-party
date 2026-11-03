@@ -1,0 +1,48 @@
+{
+  "sections": {
+    "legal": {
+      "type": "custom-legal-content",
+      "blocks": {
+        "group_1": {
+          "type": "group",
+          "settings": {
+            "heading": "",
+            "text": "<p>Ruby Rockets is committed to ensuring that its website and all communications and services offered to the public are accessible for people with disabilities. As part of this commitment, Ruby Rockets strives to provide an accessible website compatible with the Web Content Accessibility Guidelines (WCAG) version 2.2, AA, and commercial screen reading software. Features of the website are created to allow individuals with vision and other impairments to understand and use the website to the same degree as someone without disabilities. Ruby Rockets performs regular inspection and maintenance of the website, including reviews and upgrades for WCAG compliance.</p>"
+          }
+        },
+        "group_2": {
+          "type": "group",
+          "settings": {
+            "heading": "Disclaimer",
+            "text": "<p>Please be aware that our efforts to improve the accessibility and usability are ongoing. We anticipate this process could take a couple months. While we strive to make the Website as accessible as possible, our pages may not always pass online testing or validation tools. We appreciate your understanding.</p>"
+          }
+        },
+        "group_3": {
+          "type": "group",
+          "settings": {
+            "heading": "Contact Us",
+            "text": "<p>If, at any time, you have specific questions or concerns about the accessibility of any particular web page on the Website, then please contact us. If you do encounter an accessibility issue, then please be sure to specify the web page and nature of the issue, and we will make all reasonable efforts to make that page or the information contained therein accessible for you. Thanks for visiting.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "group_1",
+        "group_2",
+        "group_3"
+      ],
+      "settings": {
+        "show_title": true,
+        "content_width": 1000,
+        "color_scheme": "scheme-7",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60,
+        "custom_class": ""
+      }
+    }
+  },
+  "order": [
+    "legal"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "sections": {
+    "legal": {
+      "type": "custom-legal-content",
+      "blocks": {
+        "group_1": {
+          "type": "group",
+          "settings": {
+            "heading": "",
+            "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.</p>"
+          }
+        },
+        "group_2": {
+          "type": "group",
+          "settings": {
+            "heading": "Headline Goes Here",
+            "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.</p>"
+          }
+        },
+        "group_3": {
+          "type": "group",
+          "settings": {
+            "heading": "Headline Goes Here",
+            "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.</p>"
+          }
+        },
+        "group_4": {
+          "type": "group",
+          "settings": {
+            "heading": "Headline Goes Here",
+            "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "group_1",
+        "group_2",
+        "group_3",
+        "group_4"
+      ],
+      "settings": {
+        "show_title": true,
+        "content_width": 1000,
+        "color_scheme": "scheme-7",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60,
+        "custom_class": ""
+      }
+    }
+  },
+  "order": [
+    "legal"
+  ]
+}
