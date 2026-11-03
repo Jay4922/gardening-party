@@ -4,8 +4,9 @@
 **Figma:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/Ruby-Rockets-%7C-Dev-BKP
 **Figma file key:** 716dxbZpF2R0c3qnv7cZkF
 **Dev store:** jp-dev-07.myshopify.com
-**Templates in scope:** Homepage (`index`), FAQ (`page.faq`), Our Story (`page.our-story`), Retailers & Partners (`page.retailers-partners` — Figma frame "IP - Find Us" `3:7112`), Contact (`page.contact`) + global header/footer.
-**Out of scope:** product/collection pages, Learn/blog, store locator (`3:6866`), legal pages, search, 404, login, cart, landing page, default template. The default-template frame (`3:5863`) is used only as a typography reference.
+**Templates in scope:** Homepage (`index`), FAQ (`page.faq`), Our Story (`page.our-story`), Retailers & Partners (`page.retailers-partners` — Figma frame "IP - Find Us" `3:7112`), Contact (`page.contact`) + global header/footer. **Added 2026-11-03:** legal pages (Privacy Policy, Terms & Conditions, Accessibility Statement, Cookie preference settings), Search Result (`search`), Error (`404`).
+**Added 2026-11-03 (later):** Learn blog (`blog`, frame "IP - Learn" `23:12287`) and article (`article`, second "IP - Learn" frame `23:12547`).
+**Out of scope:** store locator (`3:6866`), login, cart, landing page, default template. The default-template frame (`3:5863`) is used only as a typography reference.
 
 ### Figma frames (in scope)
 
@@ -71,26 +72,34 @@ Figma line height is "normal" in codegen (≈1.2) even though styles say 100% �
 
 ## Status
 
-| Section               | Node ID             | Template(s)                        | Complexity | Status |
-| --------------------- | ------------------- | ---------------------------------- | ---------- | ------ |
-| Announcement Bar      | `3:353`             | all (global)                       | low        | built  |
-| Header                | `3:378`             | all (global)                       | high       | built  |
-| Footer                | `3:1651` + `3:1714` | all (global)                       | medium     | built  |
-| Instagram Feed        | `3:1141`            | all in-scope pages                 | medium     | built  |
-| Page Banner           | `3:6108`            | faq, our-story, retailers, contact | low        | built  |
-| Image With Text       | `3:6631`            | our-story, retailers               | low        | built  |
-| Function Meets Flavor | `3:775`             | index, retailers                   | medium     | built  |
-| CTA Banner            | `3:1115`            | index, faq, retailers              | medium     | built  |
-| Video Hero            | `3:454`             | index                              | high       | built  |
-| Benefit Marquee       | `3:611`             | index                              | medium     | built  |
-| Featured Products     | `3:652`             | index                              | high       | built  |
-| Community Videos      | `3:808`             | index                              | high       | built  |
-| Reviews               | `3:950`             | index                              | high       | built  |
-| FAQ                   | `3:6110`            | faq                                | high       | built  |
-| Founder Story         | `3:6695`            | our-story                          | low        | built  |
-| Team                  | `3:6797`            | our-story                          | medium     | built  |
-| Partner Cards         | `3:7200`            | retailers                          | medium     | built  |
-| Contact               | `3:5203`            | contact                            | medium     | built  |
+| Section               | Node ID             | Template(s)                           | Complexity | Status  |
+| --------------------- | ------------------- | ------------------------------------- | ---------- | ------- |
+| Announcement Bar      | `3:353`             | all (global)                          | low        | built   |
+| Header                | `3:378`             | all (global)                          | high       | built   |
+| Footer                | `3:1651` + `3:1714` | all (global)                          | medium     | built   |
+| Instagram Feed        | `3:1141`            | all in-scope pages                    | medium     | built   |
+| Page Banner           | `3:6108`            | faq, our-story, retailers, contact    | low        | built   |
+| Image With Text       | `3:6631`            | our-story, retailers                  | low        | built   |
+| Function Meets Flavor | `3:775`             | index, retailers                      | medium     | built   |
+| CTA Banner            | `3:1115`            | index, faq, retailers                 | medium     | built   |
+| Video Hero            | `3:454`             | index                                 | high       | built   |
+| Benefit Marquee       | `3:611`             | index                                 | medium     | built   |
+| Featured Products     | `3:652`             | index                                 | high       | built   |
+| Community Videos      | `3:808`             | index                                 | high       | built   |
+| Reviews               | `3:950`             | index                                 | high       | built   |
+| FAQ                   | `3:6110`            | faq                                   | high       | built   |
+| Founder Story         | `3:6695`            | our-story                             | low        | built   |
+| Team                  | `3:6797`            | our-story                             | medium     | built   |
+| Partner Cards         | `3:7200`            | retailers                             | medium     | built   |
+| Contact               | `3:5203`            | contact                               | medium     | built   |
+| Legal Content         | `23:12915` (+3)     | privacy, terms, accessibility, cookie | low        | built   |
+| Error 404             | `23:13359`          | 404                                   | low        | built   |
+| Search Results        | `23:13245`          | search                                | medium     | built   |
+| Collection Grid       | `23:10274`          | collection                            | high       | built   |
+| Product Main (PDP)    | `23:10287`          | product                               | high       | built   |
+| Blog Featured         | `23:12298`          | blog                                  | medium     | built   |
+| Blog Latest           | `23:12393`          | blog                                  | medium     | pending |
+| Article Main          | `23:12558`          | article                               | medium     | pending |
 
 ## Build order
 
@@ -245,6 +254,7 @@ Near match: Dawn `header` (middle-left logo layout, dropdown menu, drawer). Diff
 
 ## Build notes
 
+- **Fix (2026-11-03, Figma `23:15702`):** the 4px brand-gradient bar under the active-page link (and on hover) never appeared. The show rules used a shorter selector than the base `::after` rule, so it won on specificity and the bar stayed at `opacity: 0`. The show rules now use the same `> .list-menu > li >` path.
 - Option 1 (restyle Dawn header + CTA) approved; schema approved 2026-11-02.
 - Live Figma vs brief: dropdown is solid black (not #1E1E1E), 280 wide, bottom radius 20, pt-10/pb-28/px-28, gap 13; active underline is 4px; search panel black, right-aligned, bottom radius 20, p-28, 440px input (white 20% fill, 2px white border, radius 48); mobile bar py-14 px-20, 20px icons gap 12, logo 70x55. Built to the live values.
 - Schema: added `cta_label` / `cta_link` / `show_cta_mobile_drawer`, `drawer_color_scheme` (white drawer while dropdown stays black), mobile padding (14/14), `custom_class`; padding step 4 → 2; defaults → scheme-3, no separator, no localization selectors.
@@ -334,6 +344,7 @@ Near match: Dawn `footer` (link_list blocks, newsletter, social icons). The layo
 
 ## Build notes
 
+- **Fix (2026-11-03):** the footer's active-page link no longer has an underline (it overrides Dawn's `.list-menu__item--active`). The hover underline stays.
 - Built from Option A (restyle Dawn's footer); schema approved 2026-11-02.
 - Live Figma vs brief: 80px gap between the newsletter (440px) and the columns; the email field has a white 20% fill, 2px white border and radius 48; Subscribe is `btn-dark-gradient` (black fill); links are Inter **Medium** 16; social icons are **black** circles (28px) with white glyphs; the © and ♥ icons are 24px with a 4px gap and 20px between the two groups; the bar is py-10 px-55 on desktop and p-20 stacked on mobile; the mobile logo is 108×80.
 - Markup: newsletter moved left of the columns in `.footer__main` (the padding class moved there so the gradient bar sits outside the section padding). Link-list headings are `<h2 class="footer__menu-heading h5"><button aria-expanded>` and collapse below 990px. Dawn's bottom row was replaced by `.footer__bar`. "Powered by Shopify" was removed. Localization and payment markup is kept but off by default.
@@ -491,6 +502,7 @@ No match — build from scratch. One section serves all four pages.
 - Overlay = brand gradient (alpha 1 → .4 → .2 → .2 → .4 → 1; 120° desktop, 100° mobile) over a 270° black scrim (.6/.42). CSS in `css/components.css` (`.page-banner*`); title uses the new global `.h-banner` class in `css/base.css` (48 → 64 @1199 → 80 @1440).
 - Product image: `drop-shadow(0 4px 20px rgb(0 0 0 / .4))` from Figma's layer shadow. Slot is right/bottom-anchored, 43.6% wide (max 659) on desktop, and 349×56.5% centered on mobile.
 - Verified at 1512 / 900 / 376 using the Figma images loaded locally for the test only (not committed). Every schema setting is referenced in the output.
+- **Fix (2026-11-03):** on Retailers & Partners, the title ran onto one line at 80px under the product boxes (copy was capped at 1062px). On desktop `.page-banner__copy` is now capped at 50% of the content width, so it wraps to "Retailers &⏎Partners" like Figma. On desktop the background image is also anchored to the right and bottom (`object-right-bottom`), so a flattened banner image (photo + products in one file) keeps its products in view when `cover` crops it between 990 and 1512px or above 1512px.
 - **Known deviation:** Figma crops its own product shot (−12.6px top bleed, about 13px off the bottom). Per the image_picker rule, the uploaded image is shown whole (object-contain, bottom-anchored) instead of copying Figma's crop.
 
 ---
@@ -805,6 +817,8 @@ Near match: Dawn `slideshow`, but the video slides and mobile split layout need 
 - Added to `templates/index.json` as the first section with 3 slides (images to be uploaded in the customizer).
 - Verified: dev server renders 3 slides, valid Swiper JSON, h2 heading, both buttons; 0 Liquid errors; Theme Check 0 errors; ESLint clean.
 - **Visual diff + slider interaction check deferred** — user will check visually later.
+- **Fix (2026-11-03):** the "Join the launch" button (`.btn-glass-gradient`, Figma `3:460`) now has a 48% black fill and the gradient border drawn as a masked `::before` ring. Before, the gradient was painted under the translucent fill, so the gradient showed through the middle of the button. Hover still goes solid black.
+- **Fix (2026-11-03):** pagination re-checked against `3:465`: the active bar is the brand gradient with a 2px white **outside** stroke. The old inner `border-2` + `box-border` filled the whole 4px desktop bar, so the gradient never showed. `.ctm-pagination` now draws the ring with `box-shadow: 0 0 0 2px` and keeps the full 40 × 4 gradient. This applies to every slider that uses `.ctm-pagination`.
 - **Fix (2026-11-02):** on wide screens the copy and dots now align with the 1512px container (`padding-left: max(55px, (100% - 1512px)/2 + 55px)`), copy capped at 775px.
 
 ---
@@ -871,6 +885,83 @@ None.
 - Added to `templates/index.json` after the hero with Figma's 5 benefits.
 - Verified: dev server renders 15 items (10 aria-hidden copies), valid config JSON; 0 Liquid errors; Theme Check 0 errors; ESLint clean.
 - **Visual diff + motion check deferred** — user will check visually later.
+
+---
+
+## Collection Grid
+
+**Status:** built
+**Node ID:** 23:10274 (frame "IP - Products + Gift Card" `23:9970`; no mobile frame found)
+**Figma link:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/?node-id=23-9970
+**Templates:** collection (`templates/collection.json`; header "Products" goes to `/collections/frontpage`)
+**Complexity:** high
+**Section file:** sections/main-collection-product-grid.liquid (Dawn, extended) + snippets/card-product.liquid (`card_style: 'collection'`) + templates/collection.json
+
+## Visual brief
+
+**Page stack:** Page Banner ("IP Header" `23:9979`, 400 tall, "FUNCTION MEETS FROZEN" plus the product photo, reusing `custom-page-banner`), then the product grid, then the Instagram Feed and the footer (both global, already built).
+
+**Grid** (`23:10274`): cream→white gradient (`#fff8f0`→white), `px-40 py-80`, 3 equal cards (440.67 wide) with a 55px gap. Each card is a centered column with a 20px gap:
+
+- Product image: 202×280.
+- Optional red "BEST SELLER" tag: `#EF1207`, Inter Black 12 uppercase, `px-14 py-4`, radius 22, at 20/15 from the card's top-left.
+- Function name: Plus Jakarta Sans Bold 32, uppercase, 1.28 tracking. Flavor below it: Inter Medium 20, 4px gap.
+- Description: Inter 16.
+- Price: Inter Medium 20, "$XX.XX / pack" (5px gaps).
+- Buttons, full width, stacked 10px apart:
+  - "ADD TO CART": black fill, gradient border (`btn-dark-gradient`).
+  - "FIND IN STORES": white fill, gradient border (`btn-outline-gradient`).
+
+**Hidden in Figma:**
+
+- Sort row (`23:9983`), filter sidebar (`23:9991`), and a second card row (`23:10198`).
+- Gift Card card (`23:10017`): image 328×280, "Gift Card" / "Their flavor. Your treat." / "Give them something cool.", plus an old-style stepper and add-to-cart button.
+- Wide "Gift Card" banner variants (`23:10236`, `23:10244`).
+
+## Content elements
+
+- Products come from the collection.
+- Per card: image, badge, function name, flavor, description, price + "/ pack", Add to cart, Find in stores.
+
+## Client decisions (2026-11-03)
+
+- Build as the **collection template**, not a custom page.
+- **Gift card shows as a normal card** in the grid, with the same layout as the snack cards. It needs a denomination choice before Add to cart.
+- **No filters or sorting.** Pagination stays for larger collections.
+- **"Find in stores"** uses one section-level URL setting for every card.
+
+## Reuse check
+
+- `custom-page-banner`: reuse as is.
+- Instagram Feed and footer: global, already in place.
+- `card-product` `card_style: 'function'`: closest match, but it has a quantity stepper, no price and a single outline button. Extend it with a variant; don't fork it.
+- `main-collection-product-grid`: Dawn's grid with pagination; restyle it or replace its card call.
+
+## Dependencies & risks
+
+- Metafields `custom.function_name`, `custom.short_description` and `custom.badge` are still not created in the store (same as Featured Products), so cards fall back to product titles until they exist.
+- Gift card denominations: the card needs a variant select, since Figma shows none.
+- No mobile frame. Planned: 1 column, stacked, matching the homepage card's mobile type scale.
+- The "/ pack" suffix is hard-coded copy (translatable). Confirm that every product is sold per pack; the gift card won't show it.
+
+## QA
+
+- **Last QA run:**
+- **Result:**
+- **Open issues:**
+- **Non-blocking suggestions:**
+
+## Build notes
+
+- Option 1 (restyle Dawn's grid + add a `collection` card variant) approved; schema approved 2026-11-03.
+- Banner image per collection: `custom-page-banner` uses the collection metafield `custom.collection_banner` (Image, created by the user 2026-11-03) when it's set, otherwise the section's `background_image`. The desktop aspect ratio follows whichever image is used.
+- Template: `custom-page-banner` replaces `main-collection-banner`. Its heading falls back to the collection title, so "FUNCTION MEETS FROZEN" only shows if it's typed into the banner's heading, which then applies to every collection. Banner images need uploading in the customizer.
+- Grid: filters and sorting are off, quick add is `standard`, 12 per page, 3 columns on desktop and 1 on mobile, `scheme-7` (cream→white), 80/80 padding on desktop and 60/60 on mobile, 40px side inset, 55px gaps (Dawn grid spacing variables).
+- Card: reuses the `function` branch. `collection` adds the price + `price_suffix` and full-width "Add to cart" (`btn-dark-gradient`) + "Find in stores" (`btn-outline-gradient`), with no stepper. The image box is 202 × 280, or 328 × 280 for gift cards. Multi-variant non-gift products show "Choose options" linking to the product page.
+- Gift card: a `<select name="id">` of denominations, no price row, and no "Find in stores" button (gift cards aren't sold in stores). This is a judgement call, so confirm with the client.
+- `stores_link` is set to `/pages/retailers-partners` in the template as a placeholder, because the header's "Find Us" goes to `#`. Change it in the customizer.
+- Verified on the dev server: `/collections/frontpage` and `/collections/all` render with 0 Liquid errors. Snack products show the price, "/ pack" and both buttons, and multi-variant products show "Choose options". Theme Check: 0 errors. The LiquidComplexity warning on `card-product.liquid` rose from 140 to 173.
+- **Not verified:** the gift card path, because the dev store has no gift card product. The visual diff is deferred; the user checks visually.
 
 ---
 
@@ -1204,6 +1295,12 @@ Near match: Dawn `collapsible-content`, but the tabs and search need a custom se
 
 ## Build notes
 
+- **Card layout (2026-11-03, product page, Figma `23:10713`):** option 1 approved and schema approved. A new `layout` setting, "page" (default, unchanged) or "card", adds an image card to `custom-faq`. In card mode the eyebrow, subheading, search and tabs are hidden, and the heading is left-aligned. The 571 × 400 card (radius 20, brand tint from Figma's gradient stops) sits beside one numbered list, 55px apart, bottoms aligned; on mobile the card is 320 tall and stacks above the list. The card's settings are `card_image`, `card_gradient`, `card_heading` (a `<p class="h2">`, so it isn't a second heading), the button (falls back to `/pages/faq`), and two text links that each need both a label and a URL.
+- The question row markup moved into `snippets/faq-item.liquid`, which both layouts render. The FAQ page output is unchanged: 38 items, 6 tabs, 0 errors.
+- Placed in `templates/product.json` as `product_faq_section` (between `function_flavor_band` and `reviews`): `scheme-7`, padding 80/80 on desktop and 60/60 on mobile, 5 questions with Figma's placeholder answers. The card image still needs uploading.
+- **SEO watch:** this section prints its own FAQPage JSON-LD. If the `product_faq` block in `main-product` also prints FAQPage, the page will have two, so one of them must be dropped.
+- **Fix (2026-11-03, user screenshot vs `23:10983`):** the card heading rendered black. It's a `<p class="h2">`, and `.title-white` only colors h1–h6, so `.faq__card-heading` now sets white itself. "Shipping information" also wrapped to a second line: Figma's row only just fits (207 + 89 + 191 + 2 × 20 = 527 of 531px). On desktop the actions row no longer wraps, the links don't shrink, and the pill is `flex-1 min-w-0`. **Known deviation:** the pill's side padding is 20px instead of Figma's 28 so "View all FAQs →" isn't squeezed. It still wraps on mobile.
+
 - Built from Option A (section blocks: `category` + `question`, `max_blocks: 50`). Template `templates/page.faq.json` holds the 6 tabs and the 13 Figma questions under "Products and functions". The other 5 tabs have 5 demo placeholder questions each (`demo_question_1`–`25`, added by another session) until the client supplies real content. That's 44 of the 50-block limit.
 - Live Figma corrections to the brief: questions and numbers are 20px (16 on mobile) Plus Jakarta Bold with no tracking (new global `.h-faq`); the number is orange only when the row is open; the column is 1000px wide; dividers are black at 40%; eyebrow and subheading are 24 → 20 on mobile (new `.content-eyebrow-large` and the existing `.content-large`).
 - Tabs: gradient-bordered pills on desktop (wrap and center below 1441px, spread across the width from 1441px); below 990px a gradient dropdown toggle. Native `<details>`; keyboard support for the tabs (arrows, Home/End, Esc).
@@ -1522,3 +1619,465 @@ Near match: Dawn `contact-form` (reuse its form handling), but with a new two-co
 - **Interpolated:** stacked below 990 (info → rows → map at 604:253 → form); name fields stacked below 480; gap 40 → 55 from 1366; mobile padding 60/60.
 - `templates/page.contact.json` replaced: Page Banner → Contact (Dawn `main-page` + `contact-form` removed from the template; their files untouched).
 - Verified: Theme Check clean, ESLint clean, no Liquid errors on `/pages/contact`, tel/mailto links and all `contact[...]` fields render, all settings referenced. Test submission not sent (would email the store). **Visual check deferred.**
+
+---
+
+## Legal Content
+
+**Status:** built
+**Node ID:** 23:12915 (Privacy) · 23:12998 (Terms) · 23:13084 (Accessibility) · 23:13166 (Cookie preference settings)
+**Figma link:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/?node-id=23-13084
+**Templates:** page.legal (new) — Privacy Policy, Terms & Conditions, Accessibility Statement, Cookie preference settings
+**Complexity:** low
+**Section file:** sections/custom-legal-content.liquid
+
+Frames (1512 desktop only, no mobile): Privacy `23:12903`, Terms `23:12986`, Accessibility `23:13072`, Cookie `23:13154`. All four use the same layout; no page banner (header → content → footer; Instagram feed not shown).
+
+## Visual brief
+
+Cream→white gradient (`#FFF8F0` → white), padding 80 top/bottom, 55 sides, a single 1000px column centered (x=256 at 1512), sections stacked with a 55 gap.
+
+- H1 page title: Plus Jakarta Sans Bold 64, tracking 4% (2.56px), uppercase, `#2D2926` (Black C). Cookie title wraps to two lines at 1000px.
+- Intro paragraph (optional, Privacy/Terms/Accessibility): Inter Regular 16, black.
+- Repeating groups: heading Plus Jakarta Sans Bold 24, tracking 6% (1.44px), uppercase, `#2D2926`; 20 below it, one or more paragraphs Inter Regular 16 with 20 between paragraphs.
+- Mobile: no frame. Interpolate: 20px gutter, title 32 (H3 mobile scale), group heading 20, gap 40, padding 60.
+
+## Content elements
+
+- Page title (H1)
+- Intro paragraph
+- Heading + paragraph groups (Privacy 3, Terms 4, Accessibility 2 "DISCLAIMER"/"CONTACT US", Cookie 2)
+- Copy: Accessibility has final copy; Privacy/Terms/Cookie are lorem ipsum placeholders.
+
+## Schema plan
+
+Section: `show_title`, `content_width` (1000), mandatory trio (scheme-7, padding 80/80 · 60/60, `custom_class`). Blocks: `group` (heading, richtext). Copy lives in each page's content in admin.
+
+## Design tokens used
+
+- Colors: `--color-cream` gradient (`--gradient-cream`), `#2D2926` heading color, black body
+- Typography: H1/H1-1 (64), H4.1/H4.1-1 (24), H5/H5-2 (16)
+- Spacing: 80 / 55 / 20
+
+## Interactions & JS
+
+None.
+
+## Reuse check
+
+Dawn `main-page` renders `page.title` + `page.content` (rte) — near match; needs Figma typography/width/gradient. No existing custom section matches.
+
+## Dependencies & risks
+
+- Shopify's built-in `/policies/*` pages are not theme-templatable; these are built as regular Pages using the `page.legal` template, linked from the footer Legal menu.
+- Privacy/Terms/Cookie copy is lorem ipsum — real legal copy needed from the client.
+- "Cookie preference settings" is designed as a static text page; a real consent toggle (Shopify Customer Privacy API / consent banner app) is not in the design. Confirm.
+- No mobile frame.
+
+## QA
+
+- **Last QA run:**
+- **Result:**
+- **Open issues:**
+- **Non-blocking suggestions:**
+
+## Build notes
+
+- Built 2026-11-03, Option C (page title + `page.content`, optional `group` blocks). Template `templates/page.legal.json` (assign it to the 4 legal pages in admin).
+- CSS: `.legal*` in `css/components.css`; new token `--color-ink: #2d2926` (Figma "Black C") in `css/application.css`. Rich text H2/H3/H4 in page content get the 24 uppercase group-heading style; 55 between groups, 20 heading→text and between paragraphs.
+- **Interpolated (no mobile frame):** title 32 → 48 (768) → 64 (1199); group heading 20 → 24 (990); gaps 40 → 55 (990); padding 60/60 mobile, 20px gutter.
+- Store pages not created yet (Shopify connector needed re-auth). Page bodies prepared from Figma copy (Accessibility final, others lorem ipsum).
+- Verified: Theme Check clean, 0 Liquid errors on `/pages/contact?view=legal`, all settings referenced.
+- **Visual check 2026-11-03** (1512 / 860 / 376, sample blocks): matches 23:13084/23:12915 — 1000 column at x=256, 64 title, 24 headings, 55/20 rhythm, cream gradient. No overflow.
+
+---
+
+## Error 404
+
+**Status:** built
+**Node ID:** 23:13359
+**Figma link:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/?node-id=23-13359
+**Templates:** 404
+**Complexity:** low
+**Section file:** sections/custom-404.liquid
+
+Frame `23:13347` (1512, desktop only). Header → content → footer; no banner or Instagram feed.
+
+## Visual brief
+
+Cream→white gradient, padding 80 top/bottom, 55 sides, centered column with a 40 gap:
+
+- Image 740×383, radius 10, `object-cover` (photo of four people with frozen bars).
+- Heading "404 ERROR." Plus Jakarta Sans Bold 48, tracking 4% (1.92px), uppercase, black, centered.
+- 10 below: "Page not found." Inter Medium 32, `#2D2926`, centered (H3/H3-2B).
+- Button "GO HOME →": project's outline-gradient pill (white fill, 2px gradient border, px-28 py-10, radius 80, Inter Medium 16 uppercase, 20px arrow).
+- Mobile: interpolate — image full-width at 740:383 ratio, heading 32, subheading 20.
+
+## Content elements
+
+- Image (image_picker, never bundled)
+- Heading, subheading, button label + link
+
+## Schema plan
+
+Section: `image`, `heading`, `subheading`, `button_label`, `button_link`, mandatory trio (scheme-7, padding 80/80 · 60/60, `custom_class`). No blocks.
+
+## Design tokens used
+
+- Colors: `--gradient-cream`, black, `#2D2926`, `--gradient-brand` (button border)
+- Typography: H2/H2-1 (48), H3/H3-2B (32), H5/H5-2M (16)
+
+## Interactions & JS
+
+None.
+
+## Reuse check
+
+Dawn `main-404` (fixed translated strings, no image). Button style matches the existing outline-gradient pill used across the theme.
+
+## Dependencies & risks
+
+- Image comes from the merchant (image_picker); blank state = no image block.
+- No mobile frame.
+
+## QA
+
+- **Last QA run:**
+- **Result:**
+- **Open issues:**
+- **Non-blocking suggestions:**
+
+## Build notes
+
+- Built 2026-11-03, Option B. `templates/404.json` now uses `custom-404` (Dawn `main-404.liquid` untouched). Heading is the page's H1 (`.h2` scale = 48 at 1440+). Button: `ctm-button btn-outline-gradient`, blank link → homepage.
+- Image not set in the template (image_picker, merchant uploads); no image = section starts at the heading.
+- **Interpolated:** image full width at 740:383, subheading 20 → 32 (990).
+- Verified: Theme Check clean, 0 Liquid errors on `/products/does-not-exist` (404), all settings referenced.
+- **Visual check 2026-11-03** (1512 / 376): heading, subheading and button match 23:13359. Image area not yet comparable — no image uploaded.
+
+---
+
+## Search Results
+
+**Status:** built
+**Node ID:** 23:13245
+**Figma link:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/?node-id=23-13245
+**Templates:** search
+**Complexity:** medium
+**Section file:** sections/custom-search-results.liquid
+
+Frame `23:13233` (1512, desktop only): Header → **Page Banner** ("SEARCH", 400 tall — reuse `custom-page-banner`) → Search Results → **Instagram Feed** (reuse `custom-instagram-feed`) → Footer.
+
+## Visual brief
+
+Cream→white gradient, padding 100 all sides (1312 inner width):
+
+- Search field right-aligned: 410×40, white/20 fill, 2px black border, radius 48, px-20 py-10, 20px search icon + Inter Regular 16 placeholder "Search" (same style as `.ctm-input`).
+- 40 gap, then a 3-column card grid (410.67 cols, 40 column gap, 40 row gap): image 280 tall radius 10 cover; 20 gap; title Plus Jakarta Sans Bold 24 tracking 6% uppercase centered; excerpt Inter Regular 16 centered, truncated (~3 lines with "…"); "LEARN MORE →" outline-gradient pill centered.
+- Pagination centered, 8 gap: 40px circular prev/next arrow buttons (gradient ring), page numbers Plus Jakarta Sans Bold 16; current page has the brand-gradient fill + white text (px-9 py-3, radius 1); "..." for gaps.
+- Mobile: interpolate — 1 column (2 at tablet), full-width search field, padding 60/20.
+
+## Content elements
+
+- Search input (query prefilled with `search.terms`)
+- Result cards: image, title, excerpt, button (works for products, articles, pages)
+- Pagination
+- Empty / no-results state (not in Figma)
+
+## Schema plan
+
+Section: `placeholder`, `results_per_page` (6), `show_image`, `show_excerpt`, `excerpt_words` (22), `button_label`, `empty_heading`, `empty_text`, mandatory trio (scheme-7, padding 100/100 · 60/60, `custom_class`). No blocks (one card type).
+
+## Design tokens used
+
+- Colors: `--gradient-cream`, `--gradient-brand`, black
+- Typography: H4.1/H4.1-1 (24), H5/H5-2 (16), H5/H5-1 (16 bold, pagination)
+- Spacing: 100 / 40 / 20
+
+## Interactions & JS
+
+Standard GET form to `/search`; Shopify pagination links. Optional Dawn predictive search on the input.
+
+## Reuse check
+
+Dawn `main-search` (product grid + filters/sort, Dawn product cards) — functionally a match but visually far from Figma. `custom-page-banner` and `custom-instagram-feed` reused as-is. `snippets/pagination.liquid` exists (Dawn markup).
+
+## Dependencies & risks
+
+- Figma shows no filters/sorting/result-type tabs — Dawn's filters would be removed.
+- Result types are mixed (products/articles/pages); card image/excerpt source differs per type.
+- No empty-state or mobile design.
+
+## QA
+
+- **Last QA run:**
+- **Result:**
+- **Open issues:**
+- **Non-blocking suggestions:**
+
+## Build notes
+
+- Built 2026-11-03, Option B. `templates/search.json`: Page Banner (heading "Search") → Search Results; Instagram feed comes from `footer-group.json` (global). Dawn `main-search` removed from the template only.
+- Cards: product `featured_media`, article `image`, pages get a neutral `bg-black/5` image box for alignment; excerpt `strip_html | truncatewords` + 3-line clamp. Buttons `aria-describedby` the card title. Visually hidden results-count H2 (`role=status`).
+- Pagination: `paginate.parts`, 40px gradient-ring arrows (disabled at ends, 40% opacity), gradient-filled current page.
+- **Interpolated:** 1 col → 2 (640) → 3 (990); search field full width below 768; padding 60 mobile, 20 gutter.
+- **Deviation:** no-results state has no Figma design (uses H4 + body text). Couldn't trigger it on the dev store — Shopify's fuzzy search returned results for nonsense queries.
+- Verified: Theme Check clean, 0 Liquid errors on `/search`, `/search?q=a` (6 cards, pagination), `?page=2`, all settings referenced.
+- **Visual check 2026-11-03** (headless Chrome at 1512 / 860 / 376, no horizontal overflow): matches 23:13245. Fixed after the check: (1) image-less cards collapsed — Dawn's `div:empty{display:none}` hid the empty media box → `.search-card__media:empty{display:block}`; (2) buttons now share a row baseline (`.search-card > .ctm-button{mt-auto}`).
+- **Watch:** `shopify theme dev --theme-editor-sync` overwrote `templates/search.json` with Dawn's `main-search` once (17:34) — rewritten. If the search page shows Dawn's layout again, the editor sync pulled the remote template back.
+
+---
+
+## Product Main (PDP)
+
+**Status:** built
+**Node ID:** 23:10287 ("SEction 1" in frame "IP - Products 1" `23:10276`)
+**Figma link:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/?node-id=23-10287
+**Templates:** product (section `main`)
+**Complexity:** high
+**Section file:** sections/main-product.liquid (Dawn, restyled in place — Option A)
+
+## Visual brief
+
+Cream→white gradient (scheme-7), p-100. Gallery 680 (four 120×120 thumbs, 20 apart, active = 3px brand-gradient ring | 540×540 cream/28% panel, radius 20) · 55 gap · info column 577: eyebrow (orange H4.1 24), title (H2 48, Black C), "6-PACK — $XX.XX" (24 bold), 5×28 stars + "58 Reviews", description (Inter 16), stats row between 1px black/40 rules, Choose Your Function + Flavor cards, QUANTITY + pill stepper, Add to cart (black) + Find in stores (outline) halves, 3 accordions. Groups 28 apart; eyebrow→rating group 10 apart.
+
+## Build notes
+
+- Option A: Dawn's main-product kept (variant JS, product-form, media gallery, pickup, app blocks). Wrapper `.main-product`, inner `.main-product__inner` (1512 container, px 20/55/100). Desktop grid 680fr/577fr at 990+. CSS under `/* ===== PDP main ===== */` in css/components.css.
+- New blocks: `eyebrow` (text, falls back to `custom.function_name`). Price block gained `pack_label` (falls back to the selected variant title; hidden for single-variant products) — inside `#price-{section}` so it updates on variant change. Rating block now renders `snippets/product-rating.liquid` (Figma star `icon-star.svg`, `reviews.rating` / `reviews.rating_count`, locale `products.product.review_count`). Buy buttons gained `find_in_stores_label` / `find_in_stores_link` (blank link hides it) and a `submit_class` param (`ctm-button btn-dark-gradient`).
+- Section settings added: `padding_top_mobile`, `padding_bottom_mobile` (desktop padding switches at 990, no more 0.75 scaling), `custom_class`.
+- Gallery = Dawn "thumbnail" layout restyled: thumbs column left on desktop (scrolls past 540), main media forced square (`--aspect-ratio: 1`) with object-contain + 20 inset. Mobile keeps Dawn's swipe slider + counter.
+- Add-to-cart loading spinner removed (markup in buy-buttons + `loading` toggles in assets/product-form.js) per shopify-liquid rule; `aria-disabled` still blocks double submits.
+- Template: vendor, share and variant_picker blocks removed (not in Figma); Shop Pay button off.
+- Product blocks: `product_stats`, `product_faq`, `function_flavor` each render their own snippet (product-stats / product-faq / product-function).
+- Verified: Theme Check clean (only Dawn's existing `seo_media` UnusedAssign), `/products/chocolate-brownie-batter` 200 with 0 Liquid errors. Eyebrow, pack label, rating and Find in stores don't render on the dev product yet — their data (metafield, variants, review metafields, link) is empty. **Visual check deferred** — user will check.
+- **Open:** review source (app vs standard metafields), "6-PACK" source, Find in stores destination.
+
+---
+
+## Learn — page layout (blog + article)
+
+Two desktop frames (1512), no mobile frames:
+
+- **Blog** `23:12287` ("IP - Learn"): Header → **Page Banner** "LEARN" (`23:12296`, IP Header instance, 400 tall — reuse `custom-page-banner`) → **Blog Featured** (`23:12298`) → **Blog Latest** (`23:12393`) → Instagram Feed + Footer (global, `footer-group.json`).
+- **Article** `23:12547` (second frame also named "IP - Learn"): Header (IP Header instance hidden — no banner) → **Article Main** (`23:12558`) → Instagram Feed + Footer.
+
+Typography values below are read from the screenshots + layer heights and matched to the global type scale. `get_design_context` was unavailable during analysis (Figma MCP auth dropped) — **re-verify font sizes/colors on the Phase 3 fetch.**
+
+---
+
+## Blog Featured
+
+**Status:** built
+**Node ID:** 23:12298 ("Section 1" in `23:12297`)
+**Figma link:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/?node-id=23-12298
+**Templates:** blog
+**Complexity:** medium
+**Section file:** sections/custom-blog-featured.liquid (+ snippets/article-meta.liquid)
+
+## Visual brief
+
+1512×800, cream→white gradient, p-100 (1312 inner), 40 between toolbar and card.
+
+- **Toolbar** (items-end, 40 gap): H2 "GOOD STUFF TO KNOW." (Plus Jakarta Sans Bold 48 / 4%) left; right half = search pill 410×40 + 20 gap + "Filter" pill (Inter Regular 16 + 16px `bi:filter`). Both pills: white/20 fill, 2px black border, radius 48, px-20 py-10.
+- **Featured card**: **6px brand-gradient border, radius 10**; image fills the left half (left corners rounded); 55 gap; copy column padded 28 top/right/bottom, 28 between groups:
+  - eyebrow "FEATURED" — **Inter Medium 24**, `#FF6F00`, uppercase; 10 above the title
+  - title — H2 48 / 4%, 2 lines
+  - infos — 24px icons (`hugeicons:user-round`, `basil:calendar-outline`, `hugeicons:tag-02`), 4 gap, **Inter Medium 16**, 28 between items
+  - excerpt — Inter Regular 16, 2 paragraphs
+  - "READ THE STORY →" — black pill, gradient border, radius 80, px-28 py-10 (`.btn-dark-gradient`)
+- Figma composes the image from three stacked photos — built as the single article image.
+- Mobile (interpolated): toolbar stacks (heading, then search + filter row); card stacks image (4:3) above copy, p-20.
+
+## Content elements
+
+- Section heading, Featured eyebrow, button label, search placeholder, filter labels — locale strings (`blogs.learn.*`)
+- Featured article = newest article in the blog (`blog.articles.first`): image, title, author, date, first tag, excerpt (falls back to content truncated to 55 words)
+- Search form → `/search?type=article`; Filter `<details>` → `blog.all_tags` tag URLs
+
+## Schema plan
+
+**User decision (2026-11-03): content is managed in the admin only.** The customizer exposes just `padding_top`, `padding_bottom`, `padding_top_mobile`, `padding_bottom_mobile` and `custom_class`. Color scheme is fixed to scheme-7 (cream gradient). No blocks.
+
+## Design tokens used
+
+- Colors: scheme-7 (`--gradient-cream`), `--gradient-brand` (card ring, button border), `--color-orange` (eyebrow, active filter), black
+- Typography: H2 (48), `.content-large` (Inter Medium 24) eyebrow, Inter Medium 16 meta, Inter Regular 16 body
+- Spacing: 100 / 55 / 40 / 28 / 20 / 10 / 4
+
+## Interactions & JS
+
+No JS. Search = GET form. Filter = native `<details>` dropdown (All + each tag, `aria-current` on the active one); closes on toggle, not on outside click.
+
+## Reuse check
+
+Reuses `.search-results__form` / `__input` / `__form-icon` (search pill), `.ctm-gradient-card` (6px ring, radius overridden to 10), `.ctm-button.btn-dark-gradient`, `.content` / `.ctm-title` wrappers. New shared snippet `article-meta` (Blog Latest + Article Main reuse it).
+
+## Dependencies & risks
+
+- **Category = first tag** (no category field on articles) — confirm, or add an article metafield later.
+- Search lands on the global Search Results page filtered to articles (all blogs, not just Learn).
+- The featured article also appears in "The Latest" (excluding it would break pagination counts).
+- No mobile design.
+
+## QA
+
+- **Last QA run:**
+- **Result:**
+- **Open issues:**
+- **Non-blocking suggestions:**
+
+## Build notes
+
+- Built 2026-11-03, Option B then reduced to admin-only per user (no article picker / text settings). Locale keys under `blogs.learn` in `locales/en.default.json`.
+- New SVG icons: `assets/icon-user-round.svg`, `icon-calendar.svg`, `icon-tag.svg`, `icon-blog-filter.svg` (Figma paths, `currentColor`, 24/16 roots).
+- Image `loading` eager when the section is in the first two slots (it sits right under the banner), lazy otherwise; `sizes` from the 623px desktop half.
+- `templates/blog.json`: Page Banner ("Learn", h1, same settings as search.json) → `featured` → Dawn `main` (until Blog Latest replaces it).
+- CSS under `/* ===== Blog featured ... */` and `/* ===== Article meta row ... */` at the end of css/components.css.
+- Verified: JSON valid, Theme Check — no findings in the new files, Tailwind test build compiles the new classes, `/blogs/news` 200 with 0 Liquid errors (featured card, tag filter with 2 dev tags, author/date/tag rendered). Dev article has no image — the empty 4:3/488 box is kept. **Visual check deferred** — user will check.
+
+---
+
+## Blog Latest
+
+**Status:** pending
+**Node ID:** 23:12393 ("Section 2" in `23:12297`)
+**Figma link:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/?node-id=23-12393
+**Templates:** blog
+**Complexity:** medium
+**Section file:** _(filled in after build)_
+
+## Visual brief
+
+1512×855, **black** background (dark scheme), padding 80 (content 1352 at x 80 — note: 80 gutter, not the 100 used by Blog Featured).
+
+- H2 "THE LATEST" (48, white), left-aligned.
+- 40 below: 3-column card grid, cards 424 wide, 40 column gap (424×3 + 40×2 = 1352). Card (515 tall):
+  - image 424×280, radius ~10, cover
+  - 20 gap, title centered (30 tall ≈ H4.1 24 tracking 6% uppercase, white)
+  - 20 gap, infos row (author · date · category with 24px icons) spread across full card width (author x 0, date x 155, category x 324)
+  - 20 gap, excerpt Inter 16 centered, 3 lines with "…"
+  - 20 gap, "LEARN MORE →" white pill with gradient border, centered (193×44)
+- 40 below the grid: pagination centered — 40px gradient-ring circle prev/next arrows, page numbers 1 2 3 … 5, current page gradient-filled (same as Search Results pagination).
+- Mobile (interpolated): 1 col → 2 (640) → 3 (990); padding 60/20.
+
+## Content elements
+
+- Heading — H2
+- Article cards: image, title, author, date, category, excerpt, button
+- Pagination (3 per page in the mock)
+
+## Schema plan
+
+_(Proposed.)_ This is the blog's main listing (`paginate blog.articles`), so it is the template's `main` section.
+
+- `heading` — text — "The Latest"
+- `articles_per_page` — range (3–24, default 6; Figma shows 3)
+- `show_image` / `show_author` / `show_date` / `show_category` / `show_excerpt` — checkbox
+- `excerpt_words` — range; `button_label` — text ("Learn more")
+- Mandatory trio (dark scheme, padding 80/80 · 60/60, `custom_class`)
+
+## Design tokens used
+
+- Colors: black bg, white text, `--gradient-brand` (button ring, pagination)
+- Typography: H2 48, H4.1 24, H5/H5-2 16
+- Spacing: 80 / 40 / 20
+
+## Interactions & JS
+
+None beyond pagination links. Tag-filtered URLs (`/blogs/<blog>/tagged/<tag>`) reuse this listing.
+
+## Reuse check
+
+- Near match: `custom-search-results` card + pagination (same card structure, centered title/excerpt/button) — differences: dark background, infos row, 424 cards / 80 gutter. Extract a shared `article-card` style or reuse its classes.
+- Dawn `snippets/article-card.liquid` exists (Dawn markup) — restyle or replace.
+
+## Dependencies & risks
+
+- Card buttons alternate between "Button 4" and "Button 5" component instances in Figma; screenshot shows them identical — treated as one style.
+- Category source (see Blog Featured).
+- No empty state / mobile design.
+
+## QA
+
+- **Last QA run:**
+- **Result:**
+- **Open issues:**
+- **Non-blocking suggestions:**
+
+## Build notes
+
+---
+
+## Article Main
+
+**Status:** pending
+**Node ID:** 23:12558 ("Section 1" in article frame `23:12547`)
+**Figma link:** https://www.figma.com/design/716dxbZpF2R0c3qnv7cZkF/?node-id=23-12558
+**Templates:** article
+**Complexity:** medium
+**Section file:** _(filled in after build)_
+
+## Visual brief
+
+1512×1588, cream→white gradient, padding 100 (content 1312 at x 100). No page banner on this template.
+
+- y 100: "← BACK TO BLOG" pill, 208×44, left-aligned, black fill + gradient border (`btn-dark-gradient`).
+- y 184 (40 below): centered content column 1000 wide (x 256):
+  - featured image 690×500, centered, radius ~10
+  - 20 gap, title centered (40 tall ≈ H3 32 uppercase)
+  - 20 gap, infos row centered (440 wide: author · date · category, 24px icons)
+  - 20 gap, article body (richtext, Inter 16, centered text in the mock; paragraphs ~24 apart)
+  - 20 gap, "SHOP NOW →" outline-gradient pill, centered (179×44)
+- y 1444 (40 below column): prev/next row full 1312 — "← PREVIOUS" outline pill left (171×44), "NEXT →" black pill right (133×44).
+- Mobile (interpolated): image full width (aspect 690:500), padding 60/20, prev/next stay on one row.
+
+## Content elements
+
+- Back-to-blog link (→ `blog.url`)
+- `article.image`, `article.title`, author, `published_at` (`%m/%d/%Y`), category
+- `article.content`
+- Shop Now CTA (merchant URL)
+- Previous / Next article links (`blog.previous_article` / `blog.next_article`)
+
+## Schema plan
+
+_(Proposed.)_
+
+- `back_label` — text ("Back to blog")
+- `show_image` / `show_author` / `show_date` / `show_category` — checkbox
+- `cta_label` — text ("Shop now"); `cta_link` — url (blank hides the button)
+- `prev_label` / `next_label` — text
+- Mandatory trio (scheme-7, padding 100/100 · 60/60, `custom_class`)
+
+## Design tokens used
+
+- Colors: `--gradient-cream`, `--gradient-brand`, black
+- Typography: H3 32, H5/H5-2 16, buttons H5/H5-2M
+- Spacing: 100 / 40 / 20
+
+## Interactions & JS
+
+None. Prev/next hide when there is no adjacent article. Comments not in Figma (blog comments off, or render Dawn's comment form below if enabled — confirm).
+
+## Reuse check
+
+- Dawn `main-article` (blocks: featured_image, title, share, content) — same data, different layout; restyle with blocks or replace with a custom section.
+- Infos row identical to Blog Featured / Blog Latest — shared snippet (`article-meta`).
+
+## Dependencies & risks
+
+- Body text is centered in the mock — long-form centered copy hurts readability; confirm vs left-aligned.
+- Shop Now destination (single URL vs per-article metafield).
+- Article JSON-LD (`Article`) needed for SEO.
+- Category source (shared risk).
+- No mobile design.
+
+## QA
+
+- **Last QA run:**
+- **Result:**
+- **Open issues:**
+- **Non-blocking suggestions:**
+
+## Build notes

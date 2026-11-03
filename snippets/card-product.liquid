@@ -22,6 +22,13 @@
   - card_style: {String} 'function' renders the centered Ruby Rockets card (Figma 3:664): badge, function name,
     flavor subtitle, short description and a quantity stepper + add to cart. Reads product metafields
     custom.function_name, custom.short_description, custom.badge and custom.accent_color. (optional)
+  - card_style: {String} 'collection' renders the collection-page variant of 'function' (Figma 23:10274): adds the
+    price + suffix, swaps the stepper for full-width "Add to cart" + "Find in stores" buttons; gift cards get a
+    denomination select instead of the price. (optional)
+  - show_badge: {Boolean} Show custom.badge on 'function'/'collection' cards. Default: true (optional)
+  - price_suffix: {String} Text after the price on 'collection' cards, e.g. "pack" (optional)
+  - stores_label: {String} "Find in stores" button text on 'collection' cards (optional)
+  - stores_link: {String} "Find in stores" URL on 'collection' cards; blank hides the button (optional)
 
   Usage:
   {% render 'card-product', show_vendor: section.settings.show_vendor %}
@@ -77,11 +84,19 @@
       <span class="visually-hidden">: {{ mini_name | escape }}</span>
     </a>
   </div>
-{%- elsif card_style == 'function' -%}
+{%- elsif card_style == 'function' or card_style == 'collection' -%}
   {%- liquid
     assign fn_has_product = false
     if card_product and card_product != empty
       assign fn_has_product = true
+    endif
+    assign fn_collection = false
+    if card_style == 'collection'
+      assign fn_collection = true
+    endif
+    assign fn_gift_card = false
+    if fn_has_product and card_product.gift_card?
+      assign fn_gift_card = true
     endif
 
     assign fn_name = 'Product name'
@@ -95,7 +110,9 @@
         assign fn_subtitle = card_product.title
       endif
       assign fn_description = card_product.metafields.custom.short_description.value
-      assign fn_badge = card_product.metafields.custom.badge.value
+      unless show_badge == false
+        assign fn_badge = card_product.metafields.custom.badge.value
+      endunless
       assign fn_accent = card_product.metafields.custom.accent_color.value
       assign fn_variant = card_product.selected_or_first_available_variant
       assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id
@@ -106,7 +123,7 @@
     endif
   -%}
   <div
-    class="card-function"
+    class="card-function{% if fn_collection %} card-function--collection{% endif %}{% if fn_gift_card %} card-function--gift{% endif %}"
     {% if fn_accent != blank %}
       style="--card-accent: {{ fn_accent }};"
     {% endif %}
@@ -163,7 +180,108 @@
         </div>
       {%- endif -%}
 
-      {%- if fn_has_product and quick_add != 'none' and quick_add != blank -%}
+      {%- if fn_collection and fn_has_product and fn_gift_card == false -%}
+        <p class="card-function__price">
+          <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+          {{- fn_variant.price | money -}}
+          {%- if price_suffix != blank -%}
+            <span aria-hidden="true">/</span><span>{{ price_suffix | escape }}</span>
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+
+      {%- if fn_collection -%}
+        <div class="card-function__buttons">
+          {%- if fn_has_product and quick_add != 'none' and quick_add != blank -%}
+            {%- liquid
+              # Gift cards pick their denomination in the card; other multi-variant products go to the PDP
+              assign fn_needs_options = fn_qty_rules
+              if card_product.variants_count > 1 and fn_gift_card == false
+                assign fn_needs_options = true
+              endif
+            -%}
+            {%- if fn_needs_options -%}
+              <a href="{{ card_product.url }}" class="ctm-button ctm-button-full btn-dark-gradient">
+                {{- 'products.product.choose_options' | t -}}
+              </a>
+            {%- else -%}
+              <product-form data-section-id="{{ section_id }}" class="card-function__form">
+                {%- form 'product',
+                  card_product,
+                  id: product_form_id,
+                  class: 'form card-function__actions',
+                  novalidate: 'novalidate',
+                  data-type: 'add-to-cart-form'
+                -%}
+                  {%- if fn_gift_card and card_product.variants_count > 1 -%}
+                    <div class="card-function__select-wrap">
+                      <label class="visually-hidden" for="Variant-{{ product_form_id }}">
+                        {{- card_product.options.first | escape -}}
+                      </label>
+                      <select
+                        id="Variant-{{ product_form_id }}"
+                        name="id"
+                        class="card-function__select product-variant-id"
+                      >
+                        {%- for variant in card_product.variants -%}
+                          <option
+                            value="{{ variant.id }}"
+                            {% if variant == fn_variant %}
+                              selected
+                            {% endif %}
+                            {% unless variant.available %}
+                              disabled
+                            {% endunless %}
+                          >
+                            {{- variant.title | escape -}}
+                          </option>
+                        {%- endfor -%}
+                      </select>
+                      <span class="svg-wrapper" aria-hidden="true">{{ 'icon-caret.svg' | inline_asset_content }}</span>
+                    </div>
+                  {%- else -%}
+                    <input
+                      type="hidden"
+                      name="id"
+                      value="{{ fn_variant.id }}"
+                      class="product-variant-id"
+                      {% if fn_variant.available == false %}
+                        disabled
+                      {% endif %}
+                    >
+                  {%- endif -%}
+                  <button
+                    id="{{ product_form_id }}-submit"
+                    type="submit"
+                    name="add"
+                    class="ctm-button ctm-button-full btn-dark-gradient card-function__submit"
+                    aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
+                    aria-live="polite"
+                    data-sold-out-message="true"
+                    {% if fn_variant.available == false %}
+                      disabled
+                    {% endif %}
+                  >
+                    <span>
+                      {%- if fn_variant.available -%}
+                        {{ 'products.product.add_to_cart' | t }}
+                      {%- else -%}
+                        {{ 'products.product.sold_out' | t }}
+                      {%- endif -%}
+                    </span>
+                    <span class="sold-out-message hidden">{{ 'products.product.sold_out' | t }}</span>
+                  </button>
+                {%- endform -%}
+              </product-form>
+            {%- endif -%}
+          {%- endif -%}
+          {%- if stores_link != blank and fn_gift_card == false -%}
+            <a href="{{ stores_link }}" class="ctm-button ctm-button-full btn-outline-gradient">
+              {{- stores_label | default: 'Find in stores' | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- elsif fn_has_product and quick_add != 'none' and quick_add != blank -%}
         {%- if card_product.variants_count > 1 or fn_qty_rules -%}
           <a href="{{ card_product.url }}" class="ctm-button btn-outline-gradient">
             {{- 'products.product.choose_options' | t -}}
@@ -525,7 +643,6 @@
                         {{- 'icon-arrow.svg' | inline_asset_content -}}
                       </span>
                     {%- endif -%}
-                    {%- render 'loading-spinner' -%}
                   </button>
                 </modal-opener>
                 <quick-add-modal id="QuickAdd-{{ card_product.id }}" class="quick-add-modal">
@@ -593,7 +710,6 @@
                           {{- 'icon-plus.svg' | inline_asset_content -}}
                         </span>
                       {%- endif -%}
-                      {%- render 'loading-spinner' -%}
                     </button>
                   {%- endform -%}
                 </product-form>
@@ -649,7 +765,6 @@
                     data-product-url="{{ card_product.url }}"
                   >
                     {{ 'products.product.choose_options' | t }}
-                    {%- render 'loading-spinner' -%}
                   </button>
                 </modal-opener>
                 <modal-dialog

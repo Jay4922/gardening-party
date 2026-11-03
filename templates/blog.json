@@ -1,5 +1,33 @@
 {
   "sections": {
+    "page_banner": {
+      "type": "custom-page-banner",
+      "settings": {
+        "heading": "Learn",
+        "heading_tag": "h1",
+        "background_image": "shopify://shop_images/IP_Header.png",
+        "show_gradient": false,
+        "overlay_opacity": 100,
+        "height_desktop": 400,
+        "height_mobile": 400,
+        "bg_color": "#000000",
+        "padding_top": 55,
+        "padding_bottom": 55,
+        "padding_top_mobile": 80,
+        "padding_bottom_mobile": 55,
+        "custom_class": ""
+      }
+    },
+    "featured": {
+      "type": "custom-blog-featured",
+      "settings": {
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60,
+        "custom_class": ""
+      }
+    },
     "main": {
       "type": "main-blog",
       "settings": {
@@ -14,6 +42,8 @@
     }
   },
   "order": [
+    "page_banner",
+    "featured",
     "main"
   ]
 }

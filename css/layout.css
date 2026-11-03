@@ -8,12 +8,18 @@
   @apply px-20 990:px-55;
 }
 
-/* Logo: 70 x 55 mobile, 92 x 73 desktop */
+/* Logo: 70 x 55 mobile, 92 x 73 desktop. Dawn's 7.5px link padding would make the bar 127 tall instead of Figma's 112.6 (20 + 72.6 + 20). */
+.header-wrapper .header__heading-link {
+  @apply p-0;
+}
 .header-wrapper .header__heading-logo-wrapper {
   @apply w-70 990:w-92;
 }
 
-/* Desktop menu: 55px after the logo, 27px between links, 10px link padding, Inter Medium 16 */
+/* Desktop menu: 55px after the logo (Dawn's 2rem grid column-gap removed), 27px between links, 10px link padding, Inter Medium 16 */
+.header-wrapper .header--middle-left {
+  @apply 990:gap-x-0;
+}
 .header-wrapper .header--middle-left .header__inline-menu {
   @apply ml-55;
 }
@@ -28,7 +34,8 @@
 .header-wrapper .header__inline-menu .header__menu-item .icon-caret {
   @apply hidden;
 }
-.header-wrapper .header__active-menu-item {
+.header-wrapper .header__active-menu-item,
+.header-wrapper .header__menu-item:hover span {
   @apply no-underline;
 }
 
@@ -39,9 +46,18 @@
   content: '';
   background: var(--gradient-brand);
 }
-.header-wrapper .header__inline-menu .header__menu-item:hover::after,
-.header-wrapper .header__inline-menu details[open] > .header__menu-item::after,
-.header-wrapper .header__inline-menu .header__menu-item:has(.header__active-menu-item)::after {
+/* Same li/details path as the base rule above — a shorter selector loses on specificity and the bar stays hidden */
+.header-wrapper .header__inline-menu > .list-menu > li > .header__menu-item:hover::after,
+.header-wrapper .header__inline-menu > .list-menu > li > .header__menu-item:has(.header__active-menu-item)::after,
+.header-wrapper .header__inline-menu > .list-menu > li > header-menu > details > .header__menu-item:hover::after,
+.header-wrapper .header__inline-menu > .list-menu > li > header-menu > details[open] > .header__menu-item::after,
+.header-wrapper
+  .header__inline-menu
+  > .list-menu
+  > li
+  > header-menu
+  > details
+  > .header__menu-item:has(.header__active-menu-item)::after {
   @apply opacity-100;
 }
 
@@ -219,8 +235,9 @@
 .footer .footer-block__details-content .list-menu__item--link {
   @apply p-0 font-body font-medium text-16 leading-figma text-white no-underline hover:underline;
 }
+/* No active-page underline in the footer (overrides Dawn's .list-menu__item--active); hover underline stays */
 .footer .footer-block__details-content .list-menu__item--active {
-  @apply underline;
+  @apply no-underline hover:underline;
 }
 
 /* Gradient bottom bar: socials left, © + credit right (stacked and centered on mobile) */

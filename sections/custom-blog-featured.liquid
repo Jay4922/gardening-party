@@ -1,0 +1,213 @@
+{% comment %}
+  Blog Featured — Figma "Section 1" 23:12298 (IP - Learn 23:12287).
+  Heading + article search + tag filter, then the newest article as a gradient-ring featured card.
+  All content comes from the blog in the admin; only padding and an extra class are editable.
+  Used by templates/blog.json between the Page Banner and Blog Latest.
+{% endcomment %}
+{%- liquid
+  assign input_id = 'BlogSearch-' | append: section.id
+  assign featured = blog.articles.first
+  assign title_id = 'BlogFeatured-' | append: section.id
+  assign tag_base = blog.url | append: '/tagged/'
+  if section.index > 2
+    assign image_loading = 'lazy'
+  else
+    assign image_loading = 'eager'
+  endif
+-%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="blog-featured section-{{ section.id }}-padding color-scheme-7 gradient {{ section.settings.custom_class }}">
+  <div class="blog-featured__inner">
+    <div class="blog-featured__toolbar">
+      <div class="ctm-title title-black blog-featured__heading">
+        <h2>{{ 'blogs.learn.heading' | t }}</h2>
+      </div>
+
+      <div class="blog-featured__tools">
+        <form
+          action="{{ routes.search_url }}"
+          method="get"
+          role="search"
+          class="search-results__form blog-featured__search"
+        >
+          <label class="visually-hidden" for="{{ input_id }}">{{ 'blogs.learn.search_label' | t }}</label>
+          <span class="search-results__form-icon">{{ 'icon-faq-search.svg' | inline_asset_content }}</span>
+          <input
+            class="search-results__input"
+            id="{{ input_id }}"
+            type="search"
+            name="q"
+            placeholder="{{ 'blogs.learn.search_placeholder' | t }}"
+            autocomplete="off"
+          >
+          <input type="hidden" name="type" value="article">
+          <input type="hidden" name="options[prefix]" value="last">
+        </form>
+
+        {%- if blog.all_tags.size > 0 -%}
+          <details class="blog-filter">
+            <summary class="blog-filter__toggle" aria-label="{{ 'blogs.learn.filter_label' | t }}">
+              <span>{{ 'blogs.learn.filter' | t }}</span>
+              {{- 'icon-blog-filter.svg' | inline_asset_content -}}
+            </summary>
+            <ul class="blog-filter__list list-none m-0 p-0" role="list">
+              <li>
+                <a
+                  href="{{ blog.url }}"
+                  class="blog-filter__link"
+                  {% if current_tags == blank %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{- 'blogs.learn.filter_all' | t -}}
+                </a>
+              </li>
+              {%- for tag in blog.all_tags -%}
+                <li>
+                  <a
+                    href="{{ tag_base }}{{ tag | handleize }}"
+                    class="blog-filter__link"
+                    {% if current_tags contains tag %}
+                      aria-current="page"
+                    {% endif %}
+                  >
+                    {{- tag | escape -}}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </details>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if featured != blank -%}
+      <article class="ctm-gradient-card blog-featured__card" aria-labelledby="{{ title_id }}">
+        <div class="blog-featured__card-inner">
+          <div class="blog-featured__media">
+            {%- if featured.image != blank -%}
+              {{
+                featured.image
+                | image_url: width: 1300
+                | image_tag:
+                  class: 'img-fluid-cover',
+                  widths: '375, 550, 750, 1000, 1300',
+                  sizes: '(min-width: 1512px) 623px, (min-width: 990px) calc((100vw - 267px) / 2), calc(100vw - 52px)',
+                  loading: image_loading,
+                  alt: featured.image.alt
+              }}
+            {%- endif -%}
+          </div>
+
+          <div class="blog-featured__copy">
+            <div class="blog-featured__titles">
+              <div class="content content-large title-orange">
+                <p class="uppercase">{{ 'blogs.learn.featured' | t }}</p>
+              </div>
+              <div class="ctm-title title-black">
+                <h3 class="h2" id="{{ title_id }}">
+                  <a href="{{ featured.url }}" class="blog-featured__title-link">{{ featured.title | escape }}</a>
+                </h3>
+              </div>
+            </div>
+
+            {% render 'article-meta', article: featured %}
+
+            <div class="content content-black blog-featured__excerpt">
+              {%- if featured.excerpt != blank -%}
+                {{ featured.excerpt }}
+              {%- else -%}
+                <p>{{ featured.content | strip_html | strip_newlines | truncatewords: 55 }}</p>
+              {%- endif -%}
+            </div>
+
+            <a href="{{ featured.url }}" class="ctm-button btn-dark-gradient" aria-describedby="{{ title_id }}">
+              {{- 'blogs.learn.read_story' | t -}}
+              {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+            </a>
+          </div>
+        </div>
+      </article>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Blog featured",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": {
+    "templates": ["blog"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Extra CSS Class"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog featured"
+    }
+  ]
+}
+{% endschema %}

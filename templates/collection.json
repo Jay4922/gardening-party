@@ -1,31 +1,48 @@
 {
   "sections": {
     "banner": {
-      "type": "main-collection-banner",
+      "type": "custom-page-banner",
       "settings": {
-        "show_collection_description": true,
-        "show_collection_image": false,
-        "color_scheme": "scheme-1"
+        "heading": "",
+        "heading_tag": "h1",
+        "show_gradient": true,
+        "overlay_opacity": 100,
+        "height_desktop": 400,
+        "height_mobile": 400,
+        "bg_color": "#000000",
+        "padding_top": 55,
+        "padding_bottom": 55,
+        "padding_top_mobile": 80,
+        "padding_bottom_mobile": 55,
+        "custom_class": ""
       }
     },
     "product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
-        "products_per_page": 16,
-        "columns_desktop": 4,
-        "color_scheme": "scheme-1",
+        "products_per_page": 12,
+        "columns_desktop": 3,
+        "columns_mobile": "1",
+        "color_scheme": "scheme-7",
+        "card_layout": "collection",
+        "show_badge": true,
+        "price_suffix": "pack",
+        "stores_label": "Find in stores",
+        "stores_link": "/pages/retailers-partners",
         "image_ratio": "adapt",
         "image_shape": "default",
         "show_secondary_image": false,
         "show_vendor": false,
         "show_rating": false,
-        "quick_add": "none",
-        "enable_filtering": true,
+        "quick_add": "standard",
+        "enable_filtering": false,
         "filter_type": "horizontal",
-        "enable_sorting": true,
-        "columns_mobile": "2",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "enable_sorting": false,
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60,
+        "custom_class": ""
       }
     }
   },

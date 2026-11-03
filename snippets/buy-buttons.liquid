@@ -6,6 +6,8 @@
   - product_form_id: {String} product form id.
   - section_id: {String} id of section to which this snippet belongs.
   - show_pickup_availability: {Boolean} for the pickup availability. If true the pickup availability is rendered, false - not rendered (optional).
+  - submit_class: {String} replaces Dawn's button classes on Add to cart, e.g. 'ctm-button btn-dark-gradient' (optional).
+  The block's find_in_stores_label / find_in_stores_link settings (main-product only) add a "Find in stores" link beside it.
 
   Usage:
   {% render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, section_id: section.id, show_pickup_availability: true %}
@@ -74,7 +76,7 @@
             id="ProductSubmitButton-{{ section_id }}"
             type="submit"
             name="add"
-            class="product-form__submit button button--full-width {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}"
+            class="product-form__submit {% if submit_class != blank %}{{ submit_class }}{% else %}button button--full-width {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}{% endif %}"
             {% if product.selected_or_first_available_variant.available == false
               or quantity_rule_soldout
               or product.selected_or_first_available_variant == null
@@ -91,8 +93,12 @@
                 {{ 'products.product.add_to_cart' | t }}
               {%- endif -%}
             </span>
-            {%- render 'loading-spinner' -%}
           </button>
+          {%- if block.settings.find_in_stores_link != blank and block.settings.find_in_stores_label != blank -%}
+            <a href="{{ block.settings.find_in_stores_link }}" class="product-form__find ctm-button btn-outline-gradient">
+              {{- block.settings.find_in_stores_label | escape -}}
+            </a>
+          {%- endif -%}
           {%- if show_dynamic_checkout -%}
             {{ form | payment_button }}
           {%- endif -%}

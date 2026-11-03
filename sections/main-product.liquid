@@ -1,6 +1,6 @@
 <product-info
   id="MainProduct-{{ section.id }}"
-  class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}"
+  class="main-product section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }} {{ section.settings.custom_class }}"
   data-section="{{ section.id }}"
   data-product-id="{{ product.id }}"
   data-update-url="true"
@@ -26,15 +26,15 @@
   {%- endif -%}
 
   {%- style -%}
+    /* .main-product */
     .section-{{ section.id }}-padding {
-      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
-      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
     }
-
-    @media screen and (min-width: 750px) {
+    @media screen and (max-width: 989px) {
       .section-{{ section.id }}-padding {
-        padding-top: {{ section.settings.padding_top }}px;
-        padding-bottom: {{ section.settings.padding_bottom }}px;
+        padding-top: {{ section.settings.padding_top_mobile }}px;
+        padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
       }
     }
   {%- endstyle -%}
@@ -74,7 +74,7 @@
 
   {% assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' %}
   <product-component view-event-payload="{{ product | standard_event_data: 'view', context: 'page' | escape }}">
-    <div class="page-width">
+    <div class="main-product__inner">
       <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
         <div class="grid__item product__media-wrapper">
           {% render 'product-media-gallery', variant_images: variant_images %}
@@ -97,8 +97,15 @@
                   >
                     {{- block.settings.text -}}
                   </p>
+                {%- when 'eyebrow' -%}
+                  {%- liquid
+                    assign eyebrow_text = block.settings.text | default: product.metafields.custom.function_name.value | default: product.type
+                  -%}
+                  {%- if eyebrow_text != blank -%}
+                    <p class="main-product__eyebrow h-eyebrow" {{ block.shopify_attributes }}>{{ eyebrow_text | escape }}</p>
+                  {%- endif -%}
                 {%- when 'title' -%}
-                  <div class="product__title" {{ block.shopify_attributes }}>
+                  <div class="product__title main-product__tight" {{ block.shopify_attributes }}>
                     <h1>{{ product.title | escape }}</h1>
                     <a href="{{ product.url }}" class="product__title">
                       <h2 class="h1">
@@ -107,7 +114,22 @@
                     </a>
                   </div>
                 {%- when 'price' -%}
-                  <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
+                  {%- liquid
+                    assign pack_label = block.settings.pack_label
+                    if pack_label == blank and product.has_only_default_variant == false
+                      assign pack_label = product.selected_or_first_available_variant.title
+                    endif
+                  -%}
+                  <div
+                    id="price-{{ section.id }}"
+                    class="main-product__price main-product__tight"
+                    role="status"
+                    {{ block.shopify_attributes }}
+                  >
+                    {%- if pack_label != blank -%}
+                      <span class="main-product__pack">{{ pack_label | escape }}</span>
+                      <span class="main-product__pack-sep" aria-hidden="true">—</span>
+                    {%- endif -%}
                     {%- render 'price',
                       product: product,
                       use_variant: true,
@@ -120,21 +142,7 @@
                       <span>{{ 'products.product.volume_pricing.note' | t }}</span>
                     </div>
                   {%- endif -%}
-                  {%- if cart.taxes_included or cart.duties_included or shop.shipping_policy.body != blank -%}
-                    <div class="product__tax caption rte">
-                      {%- if cart.duties_included and cart.taxes_included -%}
-                        {{ 'products.product.duties_and_taxes_included' | t }}
-                      {%- elsif cart.taxes_included -%}
-                        {{ 'products.product.taxes_included' | t }}
-                      {%- elsif cart.duties_included -%}
-                        {{ 'products.product.duties_included' | t }}
-                      {%- endif -%}
-                      {%- if shop.shipping_policy.body != blank -%}
-                        {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
-                      {%- endif -%}
-                    </div>
-                  {%- endif -%}
-                  <div {{ block.shopify_attributes }}>
+                  <div class="main-product__installment" {{ block.shopify_attributes }}>
                     {%- assign product_form_installment_id = 'product-form-installment-' | append: section.id -%}
                     {%- form 'product', product, id: product_form_installment_id, class: 'installment caption-large' -%}
                       <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
@@ -192,6 +200,12 @@
                       {%- endif -%}
                     {%- endif -%}
                   </p>
+                {%- when 'product_stats' -%}
+                  {% render 'product-stats', block: block, product: product %}
+                {%- when 'product_faq' -%}
+                  {% render 'product-faq', block: block, product: product %}
+                {%- when 'function_flavor' -%}
+                  {% render 'product-function', block: block, product: product %}
                 {%- when 'description' -%}
                   {%- if product.description != blank -%}
                     <div class="product__description rte quick-add-hidden" {{ block.shopify_attributes }}>
@@ -497,46 +511,11 @@
                     product: product,
                     product_form_id: product_form_id,
                     section_id: section.id,
-                    show_pickup_availability: true
+                    show_pickup_availability: false,
+                    submit_class: 'ctm-button btn-dark-gradient'
                   -%}
                 {%- when 'rating' -%}
-                  {%- if product.metafields.reviews.rating.value != blank -%}
-                    <div class="rating-wrapper">
-                      {% liquid
-                        assign rating_decimal = 0
-                        assign decimal = product.metafields.reviews.rating.value.rating | modulo: 1
-                        if decimal >= 0.3 and decimal <= 0.7
-                          assign rating_decimal = 0.5
-                        elsif decimal > 0.7
-                          assign rating_decimal = 1
-                        endif
-                      %}
-                      <div
-                        class="rating"
-                        role="img"
-                        aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}"
-                      >
-                        <span
-                          aria-hidden="true"
-                          class="rating-star"
-                          style="--rating: {{ product.metafields.reviews.rating.value.rating | floor }}; --rating-max: {{ product.metafields.reviews.rating.value.scale_max }}; --rating-decimal: {{ rating_decimal }};"
-                        ></span>
-                      </div>
-                      <p class="rating-text caption">
-                        <span aria-hidden="true">
-                          {{- product.metafields.reviews.rating.value }} /
-                          {{ product.metafields.reviews.rating.value.scale_max -}}
-                        </span>
-                      </p>
-                      <p class="rating-count caption">
-                        <span aria-hidden="true">({{ product.metafields.reviews.rating_count }})</span>
-                        <span class="visually-hidden">
-                          {{- product.metafields.reviews.rating_count }}
-                          {{ 'accessibility.total_reviews' | t -}}
-                        </span>
-                      </p>
-                    </div>
-                  {%- endif -%}
+                  {% render 'product-rating', block: block, product: product %}
                 {%- when 'complementary' -%}
                   <product-recommendations
                     class="complementary-products quick-add-hidden{% if block.settings.make_collapsible_row %} is-accordion{% endif %}{% if block.settings.enable_quick_add %} complementary-products-contains-quick-add{% endif %}"
@@ -800,9 +779,31 @@
       "limit": 1
     },
     {
+      "type": "eyebrow",
+      "name": "Eyebrow",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "info": "Leave blank to use the product's Function name metafield (custom.function_name), then the product type."
+        }
+      ]
+    },
+    {
       "type": "price",
       "name": "t:sections.main-product.blocks.price.name",
-      "limit": 1
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "pack_label",
+          "label": "Pack label",
+          "default": "6-Pack",
+          "info": "Shown before the price, e.g. 6-Pack. Leave blank to use the selected variant's name."
+        }
+      ]
     },
     {
       "type": "sku",
@@ -940,6 +941,19 @@
           "default": true,
           "label": "t:sections.main-product.blocks.buy_buttons.settings.show_gift_card_recipient.label",
           "info": "t:sections.main-product.blocks.buy_buttons.settings.show_gift_card_recipient.info"
+        },
+        { "type": "header", "content": "Find in stores button" },
+        {
+          "type": "text",
+          "id": "find_in_stores_label",
+          "label": "Label",
+          "default": "Find in stores"
+        },
+        {
+          "type": "url",
+          "id": "find_in_stores_link",
+          "label": "Link",
+          "info": "Leave blank to hide the button."
         }
       ]
     },
@@ -958,6 +972,169 @@
           "id": "share_label",
           "label": "t:sections.main-product.blocks.share.settings.text.label",
           "default": "t:sections.main-product.blocks.share.settings.text.default"
+        }
+      ]
+    },
+    {
+      "type": "product_stats",
+      "name": "Product stats",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Stats come from the product metafield \"Number with text block\" (custom.number_with_text_block). To edit them: Shopify admin → Products → choose the product → Metafields (bottom of the page) → Number with text block. In the editor preview, the block shows a link that opens the product you're previewing."
+        },
+        { "type": "header", "content": "Desktop Padding" },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Padding top",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Padding bottom",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        },
+        { "type": "header", "content": "Mobile Padding" },
+        {
+          "type": "range",
+          "id": "padding_top_mobile",
+          "label": "Padding top (mobile)",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom_mobile",
+          "label": "Padding bottom (mobile)",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        }
+      ]
+    },
+    {
+      "type": "function_flavor",
+      "name": "Function + flavor",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Cards come from the product metafield \"Choose Your Function + Flavour\" (custom.choose_your_function_flavour). To pick which cards a product shows: Shopify admin → Products → choose the product → Metafields (bottom of the page) → Choose Your Function + Flavour. To edit a card's image, title or text: Shopify admin → Content → Metaobjects → Choose Your Function + Flavour Main. In the editor preview, the block shows links to both."
+        },
+        {
+          "type": "paragraph",
+          "content": "Each card links to the product picked in the metaobject's \"Product\" field (key: product). The current product's card gets the gradient border."
+        },
+        { "type": "header", "content": "Desktop Padding" },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Padding top",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Padding bottom",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        },
+        { "type": "header", "content": "Mobile Padding" },
+        {
+          "type": "range",
+          "id": "padding_top_mobile",
+          "label": "Padding top (mobile)",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom_mobile",
+          "label": "Padding bottom (mobile)",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        }
+      ]
+    },
+    {
+      "type": "product_faq",
+      "name": "Product FAQ",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Questions and answers come from the product metafield \"Product FAQ\" (custom.product_faq). To edit them: Shopify admin → Products → choose the product → Metafields (bottom of the page) → Product FAQ. Each entry becomes one dropdown row. In the editor preview, the block shows a link that opens the product you're previewing."
+        },
+        { "type": "header", "content": "Desktop Padding" },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Padding top",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Padding bottom",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        },
+        { "type": "header", "content": "Mobile Padding" },
+        {
+          "type": "range",
+          "id": "padding_top_mobile",
+          "label": "Padding top (mobile)",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom_mobile",
+          "label": "Padding bottom (mobile)",
+          "min": 0,
+          "max": 100,
+          "step": 2,
+          "unit": "px",
+          "default": 20
         }
       ]
     },
@@ -2320,6 +2497,32 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 36
+    },
+    { "type": "header", "content": "Mobile Padding" },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Extra CSS Class"
     }
   ]
 }

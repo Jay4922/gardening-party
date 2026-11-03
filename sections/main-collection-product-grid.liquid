@@ -24,11 +24,11 @@
 
 {%- style -%}
   .section-{{ section.id }}-padding {
-    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
-    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
   }
 
-  @media screen and (min-width: 750px) {
+  @media screen and (min-width: 990px) {
     .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
@@ -40,7 +40,7 @@
   view-event-payload="{{ collection | standard_event_data: 'view' | escape }}"
   data-collection-id="{{ collection.id }}"
 >
-  <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
+  <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}{% if section.settings.card_layout == 'collection' %} collection-grid--rr{% endif %} {{ section.settings.custom_class | escape }}">
     {%- paginate collection.products by section.settings.products_per_page -%}
       {% comment %} Sort is the first tabbable element when filter type is vertical {% endcomment %}
       {%- if section.settings.enable_sorting and section.settings.filter_type == 'vertical' -%}
@@ -169,6 +169,19 @@
                       style="--animation-order: {{ forloop.index }};"
                     {% endif %}
                   >
+                    {%- if section.settings.card_layout == 'collection' -%}
+                      {% render 'card-product',
+                        card_product: product,
+                        card_style: 'collection',
+                        show_badge: section.settings.show_badge,
+                        price_suffix: section.settings.price_suffix,
+                        stores_label: section.settings.stores_label,
+                        stores_link: section.settings.stores_link,
+                        lazy_load: lazy_load,
+                        quick_add: section.settings.quick_add,
+                        section_id: section.id
+                      %}
+                    {%- else -%}
                     {% render 'card-product',
                       card_product: product,
                       media_aspect_ratio: section.settings.image_ratio,
@@ -182,6 +195,7 @@
                       section_id: section.id,
                       product_view_context: 'collection'
                     %}
+                    {%- endif -%}
                   </li>
                   {%- assign skip_card_product_styles = true -%}
                 {%- endfor -%}
@@ -209,10 +223,10 @@
     {
       "type": "range",
       "id": "products_per_page",
-      "min": 8,
+      "min": 3,
       "max": 36,
-      "step": 4,
-      "default": 16,
+      "step": 3,
+      "default": 12,
       "label": "t:sections.main-collection-product-grid.settings.products_per_page.label"
     },
     {
@@ -221,13 +235,13 @@
       "min": 1,
       "max": 6,
       "step": 1,
-      "default": 4,
+      "default": 3,
       "label": "t:sections.main-collection-product-grid.settings.columns_desktop.label"
     },
     {
       "type": "select",
       "id": "columns_mobile",
-      "default": "2",
+      "default": "1",
       "label": "t:sections.main-collection-product-grid.settings.columns_mobile.label",
       "options": [
         {
@@ -245,7 +259,53 @@
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
       "info": "t:sections.all.colors.has_cards_info",
-      "default": "scheme-1"
+      "default": "scheme-7"
+    },
+    {
+      "type": "header",
+      "content": "Product card"
+    },
+    {
+      "type": "select",
+      "id": "card_layout",
+      "label": "Card layout",
+      "options": [
+        {
+          "value": "dawn",
+          "label": "Dawn standard"
+        },
+        {
+          "value": "collection",
+          "label": "Ruby Rockets (centered)"
+        }
+      ],
+      "default": "collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show product badge",
+      "info": "Uses the product metafield custom.badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "price_suffix",
+      "label": "Price suffix",
+      "info": "Shown after the price, e.g. \"pack\". Not shown on gift cards.",
+      "default": "pack"
+    },
+    {
+      "type": "text",
+      "id": "stores_label",
+      "label": "Find in stores button label",
+      "default": "Find in stores"
+    },
+    {
+      "type": "url",
+      "id": "stores_link",
+      "label": "Find in stores link",
+      "info": "Same link on every card. Leave blank to hide the button."
     },
     {
       "type": "header",
@@ -395,21 +455,46 @@
       "type": "range",
       "id": "padding_top",
       "min": 0,
-      "max": 100,
+      "max": 160,
       "step": 4,
       "unit": "px",
       "label": "t:sections.all.padding.padding_top",
-      "default": 36
+      "default": 80
     },
     {
       "type": "range",
       "id": "padding_bottom",
       "min": 0,
-      "max": 100,
+      "max": 160,
       "step": 4,
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
-      "default": 36
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding (mobile)",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding (mobile)",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom CSS class"
     }
   ]
 }

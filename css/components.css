@@ -57,7 +57,7 @@
   @apply absolute inset-0 pointer-events-none;
 }
 .page-banner__bg {
-  @apply absolute inset-0 w-full h-full object-cover;
+  @apply absolute inset-0 w-full h-full object-cover 990:object-right-bottom;
 }
 /* Brand gradient (alpha-tapered toward the middle) over a black scrim */
 .page-banner__media::after {
@@ -110,8 +110,9 @@
   @apply w-full h-full object-contain object-bottom 990:object-right-bottom;
   filter: drop-shadow(0 4px 20px rgb(0 0 0 / 0.4));
 }
+/* Desktop: keep the title in the left half so it wraps (e.g. "Retailers &⏎Partners") instead of running under the product art on the right */
 .page-banner__copy {
-  @apply relative w-full 990:max-w-1062;
+  @apply relative w-full 990:max-w-[50%];
 }
 
 /* FAQ (sections/custom-faq.liquid) — Figma 3:6110 / mobile 3:10092 */
@@ -228,6 +229,53 @@
 .faq__empty {
   @apply mx-auto mt-28 max-w-1000 text-center;
 }
+/* Card layout (layout: card) — Figma 23:10713: left heading, 571 x 400 image card | list, 55 apart, bottoms aligned */
+.faq--card .faq__layout {
+  @apply mt-40 flex flex-col gap-40 990:mt-55 990:flex-row 990:items-end 990:gap-55;
+}
+.faq--card .faq__panels {
+  @apply m-0 max-w-none min-w-0 990:flex-1;
+}
+.faq__card {
+  @apply relative flex flex-col justify-between w-full h-320 p-20 overflow-hidden rounded-20 bg-gradient-brand 990:w-571 990:h-400 990:shrink-0;
+}
+.faq__card-bg {
+  @apply absolute inset-0 w-full h-full object-cover;
+}
+/* Brand tint: solid orange at the top, clear through the middle, deep purple at the bottom */
+.faq__card--tint::after {
+  @apply absolute inset-0 pointer-events-none;
+  content: '';
+  background: linear-gradient(
+    180deg,
+    rgb(251 139 48) 6.06%,
+    rgb(249 91 29 / 0.6) 17.8%,
+    rgb(228 66 54 / 0.1) 28.64%,
+    rgb(214 47 79 / 0.1) 65.37%,
+    rgb(134 33 118 / 0.6) 78.23%,
+    rgb(63 27 125) 90.34%
+  );
+}
+.faq__card > :not(.faq__card-bg) {
+  @apply relative z-1;
+}
+/* A <p> (not a heading tag), so .title-white's h1–h6 rule doesn't reach it — color it here */
+.faq__card-heading {
+  @apply m-0 text-white;
+}
+/* Desktop: pill + both links on one row (Figma 207 + 89 + 191 + 2 x 20 = 527 of 531) — no wrap, pill absorbs the shortfall */
+.faq__card-actions {
+  @apply flex flex-wrap items-center gap-x-20 gap-y-12 990:flex-nowrap;
+}
+.faq__card .faq__card-button {
+  @apply max-990:w-full 990:flex-1 990:min-w-0 990:px-20;
+}
+.faq__card-link {
+  @apply shrink-0 font-body font-medium text-16 leading-figma uppercase text-white underline whitespace-nowrap hover:text-light-orange;
+}
+.faq__card-link:focus-visible {
+  @apply outline-2 outline-offset-2 outline-white;
+}
 
 /* CTA banner (sections/custom-cta-banner.liquid) — Figma 3:6341 (FAQ), 3:1115 (home), 3:7261 (retailers), mobile 3:10332 */
 .cta-banner {
@@ -266,11 +314,23 @@
 }
 
 /* Translucent dark pill with gradient border (Figma hero "Join the launch": 48% black fill) */
+/* Figma 3:460: 48% black fill + brand-gradient border. The gradient is a masked ::before ring — painting it
+   under a translucent padding-box fill (as the solid variants do) tinted the whole button with the gradient. */
 .btn-glass-gradient {
-  @apply text-white;
-  background:
-    linear-gradient(rgb(0 0 0 / 0.48), rgb(0 0 0 / 0.48)) padding-box,
-    var(--gradient-brand) border-box;
+  @apply relative text-white;
+  background: rgb(0 0 0 / 0.48);
+}
+.btn-glass-gradient::before {
+  @apply absolute pointer-events-none;
+  content: '';
+  inset: -2px;
+  padding: 2px;
+  border-radius: inherit;
+  background: var(--gradient-brand) border-box;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
 }
 .btn-glass-gradient:hover {
   background:
@@ -311,15 +371,17 @@
   @apply box-border;
 }
 
-/* Slider pagination bars (Swiper): 40px bars, 8px apart; active = brand gradient with a 2px white border */
+/* Slider pagination bars (Swiper) — Figma 3:465: 40px bars, 8px apart; active = brand gradient with a 2px white
+   outside stroke. Ring is a box-shadow so it sits outside the bar — an inner border filled the whole 4px bar. */
 .ctm-pagination.swiper-pagination {
   @apply flex items-center gap-8 w-auto;
 }
 .ctm-pagination .swiper-pagination-bullet {
-  @apply m-0! w-40 h-6 990:h-4 rounded-30 bg-white opacity-100 box-border;
+  @apply m-0! w-40 h-6 990:h-4 rounded-30 bg-white opacity-100;
 }
 .ctm-pagination .swiper-pagination-bullet-active {
-  @apply border-2 border-white bg-gradient-brand;
+  @apply bg-gradient-brand;
+  box-shadow: 0 0 0 2px var(--color-white, #fff);
 }
 
 /* ===== Hero slider (sections/custom-hero-slider.liquid) — Figma 3:454 / mobile 3:8808 ===== */
@@ -501,6 +563,52 @@ a.instagram-feed__link:hover .instagram-feed__img {
   appearance: none;
 }
 
+/* ===== Product card, collection style (card_style: 'collection') — Figma 23:10274 ===== */
+/* 202 x 280 pack shot; gift cards are landscape art in a 328 x 280 box */
+.card-function--collection .card-function__media {
+  @apply w-202 h-280 items-center;
+}
+.card-function--gift .card-function__media {
+  @apply w-full max-w-328;
+}
+.card-function--collection .card-function__image {
+  @apply max-h-280;
+}
+.card-function__price {
+  @apply flex items-center justify-center gap-5 m-0 font-body font-medium text-16 990:text-20 leading-figma text-black;
+}
+/* Add to cart + Find in stores: full width, stacked 10 apart, pinned to the card bottom so rows line up */
+.card-function__buttons {
+  @apply flex flex-col gap-10 w-full mt-auto;
+}
+.card-function--collection .card-function__form {
+  @apply w-full;
+}
+.card-function--collection .card-function__actions {
+  @apply flex-col items-stretch gap-10;
+}
+/* Gift card denomination select: white pill matching the button outline */
+.card-function__select-wrap {
+  @apply relative w-full;
+}
+.card-function__select {
+  @apply w-full py-10 pl-28 pr-56 rounded-80 border-2 border-black bg-white font-body font-medium text-16 leading-figma text-black text-center cursor-pointer;
+  appearance: none;
+}
+.card-function__select-wrap .svg-wrapper {
+  @apply absolute right-28 top-1/2 -translate-y-1/2 size-12 pointer-events-none;
+}
+
+/* Collection grid (sections/main-collection-product-grid.liquid, card_layout 'collection'): 40px side inset, 55px gaps */
+.collection-grid--rr .collection.page-width {
+  @apply max-w-1512 990:px-40;
+}
+.collection-grid--rr .product-grid {
+  --grid-mobile-vertical-spacing: 55px;
+  --grid-desktop-horizontal-spacing: 55px;
+  --grid-desktop-vertical-spacing: 55px;
+}
+
 /* ===== Featured products (sections/custom-featured-products.liquid) — Figma 3:652 / mobile 3:9020 ===== */
 .featured-products__list {
   @apply m-0 p-0 list-none;
@@ -562,6 +670,286 @@ a.instagram-feed__link:hover .instagram-feed__img {
 }
 .function-flavor__stat-text {
   @apply flex items-center gap-20 990:flex-col 990:gap-10 990:text-center;
+}
+
+/* Product stats block (sections/main-product.liquid, block "product_stats"): 3 centered columns, label, then a 60 x 4 bar; bar colors cycle orange / magenta / blue */
+.product-stats__list {
+  @apply m-0 p-0 list-none flex justify-around gap-20 text-black;
+}
+.product-stats__item {
+  @apply flex flex-1 flex-col items-center gap-10 text-center min-w-0;
+}
+.product-stats__label p {
+  @apply text-14 990:text-16;
+}
+.product-stats__bar {
+  @apply block w-40 990:w-60 h-4 rounded-20 bg-orange;
+}
+.product-stats__item:nth-child(3n + 2) .product-stats__bar {
+  @apply bg-magenta;
+}
+.product-stats__item:nth-child(3n + 3) .product-stats__bar {
+  @apply bg-electric-blue;
+}
+/* Product FAQ block (sections/main-product.liquid, block "product_faq") — Figma "Dropdown" 23:10409: rows 20 apart, title | 20px caret, 1px black/40 rule 20 below */
+.product-faq {
+  @apply flex flex-col gap-20;
+}
+.product-faq__item {
+  @apply pb-20 border-b border-black/40;
+}
+.product-faq__summary {
+  @apply flex items-center gap-20 list-none cursor-pointer;
+}
+.product-faq__summary::-webkit-details-marker {
+  display: none;
+}
+.product-faq__summary:focus-visible {
+  @apply outline-2 outline-offset-4 outline-orange;
+}
+.product-faq__question {
+  @apply flex-1 min-w-0 m-0 font-heading font-bold uppercase text-16 990:text-20 leading-figma tracking-normal text-black break-words;
+}
+.product-faq__icon {
+  @apply flex size-20 shrink-0 text-black transition-transform duration-300;
+}
+.product-faq__icon svg {
+  @apply size-20;
+}
+.product-faq__item[open] .product-faq__icon {
+  @apply rotate-180 text-orange;
+}
+/* Open row: title turns orange (Figma 23:12089) */
+.product-faq__item[open] .product-faq__question {
+  @apply text-orange;
+}
+.product-faq__answer {
+  @apply pt-20;
+}
+
+/* Theme-editor-only help note for metafield-driven product blocks (snippets/product-editor-note.liquid) */
+.product-editor-note {
+  @apply mt-16 p-12 rounded-10 border border-dashed border-black/30 bg-white text-14 leading-figma;
+}
+.product-editor-note p {
+  @apply m-0;
+}
+.product-editor-note p + p {
+  @apply mt-6;
+}
+.product-editor-note a {
+  @apply text-orange underline;
+}
+
+/* ===== PDP main (sections/main-product.liquid) — Figma "SEction 1" 23:10287 =====
+   1512 canvas: p-100, gallery 680 (120 thumbs + 20 + 540 panel) | 55 gap | info 577.
+   Restyles Dawn's "thumbnail" gallery layout; Dawn's section-main-product.css loads later, so ties need ! */
+.main-product__inner {
+  @apply max-w-1512 mx-auto px-20 990:px-55 1366:px-100;
+}
+@variant 990 {
+  .main-product .product {
+    display: grid !important;
+    grid-template-columns: minmax(0, 680fr) minmax(0, 577fr);
+    @apply gap-55 m-0!;
+  }
+  .main-product .product > .grid__item {
+    @apply w-auto! max-w-none! p-0! min-w-0;
+  }
+}
+
+/* Gallery: thumbs column left of the main panel on desktop; Dawn's swipe slider + counter on mobile */
+.main-product .product-media-container {
+  --aspect-ratio: 1 !important;
+  @apply max-w-full! rounded-20 overflow-hidden border-0;
+  background-color: rgb(238 217 191 / 0.28);
+}
+.main-product .product-media-container .media {
+  @apply bg-transparent;
+}
+.main-product .product-media-container .media img {
+  @apply object-contain! p-20;
+}
+@variant 990 {
+  /* Rows stretch so the thumb column is exactly as tall as the main panel (540 at 1512, smaller below) */
+  .main-product media-gallery {
+    @apply d-grid grid-cols-[120px_minmax(0,1fr)] items-stretch gap-20;
+  }
+  .main-product media-gallery > slider-component:first-of-type {
+    @apply col-start-2 row-start-1 min-w-0;
+  }
+  .main-product .thumbnail-slider {
+    @apply relative col-start-1 row-start-1 m-0 block!;
+  }
+  .main-product .thumbnail-slider .slider-buttons {
+    @apply hidden!;
+  }
+  /* Out of flow, pinned to the stretched column: more than 4 thumbs scroll, with a thin visible scrollbar */
+  .main-product .thumbnail-list {
+    @apply absolute! inset-0 flex! flex-col gap-20 overflow-y-auto overflow-x-hidden p-0 m-0;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(0 0 0 / 0.3) transparent;
+  }
+  .main-product .thumbnail-list__item {
+    @apply w-full! shrink-0;
+  }
+}
+.main-product .thumbnail {
+  @apply rounded-10 overflow-hidden border-0 shadow-none;
+  background-color: rgb(238 217 191 / 0.28);
+}
+.main-product .thumbnail img {
+  @apply rounded-10 object-contain!;
+}
+/* Active thumb: 3px brand-gradient ring */
+.main-product .thumbnail[aria-current] {
+  @apply border-3 border-solid border-transparent shadow-none;
+  background:
+    linear-gradient(rgb(255 248 240), rgb(255 248 240)) padding-box,
+    var(--gradient-brand) border-box;
+}
+.main-product .thumbnail[aria-current] img {
+  @apply rounded-7;
+}
+
+/* Info column: 28 between groups; eyebrow / title / price / rating sit 10 apart (Figma "title" group) */
+.main-product .product__info-container {
+  @apply flex flex-col gap-28;
+}
+.main-product .product__info-container > * {
+  @apply m-0!;
+}
+.main-product .product__info-container > .main-product__tight {
+  @apply -mt-18!;
+}
+.main-product__eyebrow {
+  @apply text-orange;
+}
+.main-product .product__title h1 {
+  @apply m-0 font-heading font-bold uppercase tracking-heading text-ink text-32 leading-40 990:text-48 990:leading-60 break-words;
+}
+.main-product__price {
+  @apply flex flex-wrap items-baseline gap-5 font-heading font-bold uppercase text-black text-20 990:text-24 leading-figma tracking-heading-wide;
+}
+.main-product__price .price,
+.main-product__price .price-item,
+.main-product__price .price--large {
+  @apply m-0 font-heading font-bold text-20 990:text-24 leading-figma tracking-heading-wide text-black;
+}
+/* Dawn's Shop Pay installments form: collapse the row unless Shopify actually renders payment terms */
+.main-product__installment:not(:has(shopify-payment-terms)) {
+  @apply hidden!;
+}
+.main-product__rating {
+  @apply flex items-center gap-10;
+}
+.main-product__stars {
+  @apply flex items-center gap-3 text-orange;
+}
+.main-product__star {
+  @apply flex size-24 990:size-28;
+}
+.main-product__star svg {
+  @apply size-full;
+}
+.main-product__star.is-empty {
+  @apply opacity-25;
+}
+.main-product__rating-count {
+  @apply m-0 font-body text-16 leading-figma text-ink;
+}
+.main-product .product__description {
+  @apply font-body text-16 leading-figma text-black;
+}
+.main-product .product__description p:empty {
+  @apply h-16;
+}
+/* Stats row sits between two 1px black/40 rules (Figma "info highlights") */
+.main-product .product-stats {
+  @apply border-y border-black/40;
+}
+
+/* Quantity: "QUANTITY" beside a white pill (2px black border, px-20 py-10, 20 gap) */
+.main-product .product-form__quantity {
+  @apply flex items-center gap-10;
+}
+.main-product .quantity__label {
+  @apply m-0 font-body font-medium text-16 leading-figma uppercase text-black;
+}
+.main-product .quantity {
+  @apply w-auto min-h-0 flex items-center gap-20 px-20 py-10 rounded-50 border-2 border-black bg-white;
+}
+.main-product .quantity::before,
+.main-product .quantity::after {
+  @apply hidden!;
+}
+.main-product .quantity__button {
+  @apply size-20 w-20 p-0 text-black;
+}
+.main-product .quantity__input {
+  @apply w-40 h-auto p-0 font-heading font-bold text-16 text-center text-black opacity-100;
+}
+
+/* Buttons: Add to cart (black) + Find in stores (outline), equal halves, 10 apart */
+.main-product .product-form__buttons {
+  @apply flex gap-10 max-w-none!;
+}
+.main-product .product-form__submit,
+.main-product .product-form__find {
+  @apply flex-1 min-w-0 w-auto m-0!;
+}
+.main-product .product-form__submit[aria-disabled='true'],
+.main-product .product-form__submit:disabled {
+  @apply cursor-not-allowed opacity-60;
+}
+/* Dawn wraps the submit button text in a span; keep it inline */
+.main-product .product-form__submit > span {
+  @apply contents;
+}
+
+/* Choose your function + flavor (main-product block function_flavor) — Figma 23:10346 */
+.product-function__heading {
+  @apply mb-20 text-ink;
+}
+.product-function__list {
+  @apply m-0 p-0 list-none flex gap-10 990:gap-20;
+}
+.product-function__item {
+  @apply flex flex-1 min-w-0;
+}
+/* 10px padding, 10 radius, 72 x 100 image, 10px to the copy, 4px title → text. Tints cycle cream / pink / lavender. */
+.product-function__card {
+  @apply relative flex w-full flex-col items-center justify-center gap-4 p-10 rounded-10 text-center no-underline text-black bg-[rgb(238_217_191/0.28)];
+}
+.product-function__item:nth-child(3n + 2) .product-function__card {
+  @apply bg-[rgb(209_23_113/0.1)];
+}
+.product-function__item:nth-child(3n + 3) .product-function__card {
+  @apply bg-[rgb(69_21_140/0.1)];
+}
+/* 4px brand-gradient border on the current product (masked ring so the translucent tint stays untouched) */
+.product-function__card::before {
+  @apply absolute inset-0 p-4 rounded-10 opacity-0 pointer-events-none transition-opacity duration-300;
+  content: '';
+  background: var(--gradient-brand);
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+.product-function__card.is-active::before {
+  @apply opacity-100;
+}
+a.product-function__card:hover::before {
+  @apply opacity-100;
+}
+a.product-function__card:focus-visible {
+  @apply outline-2 outline-offset-2 outline-orange;
+}
+.product-function__media {
+  @apply mb-6 w-72 h-100 shrink-0;
+}
+.product-function__img {
+  @apply block w-full h-full object-contain;
 }
 
 /* Wider pagination bars on desktop (Figma 3:944: 60 x 6) */
@@ -815,4 +1203,235 @@ a.instagram-feed__link:hover .instagram-feed__img {
   mask:
     linear-gradient(#000 0 0) content-box exclude,
     linear-gradient(#000 0 0);
+}
+
+/* ===== Legal content (sections/custom-legal-content.liquid) — Figma 23:12915 / 23:12998 / 23:13084 / 23:13166, no mobile frame ===== */
+.legal__container {
+  @apply px-20 990:px-55;
+}
+.legal__inner {
+  @apply mx-auto w-full;
+}
+/* Figma H1/H1-1: 64 / 4% tracking; mobile interpolated to 32 */
+.legal__title {
+  @apply text-ink text-32 leading-40 768:text-48 768:leading-figma 1199:text-64;
+}
+/* Figma H4.1/H4.1-1: 24 / 6% tracking; mobile 20 */
+.legal__heading,
+.legal__body h2,
+.legal__body h3,
+.legal__body h4 {
+  @apply text-ink text-20 leading-25 tracking-heading-wide 990:text-24 990:leading-figma;
+}
+/* page.content groups: heading 20 above its text, 55 between groups */
+.legal__body h2,
+.legal__body h3,
+.legal__body h4 {
+  @apply mt-40 mb-20 990:mt-55 first:mt-0;
+}
+.legal__body p,
+.legal__body li {
+  @apply m-0 font-body text-16 leading-figma text-black;
+}
+.legal__body p + p,
+.legal__body p + ul,
+.legal__body p + ol,
+.legal__body ul + p,
+.legal__body ol + p {
+  @apply mt-20;
+}
+.legal__body ul,
+.legal__body ol {
+  @apply pl-20 space-y-10;
+}
+.legal__body ul {
+  @apply list-disc;
+}
+.legal__body ol {
+  @apply list-decimal;
+}
+.legal__body a {
+  @apply text-orange underline hover:text-black;
+}
+.legal__body strong {
+  @apply font-bold;
+}
+
+/* ===== Error 404 (sections/custom-404.liquid) — Figma 23:13359, no mobile frame ===== */
+.error-404__inner {
+  @apply flex flex-col items-center gap-40 px-20 990:px-55 text-center;
+}
+.error-404__media {
+  @apply relative w-full max-w-740 aspect-[740/383] rounded-10 overflow-hidden;
+}
+.error-404__titles {
+  @apply flex flex-col gap-10 w-full max-w-1000;
+}
+/* Figma H3/H3-2B: Inter Medium 32 #2D2926; mobile 20 */
+.error-404__subheading p {
+  @apply m-0 text-20 990:text-32 font-medium leading-figma text-ink;
+}
+
+/* ===== Search results (sections/custom-search-results.liquid) — Figma 23:13245, no mobile frame ===== */
+.search-results__inner {
+  @apply mx-auto max-w-1512 px-20 990:px-100 flex flex-col gap-40;
+}
+/* 410 x 40 pill, right-aligned — same field as .faq__search */
+.search-results__form {
+  @apply relative w-full 768:max-w-410 768:ml-auto;
+}
+.search-results__form-icon {
+  @apply absolute left-20 top-1/2 -translate-y-1/2 size-20 flex text-black pointer-events-none;
+}
+.search-results__input {
+  @apply block w-full h-40 pl-50 pr-20 rounded-48 border-2 border-black bg-white/20 font-body text-16 text-black placeholder:text-black outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange;
+  -webkit-appearance: none;
+}
+.search-results__grid {
+  @apply d-grid grid-cols-1 gap-40 640:grid-cols-2 990:grid-cols-3;
+}
+.search-card {
+  @apply flex flex-col items-center gap-20 min-w-0 text-center;
+}
+.search-card__media {
+  @apply relative w-full h-280 rounded-10 overflow-hidden bg-black/5;
+}
+/* Pages/products without an image keep the 280 box for row alignment (Dawn hides div:empty) */
+.search-card__media:empty {
+  @apply block;
+}
+/* Buttons share a baseline across a row whatever the title/excerpt length */
+.search-card > .ctm-button {
+  @apply mt-auto;
+}
+.search-card__title {
+  @apply leading-figma;
+}
+.search-card__excerpt p {
+  @apply m-0 text-16 leading-figma line-clamp-3;
+}
+.search-results__empty {
+  @apply flex flex-col items-center gap-20 text-center;
+}
+/* Pagination: 40px gradient-ring arrows, Plus Jakarta Sans Bold 16 numbers, gradient-filled current page */
+.search-pagination__list {
+  @apply flex flex-wrap items-center justify-center gap-8;
+}
+.search-pagination__arrow {
+  @apply flex items-center justify-center size-40 rounded-full border-2 border-transparent text-black no-underline transition-all duration-300;
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    var(--gradient-brand) border-box;
+}
+.search-pagination__arrow svg {
+  @apply size-18;
+}
+.search-pagination__arrow--prev svg {
+  @apply rotate-180;
+}
+a.search-pagination__arrow:hover {
+  @apply text-white;
+  background:
+    linear-gradient(#000000, #000000) padding-box,
+    var(--gradient-brand) border-box;
+}
+.search-pagination__arrow.is-disabled {
+  @apply opacity-40;
+}
+.search-pagination__page,
+.search-pagination__gap {
+  @apply flex items-center justify-center min-w-25 px-9 py-3 font-heading font-bold text-16 leading-figma text-black no-underline;
+}
+a.search-pagination__page:hover {
+  @apply text-orange;
+}
+.search-pagination__page.is-current {
+  @apply rounded-1 text-white bg-gradient-brand;
+}
+
+/* ===== Article meta row (snippets/article-meta.liquid) — Figma "infos" 23:12342: 24px icon, 4 gap, Inter Medium 16, 28 between items ===== */
+.article-meta {
+  @apply flex flex-wrap items-center gap-x-28 gap-y-10;
+}
+.article-meta__item {
+  @apply flex items-center gap-4 font-body font-medium text-16 leading-figma whitespace-nowrap;
+}
+.article-meta__item svg {
+  @apply size-24 shrink-0;
+}
+
+/* ===== Blog featured (sections/custom-blog-featured.liquid) — Figma 23:12298, no mobile frame ===== */
+.blog-featured__inner {
+  @apply mx-auto max-w-1512 px-20 990:px-100 flex flex-col gap-40;
+}
+.blog-featured__toolbar {
+  @apply flex flex-col gap-20 990:flex-row 990:items-end 990:gap-40;
+}
+.blog-featured__heading {
+  @apply flex-1 min-w-0;
+}
+.blog-featured__tools {
+  @apply flex items-end gap-20 990:flex-1 990:justify-end;
+}
+/* Search pill reuses .search-results__form; grows to fill the row beside Filter below 768 */
+.blog-featured__search {
+  @apply flex-1 768:flex-none 768:w-410 768:ml-0;
+}
+.blog-filter {
+  @apply relative shrink-0;
+}
+/* Filter pill — same 2px black / white-20 pill as the search field */
+.blog-filter__toggle {
+  @apply flex items-center gap-10 h-40 px-20 rounded-48 border-2 border-black bg-white/20 font-body text-16 leading-figma text-black cursor-pointer list-none select-none;
+}
+.blog-filter__toggle::-webkit-details-marker {
+  @apply hidden;
+}
+.blog-filter__toggle svg {
+  @apply size-16 shrink-0;
+}
+.blog-filter__toggle:focus-visible {
+  @apply outline-2 outline-offset-2 outline-orange;
+}
+.blog-filter[open] .blog-filter__toggle {
+  @apply bg-black text-white;
+}
+.blog-filter__list {
+  @apply absolute right-0 top-full z-10 mt-10 flex flex-col gap-4 min-w-200 max-h-320 overflow-y-auto p-10 rounded-20 border-2 border-black bg-white;
+}
+.blog-filter__link {
+  @apply block px-10 py-6 rounded-10 font-body text-16 leading-figma text-black no-underline whitespace-nowrap hover:bg-cream;
+}
+.blog-filter__link[aria-current='page'] {
+  @apply font-medium text-orange;
+}
+/* Figma card: 6px gradient ring, radius 10 (base .ctm-gradient-card is radius 20) */
+.blog-featured__card {
+  @apply rounded-10;
+}
+.blog-featured__card-inner {
+  @apply d-grid grid-cols-1 990:grid-cols-2 990:gap-55 rounded-4 overflow-hidden;
+}
+.blog-featured__media {
+  @apply relative min-w-0 aspect-[4/3] bg-black/5 990:aspect-auto 990:min-h-488;
+}
+.blog-featured__media img {
+  @apply absolute inset-0;
+}
+/* Article without an image keeps the box (Dawn hides div:empty) */
+.blog-featured__media:empty {
+  @apply block;
+}
+/* Figma: copy column padded 28 top/right/bottom, 28 between groups */
+.blog-featured__copy {
+  @apply flex flex-col items-start gap-20 min-w-0 p-20 990:gap-28 990:py-28 990:pr-28 990:pl-0;
+}
+.blog-featured__titles {
+  @apply flex flex-col gap-10 w-full;
+}
+.blog-featured__title-link {
+  @apply text-current no-underline hover:text-orange;
+}
+.blog-featured__excerpt p {
+  @apply text-16 leading-figma;
 }

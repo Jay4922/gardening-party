@@ -1,0 +1,302 @@
+{% comment %}
+  Search Results — Figma "Content" 23:13245 (Miscellaneous Pages - Search Result 23:13233).
+  Right-aligned search field, 3-column result cards (products, articles, pages) and gradient pagination.
+  Used by templates/search.json between the Page Banner and the global Instagram feed.
+{% endcomment %}
+{%- liquid
+  assign input_id = 'SearchResults-' | append: section.id
+  assign results_per_page = section.settings.results_per_page
+-%}
+
+{%- style -%}
+  /* .search-results */
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- paginate search.results by results_per_page -%}
+  <div class="search-results section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
+    <div class="search-results__inner">
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search-results__form">
+        <label class="visually-hidden" for="{{ input_id }}">
+          {{- section.settings.placeholder | default: 'Search' | escape -}}
+        </label>
+        <span class="search-results__form-icon">{{ 'icon-faq-search.svg' | inline_asset_content }}</span>
+        <input
+          class="search-results__input"
+          id="{{ input_id }}"
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="{{ section.settings.placeholder | escape }}"
+          autocomplete="off"
+        >
+        <input type="hidden" name="options[prefix]" value="last">
+      </form>
+
+      {%- if search.performed -%}
+        <h2 class="visually-hidden" role="status">
+          {{- search.results_count }}
+          {{ search.results_count | pluralize: 'result', 'results' }} for “{{ search.terms | escape }}”
+        </h2>
+      {%- endif -%}
+
+      {%- if search.performed and search.results_count > 0 -%}
+        <ul class="search-results__grid list-none m-0 p-0" role="list">
+          {%- for item in search.results -%}
+            {%- liquid
+              assign item_image = null
+              case item.object_type
+                when 'product'
+                  assign item_image = item.featured_media.preview_image
+                  assign item_text = item.description
+                when 'article'
+                  assign item_image = item.image
+                  assign item_text = item.excerpt_or_content
+                else
+                  assign item_text = item.content
+              endcase
+              assign item_text = item_text | strip_html | strip_newlines | truncatewords: section.settings.excerpt_words
+              assign item_title_id = 'SearchResult-' | append: section.id | append: '-' | append: forloop.index
+            -%}
+            <li class="search-card">
+              {%- if section.settings.show_image -%}
+                <div class="search-card__media">
+                  {%- if item_image != blank -%}
+                    {{
+                      item_image
+                      | image_url: width: 820
+                      | image_tag:
+                        class: 'img-fluid-cover',
+                        widths: '375, 550, 820',
+                        sizes: '(min-width: 1512px) 411px, (min-width: 990px) calc((100vw - 280px) / 3), (min-width: 640px) calc((100vw - 80px) / 2), calc(100vw - 40px)',
+                        loading: 'lazy',
+                        alt: ''
+                    }}
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+              <div class="ctm-title title-black">
+                <h3 class="search-card__title h4" id="{{ item_title_id }}">{{ item.title | escape }}</h3>
+              </div>
+              {%- if section.settings.show_excerpt and item_text != blank -%}
+                <div class="content content-black search-card__excerpt">
+                  <p>{{ item_text }}</p>
+                </div>
+              {%- endif -%}
+              {%- if section.settings.button_label != blank -%}
+                <a
+                  href="{{ item.url }}"
+                  class="ctm-button btn-outline-gradient"
+                  aria-describedby="{{ item_title_id }}"
+                >
+                  {{- section.settings.button_label | escape -}}
+                  {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+                </a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="search-pagination" aria-label="Pagination">
+            <ul class="search-pagination__list list-none m-0 p-0" role="list">
+              <li>
+                {%- if paginate.previous -%}
+                  <a
+                    href="{{ paginate.previous.url }}"
+                    class="search-pagination__arrow search-pagination__arrow--prev"
+                    aria-label="Previous page"
+                  >
+                    {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+                  </a>
+                {%- else -%}
+                  <span class="search-pagination__arrow search-pagination__arrow--prev is-disabled" aria-hidden="true">
+                    {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+                  </span>
+                {%- endif -%}
+              </li>
+              {%- for part in paginate.parts -%}
+                <li>
+                  {%- if part.is_link -%}
+                    <a href="{{ part.url }}" class="search-pagination__page" aria-label="Page {{ part.title }}">
+                      {{- part.title -}}
+                    </a>
+                  {%- elsif part.title == paginate.current_page -%}
+                    <span class="search-pagination__page is-current" aria-current="page">{{ part.title }}</span>
+                  {%- else -%}
+                    <span class="search-pagination__gap">{{ part.title }}</span>
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+              <li>
+                {%- if paginate.next -%}
+                  <a href="{{ paginate.next.url }}" class="search-pagination__arrow" aria-label="Next page">
+                    {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+                  </a>
+                {%- else -%}
+                  <span class="search-pagination__arrow is-disabled" aria-hidden="true">
+                    {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+                  </span>
+                {%- endif -%}
+              </li>
+            </ul>
+          </nav>
+        {%- endif -%}
+      {%- elsif search.performed -%}
+        <div class="search-results__empty">
+          {%- if section.settings.empty_heading != blank -%}
+            <div class="ctm-title title-black">
+              <h3 class="h4">{{ section.settings.empty_heading | escape }}</h3>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.empty_text != blank -%}
+            <div class="content content-black">
+              {{ section.settings.empty_text }}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Search results",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Search placeholder",
+      "default": "Search"
+    },
+    {
+      "type": "range",
+      "id": "results_per_page",
+      "label": "Results per page",
+      "min": 6,
+      "max": 24,
+      "step": 3,
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Result cards"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Show excerpt",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "excerpt_words",
+      "label": "Excerpt length (words)",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "default": 22
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn More"
+    },
+    {
+      "type": "header",
+      "content": "No results"
+    },
+    {
+      "type": "text",
+      "id": "empty_heading",
+      "label": "Heading",
+      "default": "No results found"
+    },
+    {
+      "type": "richtext",
+      "id": "empty_text",
+      "label": "Text",
+      "default": "<p>Try a different search term.</p>"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-7"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Extra CSS Class"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Search results"
+    }
+  ]
+}
+{% endschema %}

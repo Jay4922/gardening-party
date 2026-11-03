@@ -449,9 +449,6 @@ if (!customElements.get('quick-order-list')) {
 
       toggleLoading(loading, target = this) {
         target.querySelector('#shopping-cart-variant-item-status').toggleAttribute('aria-hidden', !loading);
-        target
-          .querySelectorAll('.variant-remove-total .loading__spinner')
-          ?.forEach((spinner) => spinner.classList.toggle('hidden', !loading));
       }
     }
   );

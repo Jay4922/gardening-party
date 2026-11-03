@@ -1,0 +1,61 @@
+{% comment %}
+  Product stats — Figma PDP stat row (577 x 143). Data: product metafield custom.number_with_text_block
+  (list of "Number with text block main" metaobjects: number_text + text). Bar colors cycle orange / magenta / blue.
+
+  Accepts:
+  - block {Object}: the main-product product_stats block
+  - product {Object}: the product
+
+  Usage:
+  {% render 'product-stats', block: block, product: product %}
+{% endcomment %}
+{%- assign stat_entries = product.metafields.custom.number_with_text_block.value -%}
+{%- if stat_entries.size > 0 or request.design_mode -%}
+  {%- style -%}
+    .product-stats-{{ block.id }} {
+      padding-top: {{ block.settings.padding_top }}px;
+      padding-bottom: {{ block.settings.padding_bottom }}px;
+    }
+    @media screen and (max-width: 989px) {
+      .product-stats-{{ block.id }} {
+        padding-top: {{ block.settings.padding_top_mobile }}px;
+        padding-bottom: {{ block.settings.padding_bottom_mobile }}px;
+      }
+    }
+  {%- endstyle -%}
+  <div class="product-stats product-stats-{{ block.id }}" {{ block.shopify_attributes }}>
+    {%- if stat_entries.size > 0 -%}
+      <ul class="product-stats__list" role="list">
+        {%- for entry in stat_entries -%}
+          {%- liquid
+            assign stat_value = entry.number_text.value | default: entry.number_and_text.value
+            assign stat_label = entry.text.value
+          -%}
+          {%- if stat_value != blank or stat_label != blank -%}
+            <li class="product-stats__item">
+              {%- if stat_value != blank -%}
+                <div class="content content-black content-stat">
+                  <p>{{ stat_value | escape }}</p>
+                </div>
+              {%- endif -%}
+              {%- if stat_label != blank -%}
+                <div class="content content-black content-stat-label product-stats__label">
+                  <p>{{ stat_label | escape }}</p>
+                </div>
+              {%- endif -%}
+              <span class="product-stats__bar" aria-hidden="true"></span>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- liquid
+      assign stats_empty = false
+      if stat_entries.size == 0
+        assign stats_empty = true
+      endif
+      render 'product-editor-note', product: product, metafield_name: 'Number with text block', is_empty: stats_empty
+    -%}
+  </div>
+{%- endif -%}

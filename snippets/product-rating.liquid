@@ -1,0 +1,36 @@
+{% comment %}
+  Product rating — Figma PDP "rate" 23:10313: five 28px orange stars (3 apart), then "58 Reviews".
+  Reads Shopify's standard review metafields (reviews.rating, reviews.rating_count), which most review apps write.
+  Stars round to the nearest whole star; unfilled stars are dimmed.
+
+  Accepts:
+  - block {Object}: the main-product rating block
+  - product {Object}: the product
+
+  Usage:
+  {% render 'product-rating', block: block, product: product %}
+{% endcomment %}
+{%- assign rating = product.metafields.reviews.rating.value -%}
+{%- if rating != blank -%}
+  {%- liquid
+    assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+    assign rating_max = rating.scale_max | default: 5
+    assign filled_stars = rating.rating | round
+  -%}
+  <div class="main-product__rating main-product__tight" {{ block.shopify_attributes }}>
+    <span
+      class="main-product__stars"
+      role="img"
+      aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: rating.rating, rating_max: rating_max }}"
+    >
+      {%- for i in (1..rating_max) -%}
+        <span class="main-product__star{% if i > filled_stars %} is-empty{% endif %}" aria-hidden="true">
+          {{- 'icon-star.svg' | inline_asset_content -}}
+        </span>
+      {%- endfor -%}
+    </span>
+    {%- if rating_count > 0 -%}
+      <p class="main-product__rating-count">{{ 'products.product.review_count' | t: count: rating_count }}</p>
+    {%- endif -%}
+  </div>
+{%- endif -%}

@@ -22,160 +22,217 @@
   }
 {%- endstyle -%}
 
-<custom-faq class="faq section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
+<custom-faq class="faq{% if section.settings.layout == 'card' %} faq--card{% endif %} section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
   <div class="page-width">
-    {%- if section.settings.eyebrow != blank
-      or section.settings.heading != blank
-      or section.settings.subheading != blank
-    -%}
-      <div class="faq__header">
-        {%- if section.settings.eyebrow != blank -%}
-          <div class="content content-eyebrow content-eyebrow-large">
-            <p>{{ section.settings.eyebrow | escape }}</p>
-          </div>
-        {%- endif -%}
-        {%- if section.settings.heading != blank -%}
-          <div class="ctm-title title-black">
-            <{{ heading_tag }} class="h2">{{ section.settings.heading | escape }}</{{ heading_tag }}>
-          </div>
-        {%- endif -%}
-        {%- if section.settings.subheading != blank -%}
-          <div class="faq__subheading content content-large content-black">
-            <p>{{ section.settings.subheading | escape }}</p>
-          </div>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
-
-    {%- if section.settings.show_search and question_count > 0 -%}
-      <div class="faq__search">
-        <label class="visually-hidden" for="FaqSearch-{{ section.id }}">
-          {{- section.settings.search_placeholder | default: 'Search' | escape -}}
-        </label>
-        <span class="faq__search-icon">{{ 'icon-faq-search.svg' | inline_asset_content }}</span>
-        <input
-          class="faq__search-input"
-          id="FaqSearch-{{ section.id }}"
-          type="search"
-          placeholder="{{ section.settings.search_placeholder | escape }}"
-          autocomplete="off"
-          data-faq-search
-        >
-      </div>
-    {%- endif -%}
-
-    {%- if section.blocks.size > 0 -%}
-      <div class="faq__tabs" data-faq-tabs>
-        <button
-          type="button"
-          class="faq__dropdown-toggle"
-          aria-expanded="false"
-          aria-controls="FaqTablist-{{ section.id }}"
-          data-faq-toggle
-        >
-          <span data-faq-toggle-label>&#8203;</span>
-          {{ 'icon-faq-caret.svg' | inline_asset_content }}
-        </button>
-
-        <div
-          class="faq__tablist"
-          id="FaqTablist-{{ section.id }}"
-          role="tablist"
-          aria-label="FAQ categories"
-        >
-          {%- assign tab_index = 0 -%}
-          {%- for block in section.blocks -%}
-            {%- liquid
-              assign starts_group = false
-              if block.type == 'category'
-                assign starts_group = true
-                assign tab_label = block.settings.title | default: 'Category'
-              elsif forloop.first
-                assign starts_group = true
-                assign tab_label = 'General'
-              endif
-            -%}
-            {%- if starts_group -%}
-              <button
-                type="button"
-                class="faq__tab"
-                id="FaqTab-{{ section.id }}-{{ tab_index }}"
-                role="tab"
-                aria-controls="FaqPanel-{{ section.id }}-{{ tab_index }}"
-                {% if tab_index == 0 %}
-                  aria-selected="true" tabindex="0"
-                {% else %}
-                  aria-selected="false" tabindex="-1"
-                {% endif %}
-                data-faq-tab="{{ tab_index }}"
-                {% if block.type == 'category' %}
-                  {{ block.shopify_attributes }}
-                {% endif %}
-              >
-                {{- tab_label | escape -}}
-              </button>
-              {%- assign tab_index = tab_index | plus: 1 -%}
-            {%- endif -%}
-          {%- endfor -%}
+    {%- if section.settings.layout == 'card' -%}
+      {%- comment -%} Product page layout — Figma 23:10713: image card left, one numbered list right {%- endcomment -%}
+      {%- if section.settings.heading != blank -%}
+        <div class="ctm-title title-black">
+          <{{ heading_tag }} class="h2">{{ section.settings.heading | escape }}</{{ heading_tag }}>
         </div>
-      </div>
+      {%- endif -%}
 
-      <div class="faq__panels">
-        {%- assign last_group = tab_index | minus: 1 -%}
-        {%- for group in (0..last_group) -%}
-          <div
-            class="faq__panel"
-            id="FaqPanel-{{ section.id }}-{{ group }}"
-            role="tabpanel"
-            aria-labelledby="FaqTab-{{ section.id }}-{{ group }}"
-            data-faq-panel="{{ group }}"
-            {% if group > 0 %}
-              hidden
-            {% endif %}
+      <div class="faq__layout">
+        <div class="faq__card{% if section.settings.card_gradient %} faq__card--tint{% endif %}">
+          {%- if section.settings.card_image != blank -%}
+            {{
+              section.settings.card_image
+              | image_url: width: 1200
+              | image_tag:
+                class: 'faq__card-bg',
+                widths: '400, 600, 800, 1000, 1200',
+                sizes: '(min-width: 990px) 571px, calc(100vw - 40px)',
+                loading: 'lazy',
+                alt: ''
+            }}
+          {%- endif -%}
+          {%- if section.settings.card_heading != blank -%}
+            <div class="ctm-title title-white">
+              <p class="h2 faq__card-heading">{{ section.settings.card_heading | escape }}</p>
+            </div>
+          {%- endif -%}
+          <div class="faq__card-actions">
+            {%- if section.settings.card_button_label != blank -%}
+              <a
+                href="{{ section.settings.card_button_link | default: '/pages/faq' }}"
+                class="ctm-button btn-outline-gradient faq__card-button"
+              >
+                {{- section.settings.card_button_label | escape -}}
+                {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+              </a>
+            {%- endif -%}
+            {%- if section.settings.card_link_1_label != blank and section.settings.card_link_1_url != blank -%}
+              <a href="{{ section.settings.card_link_1_url }}" class="faq__card-link">
+                {{- section.settings.card_link_1_label | escape -}}
+              </a>
+            {%- endif -%}
+            {%- if section.settings.card_link_2_label != blank and section.settings.card_link_2_url != blank -%}
+              <a href="{{ section.settings.card_link_2_url }}" class="faq__card-link">
+                {{- section.settings.card_link_2_label | escape -}}
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+
+        {%- if question_count > 0 -%}
+          <div class="faq__panels">
+            <div class="faq__panel">
+              {%- assign question_index = 0 -%}
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'question' -%}
+                  {%- liquid
+                    assign question_index = question_index | plus: 1
+                    assign item_open = false
+                    if section.settings.open_first and question_index == 1
+                      assign item_open = true
+                    endif
+                  -%}
+                  {% render 'faq-item', block: block, index: question_index, open: item_open %}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- else -%}
+      {%- if section.settings.eyebrow != blank
+        or section.settings.heading != blank
+        or section.settings.subheading != blank
+      -%}
+        <div class="faq__header">
+          {%- if section.settings.eyebrow != blank -%}
+            <div class="content content-eyebrow content-eyebrow-large">
+              <p>{{ section.settings.eyebrow | escape }}</p>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <div class="ctm-title title-black">
+              <{{ heading_tag }} class="h2">{{ section.settings.heading | escape }}</{{ heading_tag }}>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.subheading != blank -%}
+            <div class="faq__subheading content content-large content-black">
+              <p>{{ section.settings.subheading | escape }}</p>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_search and question_count > 0 -%}
+        <div class="faq__search">
+          <label class="visually-hidden" for="FaqSearch-{{ section.id }}">
+            {{- section.settings.search_placeholder | default: 'Search' | escape -}}
+          </label>
+          <span class="faq__search-icon">{{ 'icon-faq-search.svg' | inline_asset_content }}</span>
+          <input
+            class="faq__search-input"
+            id="FaqSearch-{{ section.id }}"
+            type="search"
+            placeholder="{{ section.settings.search_placeholder | escape }}"
+            autocomplete="off"
+            data-faq-search
           >
-            {%- assign current_group = -1 -%}
-            {%- assign question_index = 0 -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="faq__tabs" data-faq-tabs>
+          <button
+            type="button"
+            class="faq__dropdown-toggle"
+            aria-expanded="false"
+            aria-controls="FaqTablist-{{ section.id }}"
+            data-faq-toggle
+          >
+            <span data-faq-toggle-label>&#8203;</span>
+            {{ 'icon-faq-caret.svg' | inline_asset_content }}
+          </button>
+
+          <div
+            class="faq__tablist"
+            id="FaqTablist-{{ section.id }}"
+            role="tablist"
+            aria-label="FAQ categories"
+          >
+            {%- assign tab_index = 0 -%}
             {%- for block in section.blocks -%}
-              {%- if block.type == 'category' or forloop.first -%}
-                {%- assign current_group = current_group | plus: 1 -%}
-              {%- endif -%}
-              {%- if current_group > group -%}
-                {%- break -%}
-              {%- endif -%}
-              {%- if current_group == group and block.type == 'question' -%}
-                {%- assign question_index = question_index | plus: 1 -%}
-                <details
-                  class="faq__item"
-                  data-faq-item
-                  {% if section.settings.open_first and question_index == 1 %}
-                    open
+              {%- liquid
+                assign starts_group = false
+                if block.type == 'category'
+                  assign starts_group = true
+                  assign tab_label = block.settings.title | default: 'Category'
+                elsif forloop.first
+                  assign starts_group = true
+                  assign tab_label = 'General'
+                endif
+              -%}
+              {%- if starts_group -%}
+                <button
+                  type="button"
+                  class="faq__tab"
+                  id="FaqTab-{{ section.id }}-{{ tab_index }}"
+                  role="tab"
+                  aria-controls="FaqPanel-{{ section.id }}-{{ tab_index }}"
+                  {% if tab_index == 0 %}
+                    aria-selected="true" tabindex="0"
+                  {% else %}
+                    aria-selected="false" tabindex="-1"
                   {% endif %}
-                  {{ block.shopify_attributes }}
+                  data-faq-tab="{{ tab_index }}"
+                  {% if block.type == 'category' %}
+                    {{ block.shopify_attributes }}
+                  {% endif %}
                 >
-                  <summary class="faq__summary ctm-title title-black">
-                    <span class="faq__number" aria-hidden="true">
-                      {%- if question_index < 10 -%}0{%- endif -%}
-                      {{- question_index -}}
-                    </span>
-                    <h3 class="faq__question h-faq">{{ block.settings.question | escape }}</h3>
-                    <span class="faq__icon">{{ 'icon-faq-toggle.svg' | inline_asset_content }}</span>
-                  </summary>
-                  {%- if block.settings.answer != blank -%}
-                    <div class="faq__answer content content-black">
-                      {{ block.settings.answer }}
-                    </div>
-                  {%- endif -%}
-                </details>
+                  {{- tab_label | escape -}}
+                </button>
+                {%- assign tab_index = tab_index | plus: 1 -%}
               {%- endif -%}
             {%- endfor -%}
           </div>
-        {%- endfor -%}
-      </div>
-
-      {%- if section.settings.show_search -%}
-        <div class="faq__empty content content-black" role="status" hidden data-faq-empty>
-          <p>{{ section.settings.no_results_text | escape }}</p>
         </div>
+
+        <div class="faq__panels">
+          {%- assign last_group = tab_index | minus: 1 -%}
+          {%- for group in (0..last_group) -%}
+            <div
+              class="faq__panel"
+              id="FaqPanel-{{ section.id }}-{{ group }}"
+              role="tabpanel"
+              aria-labelledby="FaqTab-{{ section.id }}-{{ group }}"
+              data-faq-panel="{{ group }}"
+              {% if group > 0 %}
+                hidden
+              {% endif %}
+            >
+              {%- assign current_group = -1 -%}
+              {%- assign question_index = 0 -%}
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'category' or forloop.first -%}
+                  {%- assign current_group = current_group | plus: 1 -%}
+                {%- endif -%}
+                {%- if current_group > group -%}
+                  {%- break -%}
+                {%- endif -%}
+                {%- if current_group == group and block.type == 'question' -%}
+                  {%- liquid
+                    assign question_index = question_index | plus: 1
+                    assign item_open = false
+                    if section.settings.open_first and question_index == 1
+                      assign item_open = true
+                    endif
+                  -%}
+                  {% render 'faq-item', block: block, index: question_index, open: item_open %}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- if section.settings.show_search -%}
+          <div class="faq__empty content content-black" role="status" hidden data-faq-empty>
+            <p>{{ section.settings.no_results_text | escape }}</p>
+          </div>
+        {%- endif -%}
       {%- endif -%}
     {%- endif -%}
   </div>
@@ -216,6 +273,16 @@
   "class": "section",
   "max_blocks": 50,
   "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "page", "label": "FAQ page (search + category tabs)" },
+        { "value": "card", "label": "With image card (product page)" }
+      ],
+      "default": "page"
+    },
     { "type": "header", "content": "Heading" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "FAQ" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "We’ve got answers." },
@@ -246,6 +313,20 @@
       "label": "Open first question in each category",
       "default": true
     },
+    {
+      "type": "header",
+      "content": "Image card",
+      "info": "Only used with the \"With image card\" layout. Search and category tabs are hidden there."
+    },
+    { "type": "image_picker", "id": "card_image", "label": "Image" },
+    { "type": "checkbox", "id": "card_gradient", "label": "Show brand gradient tint", "default": true },
+    { "type": "text", "id": "card_heading", "label": "Heading", "default": "Still curious?" },
+    { "type": "text", "id": "card_button_label", "label": "Button label", "default": "View all FAQs" },
+    { "type": "url", "id": "card_button_link", "label": "Button link", "info": "Leave blank to link to /pages/faq." },
+    { "type": "text", "id": "card_link_1_label", "label": "Link 1 label", "default": "Products" },
+    { "type": "url", "id": "card_link_1_url", "label": "Link 1 URL" },
+    { "type": "text", "id": "card_link_2_label", "label": "Link 2 label", "default": "Shipping information" },
+    { "type": "url", "id": "card_link_2_url", "label": "Link 2 URL" },
     { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" },
     { "type": "header", "content": "Desktop Padding" },
     {

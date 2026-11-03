@@ -1,11 +1,16 @@
 {% comment %}
   Page Banner — Figma "IP Header" 3:6108 (desktop), 3:10069 (mobile).
-  Shared by FAQ, Our Story, Retailers & Partners and Contact. Heading falls back to the page title.
+  Shared by FAQ, Our Story, Retailers & Partners, Contact and the collection template. Heading falls back to the page title.
+  On collections the background image comes from the collection metafield custom.collection_banner, falling back to the setting.
 {% endcomment %}
 {%- liquid
   assign heading = section.settings.heading | default: page.title | default: page_title
   assign heading_tag = section.settings.heading_tag
   assign overlay_opacity = section.settings.overlay_opacity | divided_by: 100.0
+  assign background_image = section.settings.background_image
+  if collection.metafields.custom.collection_banner.value != blank
+    assign background_image = collection.metafields.custom.collection_banner.value
+  endif
 -%}
 
 {%- style -%}
@@ -23,6 +28,14 @@
       display: none;
     {%- endunless %}
   }
+  {%- if background_image != blank %}
+    /* Desktop: grow with the image's own ratio on wide screens so cover never crops the top/bottom (baked-in product art) */
+    @media screen and (min-width: 990px) {
+      .section-{{ section.id }}-padding {
+        aspect-ratio: {{ background_image.aspect_ratio }};
+      }
+    }
+  {%- endif %}
   @media screen and (max-width: 989px) {
     .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top_mobile }}px;
@@ -35,9 +48,9 @@
 <div class="page-banner section-{{ section.id }}-padding {{ section.settings.custom_class }}">
   <div class="page-banner__media page-banner__media-{{ section.id }}" aria-hidden="true">
     &#8203;
-    {%- if section.settings.background_image != blank -%}
+    {%- if background_image != blank -%}
       {{
-        section.settings.background_image
+        background_image
         | image_url: width: 3000
         | image_tag:
           class: 'page-banner__bg',
@@ -100,7 +113,8 @@
     {
       "type": "image_picker",
       "id": "background_image",
-      "label": "Background image"
+      "label": "Background image",
+      "info": "On collection pages the collection's \"Collection banner\" metafield (custom.collection_banner) is used instead when it's set."
     },
     {
       "type": "checkbox",

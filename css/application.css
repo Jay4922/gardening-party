@@ -42,6 +42,7 @@
   --color-magenta: #d11771;
   --color-electric-blue: #3e41d7;
   --color-deep-purple: #45158c;
+  --color-ink: #2d2926; /* Figma "Black C" — legal titles/headings */
 
   /* Letter spacing / line height (Figma: 4% and 6% tracking, "normal" line height) */
   --tracking-heading: 0.04em;

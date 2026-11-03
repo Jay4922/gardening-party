@@ -1,0 +1,115 @@
+{% comment %}
+  Choose your function + flavor — Figma PDP 23:10346. Data: product metafield custom.choose_your_function_flavour
+  (list of "Choose Your Function + Flavour Main" metaobjects: product_image, product_title, product_short_description,
+  optional product reference). A card links to its product when set; the card for the current product gets the
+  gradient border. Card tints cycle cream / pink / lavender.
+
+  Accepts:
+  - block {Object}: the main-product function_flavor block
+  - product {Object}: the product
+
+  Usage:
+  {% render 'product-function', block: block, product: product %}
+{% endcomment %}
+{%- liquid
+  assign function_entries = product.metafields.custom.choose_your_function_flavour.value
+  assign store_handle = shop.permanent_domain | remove: '.myshopify.com'
+  assign admin_product_url = 'https://admin.shopify.com/store/' | append: store_handle | append: '/products/' | append: product.id
+  assign admin_entries_url = 'https://admin.shopify.com/store/' | append: store_handle | append: '/content/metaobjects/entries/choose_your_function_flavour_main'
+-%}
+{%- if function_entries.size > 0 or request.design_mode -%}
+  {%- style -%}
+    /* .product-function */
+    .product-function-{{ block.id }} {
+      padding-top: {{ block.settings.padding_top }}px;
+      padding-bottom: {{ block.settings.padding_bottom }}px;
+    }
+    @media screen and (max-width: 989px) {
+      .product-function-{{ block.id }} {
+        padding-top: {{ block.settings.padding_top_mobile }}px;
+        padding-bottom: {{ block.settings.padding_bottom_mobile }}px;
+      }
+    }
+  {%- endstyle -%}
+  <div class="product-function product-function-{{ block.id }}" {{ block.shopify_attributes }}>
+    {%- if function_entries.size > 0 -%}
+      <div class="product-function__heading ctm-title">
+        <h2 class="h4">{{ 'products.product.function_flavor_heading' | t }}</h2>
+      </div>
+      <ul class="product-function__list" role="list">
+        {%- for entry in function_entries -%}
+          {%- liquid
+            assign card_image = entry.product_image.value | default: entry.image.value
+            assign card_title = entry.product_title.value | default: entry.title.value
+            assign card_text = entry.product_short_description.value | default: entry.short_description.value
+            assign card_product = entry.product.value
+            assign card_active = false
+            if card_product != blank and card_product.id == product.id
+              assign card_active = true
+            endif
+            assign card_tag = 'div'
+            if card_product != blank
+              assign card_tag = 'a'
+            endif
+          -%}
+          <li class="product-function__item">
+            <{{ card_tag }}
+              class="product-function__card{% if card_active %} is-active{% endif %}"
+              {%- if card_product != blank %}
+                href="{{ card_product.url }}"
+              {%- endif %}
+              {%- if card_active %}
+                aria-current="page"
+              {%- endif %}
+            >
+              {%- if card_image != blank -%}
+                <div class="product-function__media">
+                  {{
+                    card_image
+                    | image_url: width: 300
+                    | image_tag:
+                      class: 'product-function__img',
+                      widths: '72, 144, 216, 300',
+                      sizes: '72px',
+                      loading: 'lazy',
+                      alt: ''
+                  }}
+                </div>
+              {%- endif -%}
+              {%- if card_title != blank -%}
+                <div class="ctm-title title-black">
+                  <h3 class="h5">{{ card_title | escape }}</h3>
+                </div>
+              {%- endif -%}
+              {%- if card_text != blank -%}
+                <div class="content content-xsmall content-black">
+                  <p>{{ card_text | escape }}</p>
+                </div>
+              {%- endif -%}
+            </{{ card_tag }}>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if request.design_mode -%}
+      <div class="product-editor-note">
+        {%- if function_entries.size == 0 -%}
+          <p><strong>No function + flavor cards for this product yet.</strong> This note only shows in the theme editor.</p>
+        {%- endif -%}
+        <p>
+          Pick cards in Shopify admin → Products → {{ product.title | escape }} → Metafields → “Choose Your Function + Flavour”.
+          Card image, title and text are edited in Content → Metaobjects → “Choose Your Function + Flavour Main”.
+        </p>
+        <p>
+          <a href="{{ admin_product_url }}" target="_blank" rel="noopener">
+            Open {{ product.title | escape }} in admin ↗
+          </a>
+        </p>
+        <p>
+          <a href="{{ admin_entries_url }}" target="_blank" rel="noopener">Edit card entries ↗</a>
+        </p>
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}

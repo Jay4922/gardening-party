@@ -1,0 +1,29 @@
+{% comment %}
+  Theme-editor-only help note for product blocks fed by a metafield. Never renders on the storefront.
+  Links to the previewed product in Shopify admin using its numeric ID (not a GID, which admin can't open).
+
+  Accepts:
+  - product {Object}: the product being previewed
+  - metafield_name {String}: metafield name as shown in admin, e.g. "Product FAQ"
+  - is_empty {Boolean}: true when the metafield has no entries
+
+  Usage:
+  {% render 'product-editor-note', product: product, metafield_name: 'Product FAQ', is_empty: true %}
+{% endcomment %}
+{%- if request.design_mode -%}
+  {%- liquid
+    assign store_handle = shop.permanent_domain | remove: '.myshopify.com'
+    assign admin_product_url = 'https://admin.shopify.com/store/' | append: store_handle | append: '/products/' | append: product.id
+  -%}
+  <div class="product-editor-note">
+    {%- if is_empty -%}
+      <p><strong>No {{ metafield_name | escape }} entries for this product yet.</strong> This note only shows in the theme editor.</p>
+    {%- endif -%}
+    <p>
+      Edit in Shopify admin → Products → {{ product.title | escape }} → Metafields → “{{ metafield_name | escape }}”.
+    </p>
+    <p>
+      <a href="{{ admin_product_url }}" target="_blank" rel="noopener">Open {{ product.title | escape }} in admin ↗</a>
+    </p>
+  </div>
+{%- endif -%}

@@ -1,0 +1,55 @@
+{% comment %}
+  Product FAQ — Figma "Dropdown" 23:10409 (577 wide). Data: product metafield custom.product_faq
+  (list of "Product FAQ Main" metaobjects: question + answer). One accordion row per entry.
+
+  Accepts:
+  - block {Object}: the main-product product_faq block
+  - product {Object}: the product
+
+  Usage:
+  {% render 'product-faq', block: block, product: product %}
+{% endcomment %}
+{%- assign faq_entries = product.metafields.custom.product_faq.value -%}
+{%- if faq_entries.size > 0 or request.design_mode -%}
+  {%- style -%}
+    .product-faq-{{ block.id }} {
+      padding-top: {{ block.settings.padding_top }}px;
+      padding-bottom: {{ block.settings.padding_bottom }}px;
+    }
+    @media screen and (max-width: 989px) {
+      .product-faq-{{ block.id }} {
+        padding-top: {{ block.settings.padding_top_mobile }}px;
+        padding-bottom: {{ block.settings.padding_bottom_mobile }}px;
+      }
+    }
+  {%- endstyle -%}
+  <div class="product-faq product-faq-{{ block.id }}" {{ block.shopify_attributes }}>
+    {%- for entry in faq_entries -%}
+      {%- liquid
+        assign faq_question = entry.question.value
+        assign faq_answer = entry.answer.value
+      -%}
+      {%- if faq_question != blank -%}
+        <details class="product-faq__item">
+          <summary class="product-faq__summary">
+            <h3 class="product-faq__question">{{ faq_question | escape }}</h3>
+            <span class="product-faq__icon">{{ 'icon-faq-caret.svg' | inline_asset_content }}</span>
+          </summary>
+          {%- if faq_answer != blank -%}
+            <div class="product-faq__answer content content-black">
+              <p>{{ faq_answer | escape | newline_to_br }}</p>
+            </div>
+          {%- endif -%}
+        </details>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- liquid
+      assign faq_empty = false
+      if faq_entries.size == 0
+        assign faq_empty = true
+      endif
+      render 'product-editor-note', product: product, metafield_name: 'Product FAQ', is_empty: faq_empty
+    -%}
+  </div>
+{%- endif -%}

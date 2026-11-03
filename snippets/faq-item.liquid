@@ -1,0 +1,33 @@
+{% comment %}
+  One numbered FAQ accordion row (sections/custom-faq.liquid, both layouts).
+
+  Accepts:
+  - block: {Object} The 'question' block
+  - index: {Number} 1-based question number shown as "01"
+  - open: {Boolean} Render the row expanded. Default: false (optional)
+
+  Usage:
+  {% render 'faq-item', block: block, index: question_index, open: true %}
+{% endcomment %}
+<details
+  class="faq__item"
+  data-faq-item
+  {% if open %}
+    open
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  <summary class="faq__summary ctm-title title-black">
+    <span class="faq__number" aria-hidden="true">
+      {%- if index < 10 -%}0{%- endif -%}
+      {{- index -}}
+    </span>
+    <h3 class="faq__question h-faq">{{ block.settings.question | escape }}</h3>
+    <span class="faq__icon">{{ 'icon-faq-toggle.svg' | inline_asset_content }}</span>
+  </summary>
+  {%- if block.settings.answer != blank -%}
+    <div class="faq__answer content content-black">
+      {{ block.settings.answer }}
+    </div>
+  {%- endif -%}
+</details>

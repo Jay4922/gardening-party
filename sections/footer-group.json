@@ -78,21 +78,21 @@
           "type": "link_list",
           "settings": {
             "heading": "Company",
-            "menu": "footer"
+            "menu": "company"
           }
         },
         "menu_support": {
           "type": "link_list",
           "settings": {
             "heading": "Support",
-            "menu": "footer"
+            "menu": "support"
           }
         },
         "menu_legal": {
           "type": "link_list",
           "settings": {
             "heading": "Legal",
-            "menu": "footer"
+            "menu": "legal"
           }
         }
       },

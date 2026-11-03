@@ -98,6 +98,19 @@
       "share": "Share this article",
       "success": "Your comment was posted successfully! Thank you!",
       "success_moderated": "Your comment was posted successfully. We will publish it in a little while, as our blog is moderated."
+    },
+    "learn": {
+      "heading": "Good Stuff To Know.",
+      "featured": "Featured",
+      "read_story": "Read the story",
+      "search_placeholder": "Search",
+      "search_label": "Search articles",
+      "filter": "Filter",
+      "filter_all": "All",
+      "filter_label": "Filter articles by topic",
+      "author": "Author",
+      "published": "Published",
+      "category": "Category"
     }
   },
   "onboarding": {
@@ -107,6 +120,11 @@
   "products": {
     "product": {
       "add_to_cart": "Add to cart",
+      "function_flavor_heading": "Choose your function + flavor",
+      "review_count": {
+        "one": "{{ count }} Review",
+        "other": "{{ count }} Reviews"
+      },
       "choose_options": "Choose options",
       "choose_product_options": "Choose options for {{ product_name }}",
       "description": "Description",

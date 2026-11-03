@@ -1,0 +1,166 @@
+{% comment %}
+  Legal Content — Figma 23:12915 (Privacy), 23:12998 (Terms), 23:13084 (Accessibility), 23:13166 (Cookie preference settings).
+  Page title + page.content (edited in Shopify admin → Pages), then optional heading + text blocks. Used by templates/page.legal.json.
+{% endcomment %}
+
+{%- style -%}
+  /* .legal */
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  .legal__inner-{{ section.id }} {
+    max-width: {{ section.settings.content_width }}px;
+  }
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="legal section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
+  <div class="legal__container">
+    <div class="legal__inner legal__inner-{{ section.id }} flex flex-col gap-40 990:gap-55">
+      {%- if section.settings.show_title and page.title != blank -%}
+        <div class="ctm-title">
+          <h1 class="legal__title">{{ page.title | escape }}</h1>
+        </div>
+      {%- endif -%}
+
+      {%- if page.content != blank -%}
+        <div class="legal__body">
+          {{ page.content }}
+        </div>
+      {%- endif -%}
+
+      {%- for block in section.blocks -%}
+        {%- if block.settings.heading != blank or block.settings.text != blank -%}
+          <div class="legal__group flex flex-col gap-20" {{ block.shopify_attributes }}>
+            {%- if block.settings.heading != blank -%}
+              <div class="ctm-title">
+                <h2 class="legal__heading">{{ block.settings.heading | escape }}</h2>
+              </div>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <div class="legal__body">
+                {{ block.settings.text }}
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Legal content",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The title and text come from the page itself (Online Store → Pages). Use Heading 2 for each group heading."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show page title",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 600,
+      "max": 1312,
+      "step": 8,
+      "unit": "px",
+      "default": 1000
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-7"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Extra CSS Class"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "group",
+      "name": "Heading + text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Headline Goes Here"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Legal content"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,37 @@
+{% comment %}
+  Article meta row (Figma "infos", e.g. 23:12342): author · date (MM/DD/YYYY) · category, each with a 24px icon.
+  Category = the article's first tag (articles have no category field).
+
+  Accepts:
+  - article: {Object} Article
+  - class: {String} Extra classes on the list (optional)
+
+  Usage:
+  {% render 'article-meta', article: article, class: 'article-meta--center' %}
+{% endcomment %}
+{%- liquid
+  assign category = article.tags | first
+-%}
+<ul class="article-meta list-none m-0 p-0 {{ class }}" role="list">
+  {%- if article.author != blank -%}
+    <li class="article-meta__item">
+      {{- 'icon-user-round.svg' | inline_asset_content -}}
+      <span class="visually-hidden">{{ 'blogs.learn.author' | t }}:</span>
+      <span>{{ article.author | escape }}</span>
+    </li>
+  {%- endif -%}
+  <li class="article-meta__item">
+    {{- 'icon-calendar.svg' | inline_asset_content -}}
+    <span class="visually-hidden">{{ 'blogs.learn.published' | t }}:</span>
+    <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+      {{- article.published_at | date: '%m/%d/%Y' -}}
+    </time>
+  </li>
+  {%- if category != blank -%}
+    <li class="article-meta__item">
+      {{- 'icon-tag.svg' | inline_asset_content -}}
+      <span class="visually-hidden">{{ 'blogs.learn.category' | t }}:</span>
+      <span>{{ category | escape }}</span>
+    </li>
+  {%- endif -%}
+</ul>
