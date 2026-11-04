@@ -25,161 +25,163 @@
   class="community-videos section-padding section-{{ section.id }}-padding color-{{ section.settings.color_scheme }}{% unless section.settings.use_cream_fade %} gradient{% endunless %} overflow-hidden {{ section.settings.custom_class | escape }}"
   data-section-root
 >
-  <div class="community-videos__inner max-w-1512 mx-auto px-20 990:px-100">
-    {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
-      <div class="community-videos__header flex flex-col items-center text-center 990:items-start 990:text-left">
-        {%- if section.settings.eyebrow != blank -%}
-          <div class="content content-eyebrow content-eyebrow-large">
-            <p>{{ section.settings.eyebrow | escape }}</p>
-          </div>
-        {%- endif -%}
-        {%- if section.settings.heading != blank -%}
-          <div class="ctm-title title-black">
-            <h2>{{ section.settings.heading | escape }}</h2>
-          </div>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
-
-    {%- if section.blocks.size > 0 -%}
-      <custom-card-slider class="community-videos__slider block mt-40 990:mt-55">
-        <script type="application/json" data-swiper-config>
-          {
-            "slidesPerView": "auto",
-            "centeredSlides": true,
-            "spaceBetween": 16,
-            "breakpoints": {
-              "990": {
-                "slidesPerView": {{ section.settings.cards_per_view_desktop }},
-                "centeredSlides": false,
-                "spaceBetween": 40
-              }
-            }
-            {%- if section.settings.autoplay and section.blocks.size > 1 -%}
-              , "autoplay": { "delay": {{ section.settings.autoplay_delay | times: 1000 }}, "pauseOnMouseEnter": true, "disableOnInteraction": false }
-            {%- endif -%}
-          }
-        </script>
-        <div class="swiper community-videos__swiper">
-          <ul class="swiper-wrapper community-videos__list" role="list">
-            {%- for block in section.blocks -%}
-              {%- liquid
-                assign handle = block.settings.handle | remove_first: '@'
-                assign poster = block.settings.poster
-                if poster == blank and block.settings.video != blank
-                  assign poster = block.settings.video.preview_image
-                endif
-                assign template_id = 'CommunityVideo-' | append: section.id | append: '-' | append: block.id
-              -%}
-              <li class="swiper-slide community-card" {{ block.shopify_attributes }}>
-                <div class="community-card__media">
-                  {%- if poster != blank -%}
-                    {{
-                      poster
-                      | image_url: width: 900
-                      | image_tag:
-                        class: 'community-card__poster',
-                        widths: '320, 410, 640, 900',
-                        sizes: '(min-width: 990px) 410px, 320px',
-                        loading: 'lazy',
-                        alt: poster.alt
-                    }}
-                  {%- else -%}
-                    {{ 'lifestyle-2' | placeholder_svg_tag: 'community-card__poster' }}
-                  {%- endif -%}
-
-                  {%- if handle != blank -%}
-                    {%- if block.settings.handle_link != blank -%}
-                      <a
-                        href="{{ block.settings.handle_link }}"
-                        class="community-card__handle"
-                        target="_blank"
-                        rel="noopener"
-                      >
-                        {{- 'icon-at.svg' | inline_asset_content -}}
-                        <span>{{ handle | escape }}</span>
-                      </a>
-                    {%- else -%}
-                      <span class="community-card__handle">
-                        {{- 'icon-at.svg' | inline_asset_content -}}
-                        <span>{{ handle | escape }}</span>
-                      </span>
-                    {%- endif -%}
-                  {%- endif -%}
-
-                  {%- if block.settings.video != blank -%}
-                    <button
-                      type="button"
-                      class="community-card__play"
-                      aria-haspopup="dialog"
-                      data-video-template="{{ template_id }}"
-                    >
-                      <span class="visually-hidden">
-                        {%- if handle != blank -%}
-                          Play video by @{{ handle | escape }}
-                        {%- else -%}
-                          Play video
-                        {%- endif -%}
-                      </span>
-                      {{- 'icon-play-circle.svg' | inline_asset_content -}}
-                    </button>
-                    <template id="{{ template_id }}">
-                      <div class="community-modal__video">
-                        {{
-                          block.settings.video
-                          | video_tag:
-                            class: 'community-modal__video-el',
-                            controls: true,
-                            playsinline: true,
-                            preload: 'metadata'
-                        }}
-                      </div>
-                      {%- if section.settings.modal_show_product
-                        and block.settings.show_product
-                        and block.settings.product != blank
-                      -%}
-                        <div class="community-modal__product">
-                          {%- render 'card-product',
-                            card_product: block.settings.product,
-                            card_style: 'mini',
-                            section_id: section.id,
-                            skip_styles: true
-                          -%}
-                        </div>
-                      {%- endif -%}
-                    </template>
-                  {%- endif -%}
-                </div>
-
-                {%- if block.settings.show_product and block.settings.product != blank -%}
-                  {%- render 'card-product',
-                    card_product: block.settings.product,
-                    card_style: 'mini',
-                    section_id: section.id,
-                    skip_styles: true
-                  -%}
-                {%- endif -%}
-              </li>
-            {%- endfor -%}
-          </ul>
+  <div class="community-videos__inner custom-container">
+    <div class="990:px-45">
+      {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+        <div class="community-videos__header flex flex-col items-center text-center 990:items-start 990:text-left">
+          {%- if section.settings.eyebrow != blank -%}
+            <div class="content content-eyebrow content-eyebrow-large">
+              <p>{{ section.settings.eyebrow | escape }}</p>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <div class="ctm-title title-black">
+              <h2>{{ section.settings.heading | escape }}</h2>
+            </div>
+          {%- endif -%}
         </div>
-        <div
-          class="swiper-pagination ctm-pagination ctm-pagination-dark ctm-pagination-wide community-videos__pagination"
-        ></div>
-      </custom-card-slider>
+      {%- endif -%}
 
-      <custom-video-modal>
-        <dialog class="community-modal" aria-label="Community video">
-          <div class="community-modal__inner">
-            <button type="button" class="community-modal__close" data-modal-close>
-              <span class="visually-hidden">{{ 'accessibility.close' | t }}</span>
-              {{- 'icon-close.svg' | inline_asset_content -}}
-            </button>
-            <div class="community-modal__body" data-modal-body></div>
+      {%- if section.blocks.size > 0 -%}
+        <custom-card-slider class="community-videos__slider block mt-40 990:mt-55">
+          <script type="application/json" data-swiper-config>
+            {
+              "slidesPerView": "auto",
+              "centeredSlides": true,
+              "spaceBetween": 16,
+              "breakpoints": {
+                "990": {
+                  "slidesPerView": {{ section.settings.cards_per_view_desktop }},
+                  "centeredSlides": false,
+                  "spaceBetween": 40
+                }
+              }
+              {%- if section.settings.autoplay and section.blocks.size > 1 -%}
+                , "autoplay": { "delay": {{ section.settings.autoplay_delay | times: 1000 }}, "pauseOnMouseEnter": true, "disableOnInteraction": false }
+              {%- endif -%}
+            }
+          </script>
+          <div class="swiper community-videos__swiper">
+            <ul class="swiper-wrapper community-videos__list" role="list">
+              {%- for block in section.blocks -%}
+                {%- liquid
+                  assign handle = block.settings.handle | remove_first: '@'
+                  assign poster = block.settings.poster
+                  if poster == blank and block.settings.video != blank
+                    assign poster = block.settings.video.preview_image
+                  endif
+                  assign template_id = 'CommunityVideo-' | append: section.id | append: '-' | append: block.id
+                -%}
+                <li class="swiper-slide community-card" {{ block.shopify_attributes }}>
+                  <div class="community-card__media">
+                    {%- if poster != blank -%}
+                      {{
+                        poster
+                        | image_url: width: 900
+                        | image_tag:
+                          class: 'community-card__poster',
+                          widths: '320, 410, 640, 900',
+                          sizes: '(min-width: 990px) 410px, 320px',
+                          loading: 'lazy',
+                          alt: poster.alt
+                      }}
+                    {%- else -%}
+                      {{ 'lifestyle-2' | placeholder_svg_tag: 'community-card__poster' }}
+                    {%- endif -%}
+
+                    {%- if handle != blank -%}
+                      {%- if block.settings.handle_link != blank -%}
+                        <a
+                          href="{{ block.settings.handle_link }}"
+                          class="community-card__handle"
+                          target="_blank"
+                          rel="noopener"
+                        >
+                          {{- 'icon-at.svg' | inline_asset_content -}}
+                          <span>{{ handle | escape }}</span>
+                        </a>
+                      {%- else -%}
+                        <span class="community-card__handle">
+                          {{- 'icon-at.svg' | inline_asset_content -}}
+                          <span>{{ handle | escape }}</span>
+                        </span>
+                      {%- endif -%}
+                    {%- endif -%}
+
+                    {%- if block.settings.video != blank -%}
+                      <button
+                        type="button"
+                        class="community-card__play"
+                        aria-haspopup="dialog"
+                        data-video-template="{{ template_id }}"
+                      >
+                        <span class="visually-hidden">
+                          {%- if handle != blank -%}
+                            Play video by @{{ handle | escape }}
+                          {%- else -%}
+                            Play video
+                          {%- endif -%}
+                        </span>
+                        {{- 'icon-play-circle.svg' | inline_asset_content -}}
+                      </button>
+                      <template id="{{ template_id }}">
+                        <div class="community-modal__video">
+                          {{
+                            block.settings.video
+                            | video_tag:
+                              class: 'community-modal__video-el',
+                              controls: true,
+                              playsinline: true,
+                              preload: 'metadata'
+                          }}
+                        </div>
+                        {%- if section.settings.modal_show_product
+                          and block.settings.show_product
+                          and block.settings.product != blank
+                        -%}
+                          <div class="community-modal__product">
+                            {%- render 'card-product',
+                              card_product: block.settings.product,
+                              card_style: 'mini',
+                              section_id: section.id,
+                              skip_styles: true
+                            -%}
+                          </div>
+                        {%- endif -%}
+                      </template>
+                    {%- endif -%}
+                  </div>
+
+                  {%- if block.settings.show_product and block.settings.product != blank -%}
+                    {%- render 'card-product',
+                      card_product: block.settings.product,
+                      card_style: 'mini',
+                      section_id: section.id,
+                      skip_styles: true
+                    -%}
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
           </div>
-        </dialog>
-      </custom-video-modal>
-    {%- endif -%}
+          <div
+            class="swiper-pagination ctm-pagination ctm-pagination-dark ctm-pagination-wide community-videos__pagination"
+          ></div>
+        </custom-card-slider>
+
+        <custom-video-modal>
+          <dialog class="community-modal" aria-label="Community video">
+            <div class="community-modal__inner">
+              <button type="button" class="community-modal__close" data-modal-close>
+                <span class="visually-hidden">{{ 'accessibility.close' | t }}</span>
+                {{- 'icon-close.svg' | inline_asset_content -}}
+              </button>
+              <div class="community-modal__body" data-modal-body></div>
+            </div>
+          </dialog>
+        </custom-video-modal>
+      {%- endif -%}
+    </div>
   </div>
 </div>
 

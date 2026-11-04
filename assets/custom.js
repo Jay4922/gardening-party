@@ -15,7 +15,10 @@ if (!customElements.get('custom-faq')) {
         this.items = Array.from(this.querySelectorAll('[data-faq-item]'));
         this.search = this.querySelector('[data-faq-search]');
         this.empty = this.querySelector('[data-faq-empty]');
-        this.activeIndex = 0;
+        this.reset = this.querySelector('[data-faq-reset]');
+        // -1 = no tab selected: every group shows (Figma 23:13675 / 23:18744 default state)
+        this.activeIndex = -1;
+        this.toggleDefault = this.toggleLabel ? this.toggleLabel.textContent.trim() : '';
         this.itemText = new Map(this.items.map((item) => [item, item.textContent.toLowerCase()]));
 
         this.onTabClick = this.onTabClick.bind(this);
@@ -24,17 +27,19 @@ if (!customElements.get('custom-faq')) {
         this.onDocumentClick = this.onDocumentClick.bind(this);
         this.onSearchInput = debounce(() => this.filter(), 150);
         this.onBlockSelect = this.onBlockSelect.bind(this);
+        this.onResetClick = this.onResetClick.bind(this);
 
         this.tabs.forEach((tab) => {
           tab.addEventListener('click', this.onTabClick);
           tab.addEventListener('keydown', this.onTabKeydown);
         });
         this.toggle?.addEventListener('click', this.onToggleClick);
+        this.reset?.addEventListener('click', this.onResetClick);
         this.search?.addEventListener('input', this.onSearchInput);
         document.addEventListener('click', this.onDocumentClick);
         this.addEventListener('shopify:block:select', this.onBlockSelect);
 
-        this.activate(0, false);
+        this.activate(-1, false);
       }
 
       disconnectedCallback() {
@@ -43,30 +48,33 @@ if (!customElements.get('custom-faq')) {
           tab.removeEventListener('keydown', this.onTabKeydown);
         });
         this.toggle?.removeEventListener('click', this.onToggleClick);
+        this.reset?.removeEventListener('click', this.onResetClick);
         this.search?.removeEventListener('input', this.onSearchInput);
         document.removeEventListener('click', this.onDocumentClick);
         this.removeEventListener('shopify:block:select', this.onBlockSelect);
       }
 
+      // index -1 clears the filter: no tab selected, every panel visible
       activate(index, focus) {
-        if (!this.tabs[index]) {
+        if (index !== -1 && !this.tabs[index]) {
           return;
         }
+        const all = index === -1;
         this.activeIndex = index;
         this.tabs.forEach((tab, i) => {
           const selected = i === index;
           tab.setAttribute('aria-selected', selected ? 'true' : 'false');
-          tab.tabIndex = selected ? 0 : -1;
+          tab.tabIndex = selected || (all && i === 0) ? 0 : -1;
         });
         if (this.toggleLabel) {
-          this.toggleLabel.textContent = this.tabs[index].textContent.trim();
+          this.toggleLabel.textContent = all ? this.toggleDefault : this.tabs[index].textContent.trim();
         }
         if (!this.isSearching()) {
           this.panels.forEach((panel, i) => {
-            panel.hidden = i !== index;
+            panel.hidden = !all && i !== index;
           });
         }
-        if (focus) {
+        if (focus && !all) {
           this.tabs[index].focus();
         }
       }
@@ -76,15 +84,23 @@ if (!customElements.get('custom-faq')) {
           this.search.value = '';
           this.filter();
         }
-        this.activate(this.tabs.indexOf(event.currentTarget), false);
+        const index = this.tabs.indexOf(event.currentTarget);
+        // Clicking the active tab again clears the filter
+        this.activate(index === this.activeIndex ? -1 : index, false);
+        this.setDropdown(false);
+      }
+
+      onResetClick() {
+        this.activate(-1, false);
         this.setDropdown(false);
       }
 
       onTabKeydown(event) {
         const keys = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
         let next = null;
+        const current = this.activeIndex === -1 ? this.tabs.indexOf(event.currentTarget) : this.activeIndex;
         if (event.key in keys) {
-          next = (this.activeIndex + keys[event.key] + this.tabs.length) % this.tabs.length;
+          next = (current + keys[event.key] + this.tabs.length) % this.tabs.length;
         } else if (event.key === 'Home') {
           next = 0;
         } else if (event.key === 'End') {
@@ -298,7 +314,9 @@ if (!customElements.get('custom-benefit-marquee')) {
         const settings = this.readConfig();
         const config = {
           slidesPerView: 'auto',
-          spaceBetween: 28,
+          // Figma: 20px between items on mobile (23:20208), 28px on desktop
+          spaceBetween: 20,
+          breakpoints: { 990: { spaceBetween: 28 } },
           loop: true,
           speed: settings.speed || 6000,
           freeMode: { enabled: true, momentum: false },

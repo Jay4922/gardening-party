@@ -40,6 +40,14 @@
   @apply bg-white text-black hover:bg-black hover:text-white;
 }
 
+/* Borderless fills (Figma 23:9494 "Shop …" black pill and 23:7864 "Button Gradient"): no 2px stroke, so 39px tall */
+.btn-black {
+  @apply border-0 bg-black text-white hover:bg-gradient-brand;
+}
+.btn-gradient {
+  @apply border-0 bg-gradient-brand text-white hover:bg-none hover:bg-black;
+}
+
 /* Page banner (sections/custom-page-banner.liquid) — Figma "IP Header" 3:6108 / mobile 3:10069 */
 .page-banner {
   @apply px-20 990:px-55 relative overflow-hidden flex items-start justify-center text-center 990:items-center 990:justify-start 990:text-left;
@@ -115,7 +123,7 @@
   @apply relative w-full 990:max-w-[50%];
 }
 
-/* FAQ (sections/custom-faq.liquid) — Figma 3:6110 / mobile 3:10092 */
+/* FAQ (sections/custom-faq.liquid) — Figma 23:13675 / 23:14284 (tab selected) / mobile 23:18744 */
 .faq {
   @apply block;
 }
@@ -144,7 +152,7 @@
   @apply relative mt-28;
 }
 .faq__dropdown-toggle {
-  @apply flex w-full h-40 items-center justify-between px-28 rounded-100 border-0 bg-gradient-brand text-white font-body font-medium text-12 uppercase cursor-pointer 990:hidden;
+  @apply flex w-full h-40 items-center justify-between px-28 rounded-100 border-0 bg-gradient-brand text-white font-heading font-bold text-16 leading-figma uppercase cursor-pointer 990:hidden;
 }
 .faq__dropdown-toggle svg {
   @apply size-20 shrink-0 transition-transform duration-300;
@@ -152,17 +160,26 @@
 .faq__tabs.is-open .faq__dropdown-toggle svg {
   @apply rotate-180;
 }
-.faq__tablist {
-  @apply hidden absolute left-0 right-0 top-full z-10 mt-4 flex-col items-center gap-10 py-12 rounded-21 bg-white shadow-md 990:static 990:z-auto 990:mt-0 990:flex 990:flex-row 990:flex-wrap 990:justify-center 990:gap-10 990:p-0 990:rounded-none 990:bg-transparent 990:shadow-none 1440:flex-nowrap 1440:justify-between 1440:gap-5;
+/* Mobile dropdown card holding the reset option + the tablist; on desktop only the tablist row shows */
+.faq__menu {
+  @apply hidden absolute left-0 right-0 top-full z-10 mt-4 flex-col items-center gap-10 py-12 rounded-21 bg-white shadow-md 990:static 990:z-auto 990:mt-0 990:block 990:p-0 990:rounded-none 990:bg-transparent 990:shadow-none;
 }
-.faq__tabs.is-open .faq__tablist {
-  @apply flex;
+.faq__tabs.is-open .faq__menu {
+  @apply flex 990:block;
+}
+.faq__tablist {
+  /* Spread edge to edge like Figma when the pills fit one row; still wraps (never overflows) with longer admin labels */
+  @apply flex flex-col items-center gap-10 990:flex-row 990:flex-wrap 990:justify-center 1440:justify-between;
 }
 .faq__tab {
-  @apply px-20 py-5 border-0 bg-transparent font-body font-medium text-12 leading-15 uppercase text-black whitespace-nowrap cursor-pointer 990:py-10 990:rounded-100 990:border-2 990:border-transparent;
+  @apply px-20 py-5 border-0 bg-transparent font-heading font-bold text-14 leading-figma uppercase text-black whitespace-nowrap cursor-pointer 990:py-10 990:rounded-100 990:border-2 990:border-transparent;
 }
 .faq__tab[aria-selected='true'] {
   @apply max-990:hidden;
+}
+/* "Select category" reset lives in the mobile dropdown only */
+.faq__tab--reset {
+  @apply 990:hidden;
 }
 @variant 990 {
   .faq__tab {
@@ -170,18 +187,23 @@
       linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
       var(--gradient-brand) border-box;
   }
+  /* Figma 23:14324: selected pill is gradient-filled with no border — 38 tall vs 42 */
   .faq__tab[aria-selected='true'] {
-    @apply text-white;
-    background: var(--gradient-brand) border-box;
+    @apply text-white border-0;
+    background: var(--gradient-brand);
   }
 }
 .faq__tab:focus-visible,
 .faq__dropdown-toggle:focus-visible {
   @apply outline-2 outline-offset-2 outline-orange;
 }
-/* Accordion — 1000px column; number 40 | question | 28px icon */
+/* Accordion — 1000px column; number 40 | question | 28px icon. Tabs → list 40 desktop / 28 mobile; groups the same apart */
 .faq__panels {
-  @apply mx-auto mt-28 max-w-1000;
+  @apply flex flex-col gap-28 mx-auto mt-28 max-w-1000 990:mt-40 990:gap-40;
+}
+/* Group heading — Figma H3/H3-1 Plus Jakarta Bold 32 / 4% desktop, H4.2 20 / no tracking mobile */
+.ctm-title .faq__group-title {
+  @apply text-20 leading-figma tracking-normal 990:text-32 990:tracking-heading;
 }
 .faq__panel {
   @apply flex flex-col gap-20;
@@ -194,7 +216,7 @@
   @apply pb-20 border-b border-black/40;
 }
 .faq__summary {
-  @apply grid grid-cols-[40px_1fr_28px] items-center gap-10 list-none cursor-pointer 990:gap-20;
+  @apply grid grid-cols-[40px_1fr_28px] items-start gap-20 list-none cursor-pointer;
 }
 .faq__summary::-webkit-details-marker {
   display: none;
@@ -221,7 +243,7 @@
   @apply hidden;
 }
 .faq__answer {
-  @apply pt-20 pl-50 pr-38 990:pl-60 990:pr-48;
+  @apply pt-20 pl-60 pr-48;
 }
 .faq__answer a {
   @apply font-bold no-underline hover:underline;
@@ -309,6 +331,30 @@
 .cta-banner__text {
   @apply flex flex-col items-center gap-10;
 }
+/* Stacked (home, Figma 23:8677): 1000px text column, title breaks into two balanced lines, 55 to the buttons */
+.cta-banner--stacked .cta-banner__row {
+  @apply 990:gap-55;
+}
+.cta-banner--stacked .cta-banner__text {
+  @apply w-full max-w-1000;
+}
+.cta-banner--stacked .cta-banner__text .h2 {
+  @apply text-balance;
+}
+/* Stacked, mobile (Figma 23:18135): copy left-aligned, buttons full width and stacked 10 apart */
+.cta-banner--stacked .cta-banner__inner {
+  @apply max-990:items-stretch max-990:text-left;
+}
+.cta-banner--stacked .cta-banner__row,
+.cta-banner--stacked .cta-banner__text {
+  @apply max-990:items-start;
+}
+.cta-banner--stacked .cta-banner__buttons {
+  @apply max-990:w-full max-990:flex-col max-990:gap-10;
+}
+.cta-banner--stacked .cta-banner__buttons .ctm-button {
+  @apply max-990:w-full;
+}
 .cta-banner__buttons {
   @apply flex flex-wrap justify-center gap-20;
 }
@@ -383,6 +429,12 @@
   @apply bg-gradient-brand;
   box-shadow: 0 0 0 2px var(--color-white, #fff);
 }
+/* Mobile 40 x 6 bar: Figma draws the 2px white stroke inside the bar (hero 23:20201), so it stays 40 x 6 */
+@media (max-width: 989px) {
+  .ctm-pagination .swiper-pagination-bullet-active {
+    box-shadow: inset 0 0 0 2px var(--color-white, #fff);
+  }
+}
 
 /* ===== Hero slider (sections/custom-hero-slider.liquid) — Figma 3:454 / mobile 3:8808 ===== */
 .hero-slide__media {
@@ -407,9 +459,11 @@
 .hero-slide__product img {
   @apply w-full h-auto object-contain;
 }
-/* Mobile text panel: black with the orange/purple glow from the Figma "Assets" layer */
+/* Mobile text panel: black with the orange/purple glow from the Figma "Assets" layer.
+   Bottom pad 66 = 40 gap (buttons → dots) + 6 dot + 20 pad (23:20201); the dots sit absolute at bottom 20.
+   Desktop: copy is top-aligned, 55 from the top (23:8017). */
 .hero-slide__content {
-  @apply absolute left-0 right-0 bottom-0 flex flex-col gap-20 p-20 pb-46 bg-black overflow-hidden 990:relative 990:h-full 990:justify-center 990:gap-40 990:p-55 990:bg-transparent;
+  @apply absolute left-0 right-0 bottom-0 flex flex-col gap-20 p-20 pb-66 bg-black overflow-hidden 990:relative 990:h-full 990:justify-start 990:gap-40 990:p-55 990:bg-transparent;
 }
 .hero-slide__content::before {
   @apply absolute inset-0 pointer-events-none 990:hidden;
@@ -431,6 +485,21 @@
   }
   .hero-slider .ctm-pagination.swiper-pagination {
     left: max(28px, calc((100% - 1512px) / 2 + 28px));
+  }
+  /* Copy column = the space left of the product box (+55 right pad, − box width): 700 at 1512 like Figma 23:8017,
+     narrower below so it never runs under the box. The title may overhang the column by 75 (775 vs 700), as in Figma. */
+  .hero-slide__content {
+    --hero-col: min(700px, calc(100% + 55px - min(760px, 50.3vw)));
+  }
+  .hero-slide__copy {
+    max-width: calc(var(--hero-col) + 75px);
+  }
+  .hero-slide__copy > .content {
+    max-width: calc(100% - 75px);
+  }
+  .hero-slide__buttons {
+    @apply flex-wrap;
+    max-width: var(--hero-col);
   }
 }
 
@@ -469,13 +538,13 @@
   @apply no-underline hover:underline;
 }
 .instagram-feed__grid {
-  @apply grid grid-cols-2 gap-16 m-0 p-0 list-none 990:grid-cols-4 990:gap-20;
+  @apply grid grid-cols-2 gap-10 m-0 p-0 list-none 990:grid-cols-4 990:gap-20;
 }
 .instagram-feed__tile {
   @apply min-w-0;
 }
 .instagram-feed__link {
-  @apply block aspect-square overflow-hidden rounded-20 bg-black/5;
+  @apply block aspect-square overflow-hidden rounded-10 bg-black/5 990:rounded-20;
 }
 .instagram-feed__img {
   @apply block w-full h-full object-cover transition-transform duration-300 ease-in-out;
@@ -534,8 +603,9 @@ a.instagram-feed__link:hover .instagram-feed__img {
 .card-function__link {
   @apply text-current no-underline hover:text-orange;
 }
+/* Wraps only if a column ever gets narrower than the ~274 row */
 .card-function__actions {
-  @apply flex items-start justify-center gap-10;
+  @apply flex flex-wrap items-start justify-center gap-10;
 }
 /* Quantity stepper: white pill, 2px black border, 20px icons */
 .card-function .card-function__qty {
@@ -571,8 +641,13 @@ a.instagram-feed__link:hover .instagram-feed__img {
 .card-function--gift .card-function__media {
   @apply w-full max-w-328;
 }
+/* Figma 23:9509: description reserves 2 lines (38) so price rows line up across cards */
+.card-function--collection .card-function__copy > .content:not(.content-medium) p {
+  @apply min-h-38 line-clamp-2;
+}
+/* Fill the 202 x 280 box so non-portrait sources don't render short */
 .card-function--collection .card-function__image {
-  @apply max-h-280;
+  @apply h-full max-h-280;
 }
 .card-function__price {
   @apply flex items-center justify-center gap-5 m-0 font-body font-medium text-16 990:text-20 leading-figma text-black;
@@ -600,8 +675,9 @@ a.instagram-feed__link:hover .instagram-feed__img {
 }
 
 /* Collection grid (sections/main-collection-product-grid.liquid, card_layout 'collection'): 40px side inset, 55px gaps */
+/* Figma 23:9509 insets 40 (not the 55 container gutter); 20 below 990 like the shared mobile gutter */
 .collection-grid--rr .collection.page-width {
-  @apply max-w-1512 990:px-40;
+  @apply max-w-1512 px-20 990:px-40;
 }
 .collection-grid--rr .product-grid {
   --grid-mobile-vertical-spacing: 55px;
@@ -613,10 +689,12 @@ a.instagram-feed__link:hover .instagram-feed__img {
 .featured-products__list {
   @apply m-0 p-0 list-none;
 }
-/* Desktop: 3 x 410 columns spread across the 1312 content width (41px gaps) */
+/* Desktop: 3 x 410 columns spread across the 1312 content width (41px gaps). 990–1198 (no Figma frame): 20 gaps and
+   no extra 45 inset (see the 1199:px-45 wrapper) so each column stays ≥ 280, wide enough for the 260 image and the
+   qty + add-to-cart row. */
 @variant 990 {
   .featured-products .featured-products__list {
-    @apply grid grid-cols-3 gap-x-41 gap-y-55 transform-none;
+    @apply grid grid-cols-3 gap-x-20 1199:gap-x-41 gap-y-55 transform-none;
   }
   .featured-products .featured-products__item {
     @apply w-auto;
@@ -670,6 +748,10 @@ a.instagram-feed__link:hover .instagram-feed__img {
 }
 .function-flavor__stat-text {
   @apply flex items-center gap-20 990:flex-col 990:gap-10 990:text-center;
+}
+/* Mobile: values are 61 wide so the labels line up (23:17852 / 23:17857); a wider value like "10g" keeps its width */
+.function-flavor__stat-text > .content-stat {
+  @apply shrink-0 min-w-61 990:min-w-0;
 }
 
 /* Product stats block (sections/main-product.liquid, block "product_stats"): 3 centered columns, label, then a 60 x 4 bar; bar colors cycle orange / magenta / blue */
@@ -794,17 +876,18 @@ a.instagram-feed__link:hover .instagram-feed__img {
     @apply w-full! shrink-0;
   }
 }
+/* Figma thumbs: object-cover, no tint behind the image */
 .main-product .thumbnail {
-  @apply rounded-10 overflow-hidden border-0 shadow-none;
-  background-color: rgb(238 217 191 / 0.28);
+  @apply rounded-10 overflow-hidden border-0 shadow-none bg-transparent;
 }
 .main-product .thumbnail img {
-  @apply rounded-10 object-contain!;
+  @apply rounded-10 object-cover!;
 }
 /* Active thumb: 3px brand-gradient ring */
 .main-product .thumbnail[aria-current] {
   @apply border-3 border-solid border-transparent shadow-none;
   background:
+    linear-gradient(rgb(238 217 191 / 0.4), rgb(238 217 191 / 0.4)) padding-box,
     linear-gradient(rgb(255 248 240), rgb(255 248 240)) padding-box,
     var(--gradient-brand) border-box;
 }
@@ -861,23 +944,34 @@ a.instagram-feed__link:hover .instagram-feed__img {
 .main-product .product__description {
   @apply font-body text-16 leading-figma text-black;
 }
+/* One empty Inter 16 "normal" line = 19 */
 .main-product .product__description p:empty {
-  @apply h-16;
+  @apply h-19;
 }
 /* Stats row sits between two 1px black/40 rules (Figma "info highlights") */
 .main-product .product-stats {
   @apply border-y border-black/40;
 }
+/* Figma: items flex-1 with no gap; label Inter Medium 16 (beats base .content-stat-label 20); 4-stat variant values 44 */
+.main-product .product-stats__list {
+  @apply 990:gap-0;
+}
+.main-product .product-stats__label.content p {
+  @apply text-14 990:text-16;
+}
+.main-product .product-stats__list:has(> :nth-child(4)) .content-stat p {
+  @apply 990:text-44;
+}
 
-/* Quantity: "QUANTITY" beside a white pill (2px black border, px-20 py-10, 20 gap) */
+/* Quantity: "QUANTITY" beside a white pill — Figma 160 x 40 with an inside stroke, so 18/8 padding + 2px border; 20 gap */
 .main-product .product-form__quantity {
   @apply flex items-center gap-10;
 }
 .main-product .quantity__label {
-  @apply m-0 font-body font-medium text-16 leading-figma uppercase text-black;
+  @apply m-0! font-body font-medium text-16 leading-figma uppercase text-black;
 }
 .main-product .quantity {
-  @apply w-auto min-h-0 flex items-center gap-20 px-20 py-10 rounded-50 border-2 border-black bg-white;
+  @apply w-auto min-h-0 flex items-center gap-20 px-18 py-8 rounded-50 border-2 border-black bg-white;
 }
 .main-product .quantity::before,
 .main-product .quantity::after {
@@ -890,6 +984,10 @@ a.instagram-feed__link:hover .instagram-feed__img {
   @apply w-40 h-auto p-0 font-heading font-bold text-16 text-center text-black opacity-100;
 }
 
+/* Figma: quantity → buttons is 20, not the 28 stack gap */
+.main-product .product__info-container > .product-form__quantity + * {
+  @apply -mt-8!;
+}
 /* Buttons: Add to cart (black) + Find in stores (outline), equal halves, 10 apart */
 .main-product .product-form__buttons {
   @apply flex gap-10 max-w-none!;
@@ -917,15 +1015,25 @@ a.instagram-feed__link:hover .instagram-feed__img {
 .product-function__item {
   @apply flex flex-1 min-w-0;
 }
-/* 10px padding, 10 radius, 72 x 100 image, 10px to the copy, 4px title → text. Tints cycle cream / pink / lavender. */
+/* 10px padding, 10 radius, 72 x 100 image, 10px to the copy, 4px title → text, top-aligned.
+   Tints cycle cream / pink / lavender: .10 inactive, .28 on the current product (Figma 23:12017) */
 .product-function__card {
-  @apply relative flex w-full flex-col items-center justify-center gap-4 p-10 rounded-10 text-center no-underline text-black bg-[rgb(238_217_191/0.28)];
+  @apply relative flex w-full flex-col items-center justify-start gap-4 p-10 rounded-10 text-center no-underline text-black bg-[rgb(238_217_191/0.1)];
+}
+.product-function__card.is-active {
+  @apply bg-[rgb(238_217_191/0.28)];
 }
 .product-function__item:nth-child(3n + 2) .product-function__card {
   @apply bg-[rgb(209_23_113/0.1)];
 }
 .product-function__item:nth-child(3n + 3) .product-function__card {
   @apply bg-[rgb(69_21_140/0.1)];
+}
+.product-function__item:nth-child(3n + 2) .product-function__card.is-active {
+  @apply bg-[rgb(209_23_113/0.28)];
+}
+.product-function__item:nth-child(3n + 3) .product-function__card.is-active {
+  @apply bg-[rgb(69_21_140/0.28)];
 }
 /* 4px brand-gradient border on the current product (masked ring so the translucent tint stays untouched) */
 .product-function__card::before {
@@ -1070,7 +1178,7 @@ a.product-function__card:focus-visible {
   @apply flex flex-col items-center gap-20 text-center 990:flex-row 990:items-stretch 990:gap-40 990:text-left;
 }
 .reviews__intro {
-  @apply flex flex-col 990:flex-1 990:pl-68 990:justify-center;
+  @apply flex flex-col 990:gap-4 990:flex-1 990:pl-68 990:justify-center;
 }
 .reviews__header-divider {
   @apply block w-full h-px bg-white/40 990:w-2 990:h-auto 990:bg-white/40;
@@ -1127,8 +1235,13 @@ a.product-function__card:focus-visible {
 .review-card__body {
   @apply flex flex-col gap-10;
 }
+/* Mobile title has no tracking (23:18029); desktop keeps the shared 6% from .title-review */
+.review-card .ctm-title.title-review h3 {
+  @apply max-990:tracking-normal;
+}
+/* Stars → title: 6 mobile (23:18012), 20 desktop (23:8554); title → quote stays the body's 10 */
 .review-card__rating {
-  @apply flex items-center justify-between gap-10 mb-0 990:mb-10;
+  @apply flex items-center justify-between gap-10 -mb-4 990:mb-10;
 }
 .review-card__stars {
   @apply flex items-center gap-3;
@@ -1181,8 +1294,9 @@ a.product-function__card:focus-visible {
 .ctm-textarea {
   @apply w-full m-0 px-20 py-10 border-2 border-black bg-white/20 font-body text-16 leading-figma text-black shadow-none outline-none appearance-none transition-colors duration-300 placeholder:text-black/40 focus-visible:border-orange;
 }
+/* Figma 23:12842: 39 tall incl. the 2px border (10 + 19 + 10 drawn inside the stroke) */
 .ctm-input {
-  @apply rounded-48;
+  @apply rounded-48 py-8;
 }
 .ctm-textarea {
   @apply rounded-18 min-h-109 resize-y;
@@ -1233,12 +1347,17 @@ a.product-function__card:focus-visible {
 .legal__body li {
   @apply m-0 font-body text-16 leading-figma text-black;
 }
+/* Figma Privacy/Terms: intro sits 28 under the title (inside the title block), not 55 */
+.legal__group--intro {
+  @apply -mt-12 990:-mt-27;
+}
+/* Figma: paragraphs separated by one empty line (1lh, same as base .content p) */
 .legal__body p + p,
 .legal__body p + ul,
 .legal__body p + ol,
 .legal__body ul + p,
 .legal__body ol + p {
-  @apply mt-20;
+  @apply mt-[1lh];
 }
 .legal__body ul,
 .legal__body ol {
@@ -1323,8 +1442,21 @@ a.product-function__card:focus-visible {
     linear-gradient(#ffffff, #ffffff) padding-box,
     var(--gradient-brand) border-box;
 }
+/* Figma 23:13325: arrow stroke painted with the brand gradient (left→right; flips with the prev rotation).
+   The inline SVG keeps its size; its stroke is hidden and the gradient shows through an arrow-shaped mask. */
 .search-pagination__arrow svg {
   @apply size-18;
+  background: var(--gradient-brand);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M3.33333 10H16.6667M10.8333 15.8333L16.6667 10L10.8333 4.16667' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M3.33333 10H16.6667M10.8333 15.8333L16.6667 10L10.8333 4.16667' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+.search-pagination__arrow svg path {
+  stroke: transparent;
+}
+a.search-pagination__arrow:hover svg {
+  background: #ffffff;
 }
 .search-pagination__arrow--prev svg {
   @apply rotate-180;
@@ -1335,12 +1467,17 @@ a.search-pagination__arrow:hover {
     linear-gradient(#000000, #000000) padding-box,
     var(--gradient-brand) border-box;
 }
+/* Figma shows the unavailable arrow at full strength; it stays non-interactive (span, aria-hidden) */
 .search-pagination__arrow.is-disabled {
-  @apply opacity-40;
+  @apply pointer-events-none;
 }
 .search-pagination__page,
 .search-pagination__gap {
   @apply flex items-center justify-center min-w-25 px-9 py-3 font-heading font-bold text-16 leading-figma text-black no-underline;
+}
+/* Figma 23:13325: "..." is bare text, no box padding */
+.search-pagination__gap {
+  @apply min-w-0 px-0;
 }
 a.search-pagination__page:hover {
   @apply text-orange;
@@ -1382,7 +1519,7 @@ a.search-pagination__page:hover {
 }
 /* Filter pill — same 2px black / white-20 pill as the search field */
 .blog-filter__toggle {
-  @apply flex items-center gap-10 h-40 px-20 rounded-48 border-2 border-black bg-white/20 font-body text-16 leading-figma text-black cursor-pointer list-none select-none;
+  @apply flex items-center gap-10 h-39 px-20 rounded-48 border-2 border-black bg-white/20 font-body text-16 leading-figma text-black cursor-pointer list-none select-none;
 }
 .blog-filter__toggle::-webkit-details-marker {
   @apply hidden;
@@ -1422,9 +1559,9 @@ a.search-pagination__page:hover {
 .blog-featured__media:empty {
   @apply block;
 }
-/* Figma: copy column padded 28 top/right/bottom, 28 between groups */
+/* Figma: copy column 28 from the card's outer edge top/right/bottom (22 + the card's 6px stroke), 28 between groups */
 .blog-featured__copy {
-  @apply flex flex-col items-start gap-20 min-w-0 p-20 990:gap-28 990:py-28 990:pr-28 990:pl-0;
+  @apply flex flex-col items-start gap-20 min-w-0 p-20 990:gap-28 990:py-22 990:pr-22 990:pl-0;
 }
 .blog-featured__titles {
   @apply flex flex-col gap-10 w-full;
@@ -1432,6 +1569,84 @@ a.search-pagination__page:hover {
 .blog-featured__title-link {
   @apply text-current no-underline hover:text-orange;
 }
+/* Paragraph gap comes from base .content p (1lh) */
 .blog-featured__excerpt p {
   @apply text-16 leading-figma;
+}
+
+/* ===== Blog latest (sections/custom-blog-latest.liquid) — Figma 23:12393, no mobile frame ===== */
+/* Black section, 80 inset, 3 x 424 cards 40 apart; cards reuse .search-card (280 image, 20 gap, centered) */
+.blog-latest__inner {
+  @apply mx-auto max-w-1512 px-20 990:px-80 flex flex-col gap-40;
+}
+.blog-latest__grid {
+  @apply d-grid grid-cols-1 gap-40 640:grid-cols-2 990:grid-cols-3;
+}
+.blog-latest__card {
+  @apply text-white;
+}
+/* Meta spans the card width (Figma justify-between) */
+.article-meta--spread {
+  @apply w-full justify-between;
+}
+/* Dark pagination (Figma 23:12525): white rings + arrows, white numbers, white-filled current page */
+.search-pagination--dark .search-pagination__arrow {
+  @apply text-white;
+  background: transparent;
+  border-color: #ffffff;
+}
+.search-pagination--dark .search-pagination__arrow svg {
+  background: none;
+  -webkit-mask: none;
+  mask: none;
+}
+.search-pagination--dark .search-pagination__arrow svg path {
+  stroke: currentColor;
+}
+.search-pagination--dark a.search-pagination__arrow:hover {
+  @apply text-black bg-white;
+}
+.search-pagination--dark .search-pagination__page,
+.search-pagination--dark .search-pagination__gap {
+  @apply text-white;
+}
+.search-pagination--dark .search-pagination__page.is-current {
+  @apply text-black bg-white;
+}
+
+/* ===== Article (sections/custom-article.liquid) — Figma 23:12558, no mobile frame ===== */
+/* 100 inset; Back to blog top-left, centered 1000 column (20 gap), Previous / Next spread across the row */
+.article-page__inner {
+  @apply mx-auto max-w-1512 px-20 990:px-100 flex flex-col gap-40;
+}
+.article-page__back {
+  @apply self-start;
+}
+.article-page__icon-back {
+  @apply flex rotate-180;
+}
+.article-page__body {
+  @apply mx-auto w-full max-w-1000 flex flex-col items-center gap-20 text-center;
+}
+.article-page__media {
+  @apply relative w-full max-w-690 aspect-690/500 rounded-10 overflow-hidden;
+}
+.article-page__meta {
+  @apply max-w-440;
+}
+/* Admin rich text: Inter 16 / normal, centered; paragraph gap comes from base .content p (1lh) */
+.article-page__content {
+  @apply w-full;
+}
+.article-page__content p {
+  @apply text-16 leading-figma;
+}
+.article-page__content img {
+  @apply max-w-full h-auto mx-auto rounded-10;
+}
+.article-page__pager {
+  @apply flex flex-wrap items-center justify-between gap-20;
+}
+.article-page__next {
+  @apply ml-auto;
 }

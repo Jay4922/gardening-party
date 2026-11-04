@@ -8,6 +8,11 @@
 .utility-bar .announcement-bar__link .icon-arrow {
   @apply mb-0;
 }
+/* Dawn's .utility-bar__grid.page-width (30 / 32px sides) and body:has(...) .utility-bar .page-width (50px at 990+)
+   outrank the shared container — Figma uses the 20 / 55 gutter (3:353 / mobile 23:17438) */
+.utility-bar__grid.page-width {
+  @apply px-(--page-gutter-mobile)! 990:px-(--page-gutter)!;
+}
 
 /* ===== Dawn color-scheme gradients (assets/base.css .gradient) ===== */
 /* Dawn pins scheme gradients to the viewport (background-attachment: fixed), so sections below the fold only show

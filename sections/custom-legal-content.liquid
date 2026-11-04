@@ -37,7 +37,10 @@
 
       {%- for block in section.blocks -%}
         {%- if block.settings.heading != blank or block.settings.text != blank -%}
-          <div class="legal__group flex flex-col gap-20" {{ block.shopify_attributes }}>
+          <div
+            class="legal__group flex flex-col gap-20{% if block.settings.attach_to_title %} legal__group--intro{% endif %}"
+            {{ block.shopify_attributes }}
+          >
             {%- if block.settings.heading != blank -%}
               <div class="ctm-title">
                 <h2 class="legal__heading">{{ block.settings.heading | escape }}</h2>
@@ -153,6 +156,13 @@
           "id": "text",
           "label": "Text",
           "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "attach_to_title",
+          "label": "Sit close to page title",
+          "info": "Use for an intro paragraph directly under the title (28px gap instead of 55px).",
+          "default": false
         }
       ]
     }

@@ -59,8 +59,8 @@
         "color_scheme": "",
         "padding_top": 50,
         "padding_bottom": 50,
-        "padding_top_mobile": 50,
-        "padding_bottom_mobile": 50,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40,
         "custom_class": ""
       }
     },
@@ -108,7 +108,7 @@
         "newsletter_heading": "Join our newsletter",
         "newsletter_placeholder": "Email*",
         "newsletter_button_label": "Subscribe",
-        "mobile_logo_width": 120,
+        "mobile_logo_width": 108,
         "enable_follow_on_shop": false,
         "show_social": true,
         "enable_country_selector": false,

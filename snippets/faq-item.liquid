@@ -5,10 +5,12 @@
   - block: {Object} The 'question' block
   - index: {Number} 1-based question number shown as "01"
   - open: {Boolean} Render the row expanded. Default: false (optional)
+  - question_tag: {String} Heading tag for the question. Default: 'h3' (optional)
 
   Usage:
   {% render 'faq-item', block: block, index: question_index, open: true %}
 {% endcomment %}
+{%- assign question_tag = question_tag | default: 'h3' -%}
 <details
   class="faq__item"
   data-faq-item
@@ -22,7 +24,7 @@
       {%- if index < 10 -%}0{%- endif -%}
       {{- index -}}
     </span>
-    <h3 class="faq__question h-faq">{{ block.settings.question | escape }}</h3>
+    <{{ question_tag }} class="faq__question h-faq">{{ block.settings.question | escape }}</{{ question_tag }}>
     <span class="faq__icon">{{ 'icon-faq-toggle.svg' | inline_asset_content }}</span>
   </summary>
   {%- if block.settings.answer != blank -%}

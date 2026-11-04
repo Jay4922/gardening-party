@@ -141,58 +141,67 @@
             type="button"
             class="faq__dropdown-toggle"
             aria-expanded="false"
-            aria-controls="FaqTablist-{{ section.id }}"
+            aria-controls="FaqMenu-{{ section.id }}"
             data-faq-toggle
           >
-            <span data-faq-toggle-label>&#8203;</span>
+            <span data-faq-toggle-label>{{ 'sections.faq.select_category' | t }}</span>
             {{ 'icon-faq-caret.svg' | inline_asset_content }}
           </button>
 
-          <div
-            class="faq__tablist"
-            id="FaqTablist-{{ section.id }}"
-            role="tablist"
-            aria-label="FAQ categories"
-          >
-            {%- assign tab_index = 0 -%}
-            {%- for block in section.blocks -%}
-              {%- liquid
-                assign starts_group = false
-                if block.type == 'category'
-                  assign starts_group = true
-                  assign tab_label = block.settings.title | default: 'Category'
-                elsif forloop.first
-                  assign starts_group = true
-                  assign tab_label = 'General'
-                endif
-              -%}
-              {%- if starts_group -%}
-                <button
-                  type="button"
-                  class="faq__tab"
-                  id="FaqTab-{{ section.id }}-{{ tab_index }}"
-                  role="tab"
-                  aria-controls="FaqPanel-{{ section.id }}-{{ tab_index }}"
-                  {% if tab_index == 0 %}
-                    aria-selected="true" tabindex="0"
-                  {% else %}
-                    aria-selected="false" tabindex="-1"
-                  {% endif %}
-                  data-faq-tab="{{ tab_index }}"
-                  {% if block.type == 'category' %}
-                    {{ block.shopify_attributes }}
-                  {% endif %}
-                >
-                  {{- tab_label | escape -}}
-                </button>
-                {%- assign tab_index = tab_index | plus: 1 -%}
-              {%- endif -%}
-            {%- endfor -%}
+          <div class="faq__menu" id="FaqMenu-{{ section.id }}">
+            {%- comment -%} Mobile dropdown only: clears the tab filter so every group shows again (<custom-faq> [data-faq-reset]) {%- endcomment -%}
+            <button type="button" class="faq__tab faq__tab--reset" data-faq-reset>
+              {{- 'sections.faq.select_category' | t -}}
+            </button>
+            <div
+              class="faq__tablist"
+              id="FaqTablist-{{ section.id }}"
+              role="tablist"
+              aria-label="FAQ categories"
+            >
+              {%- assign tab_index = 0 -%}
+              {%- for block in section.blocks -%}
+                {%- liquid
+                  assign starts_group = false
+                  if block.type == 'category'
+                    assign starts_group = true
+                    assign tab_label = block.settings.title | default: 'Category'
+                  elsif forloop.first
+                    assign starts_group = true
+                    assign tab_label = 'General'
+                  endif
+                -%}
+                {%- if starts_group -%}
+                  <button
+                    type="button"
+                    class="faq__tab"
+                    id="FaqTab-{{ section.id }}-{{ tab_index }}"
+                    role="tab"
+                    aria-controls="FaqPanel-{{ section.id }}-{{ tab_index }}"
+                    aria-selected="false"
+                    {% if tab_index == 0 %}
+                      tabindex="0"
+                    {% else %}
+                      tabindex="-1"
+                    {% endif %}
+                    data-faq-tab="{{ tab_index }}"
+                    {% if block.type == 'category' %}
+                      {{ block.shopify_attributes }}
+                    {% endif %}
+                  >
+                    {{- tab_label | escape -}}
+                  </button>
+                  {%- assign tab_index = tab_index | plus: 1 -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
           </div>
         </div>
 
         <div class="faq__panels">
           {%- assign last_group = tab_index | minus: 1 -%}
+          {%- comment -%} Numbering runs on across groups (Figma 23:13675: 01–03, then 04…) {%- endcomment -%}
+          {%- assign question_index = 0 -%}
           {%- for group in (0..last_group) -%}
             <div
               class="faq__panel"
@@ -200,18 +209,22 @@
               role="tabpanel"
               aria-labelledby="FaqTab-{{ section.id }}-{{ group }}"
               data-faq-panel="{{ group }}"
-              {% if group > 0 %}
-                hidden
-              {% endif %}
             >
               {%- assign current_group = -1 -%}
-              {%- assign question_index = 0 -%}
               {%- for block in section.blocks -%}
                 {%- if block.type == 'category' or forloop.first -%}
                   {%- assign current_group = current_group | plus: 1 -%}
                 {%- endif -%}
                 {%- if current_group > group -%}
                   {%- break -%}
+                {%- endif -%}
+                {%- if current_group == group and block.type == 'category' -%}
+                  {%- assign group_heading = block.settings.heading | default: block.settings.title -%}
+                  {%- if group_heading != blank -%}
+                    <div class="ctm-title title-black">
+                      <h3 class="faq__group-title">{{ group_heading | escape }}</h3>
+                    </div>
+                  {%- endif -%}
                 {%- endif -%}
                 {%- if current_group == group and block.type == 'question' -%}
                   {%- liquid
@@ -221,7 +234,7 @@
                       assign item_open = true
                     endif
                   -%}
-                  {% render 'faq-item', block: block, index: question_index, open: item_open %}
+                  {% render 'faq-item', block: block, index: question_index, open: item_open, question_tag: 'h4' %}
                 {%- endif -%}
               {%- endfor -%}
             </div>
@@ -378,6 +391,12 @@
       "name": "Category",
       "settings": [
         { "type": "text", "id": "title", "label": "Tab title", "default": "Products and functions" },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Group heading",
+          "info": "Shown above the questions. Falls back to the tab title."
+        },
         {
           "type": "paragraph",
           "content": "Add Question blocks directly below this category. Every question up to the next Category block appears under this tab."

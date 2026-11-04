@@ -1,0 +1,194 @@
+{% comment %}
+  Blog Latest — Figma "Section 2" 23:12393 (IP - Learn 23:12287), no mobile frame.
+  Black section: "The Latest" heading, 3-column article cards (image, title, meta, excerpt, Learn more) and white pagination.
+  All content comes from the blog in the admin; only padding and an extra class are editable.
+  Used by templates/blog.json after Blog featured.
+{% endcomment %}
+{%- liquid
+  assign heading_id = 'BlogLatest-' | append: section.id
+-%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- paginate blog.articles by 6 -%}
+  <div class="blog-latest section-{{ section.id }}-padding color-scheme-3 {{ section.settings.custom_class }}">
+    <div class="blog-latest__inner">
+      <div class="ctm-title title-white">
+        <h2 id="{{ heading_id }}">{{ 'blogs.learn.latest_heading' | t }}</h2>
+      </div>
+
+      {%- if blog.articles.size > 0 -%}
+        <ul class="blog-latest__grid list-none m-0 p-0" role="list" aria-labelledby="{{ heading_id }}">
+          {%- for article in blog.articles -%}
+            {%- liquid
+              assign title_id = 'BlogLatest-' | append: section.id | append: '-' | append: forloop.index
+            -%}
+            <li class="search-card blog-latest__card">
+              <div class="search-card__media">
+                {%- if article.image != blank -%}
+                  {{
+                    article.image
+                    | image_url: width: 850
+                    | image_tag:
+                      class: 'img-fluid-cover',
+                      widths: '375, 550, 850',
+                      sizes: '(min-width: 1512px) 424px, (min-width: 990px) calc((100vw - 240px) / 3), (min-width: 640px) calc((100vw - 80px) / 2), calc(100vw - 40px)',
+                      loading: 'lazy',
+                      alt: ''
+                  }}
+                {%- endif -%}
+              </div>
+              <div class="ctm-title title-white">
+                <h3 class="search-card__title h4" id="{{ title_id }}">{{ article.title | escape }}</h3>
+              </div>
+              {% render 'article-meta', article: article, class: 'article-meta--spread' %}
+              <div class="content content-white search-card__excerpt">
+                <p>{{ article.excerpt_or_content | strip_html | strip_newlines | truncatewords: 22 }}</p>
+              </div>
+              <a href="{{ article.url }}" class="ctm-button btn-outline-gradient" aria-describedby="{{ title_id }}">
+                {{- 'blogs.learn.learn_more' | t -}}
+                {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- else -%}
+        <div class="content content-white text-center">
+          <p>{{ 'blogs.learn.empty' | t }}</p>
+        </div>
+      {%- endif -%}
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="search-pagination search-pagination--dark" aria-label="{{ 'general.pagination.label' | t }}">
+          <ul class="search-pagination__list list-none m-0 p-0" role="list">
+            <li>
+              {%- if paginate.previous -%}
+                <a
+                  href="{{ paginate.previous.url }}"
+                  class="search-pagination__arrow search-pagination__arrow--prev"
+                  aria-label="{{ 'general.pagination.previous' | t }}"
+                >
+                  {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+                </a>
+              {%- else -%}
+                <span class="search-pagination__arrow search-pagination__arrow--prev is-disabled" aria-hidden="true">
+                  {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+                </span>
+              {%- endif -%}
+            </li>
+            {%- for part in paginate.parts -%}
+              <li>
+                {%- if part.is_link -%}
+                  <a
+                    href="{{ part.url }}"
+                    class="search-pagination__page"
+                    aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
+                  >
+                    {{- part.title -}}
+                  </a>
+                {%- elsif part.title == paginate.current_page -%}
+                  <span class="search-pagination__page is-current" aria-current="page">{{ part.title }}</span>
+                {%- else -%}
+                  <span class="search-pagination__gap">{{ part.title }}</span>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+            <li>
+              {%- if paginate.next -%}
+                <a
+                  href="{{ paginate.next.url }}"
+                  class="search-pagination__arrow"
+                  aria-label="{{ 'general.pagination.next' | t }}"
+                >
+                  {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+                </a>
+              {%- else -%}
+                <span class="search-pagination__arrow is-disabled" aria-hidden="true">
+                  {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+                </span>
+              {%- endif -%}
+            </li>
+          </ul>
+        </nav>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Blog latest",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": {
+    "templates": ["blog"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Extra CSS Class"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog latest"
+    }
+  ]
+}
+{% endschema %}

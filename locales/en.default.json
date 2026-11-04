@@ -95,6 +95,9 @@
       "message": "Comment",
       "post": "Post comment",
       "back_to_blog": "Back to blog",
+      "shop_now": "Shop now",
+      "previous": "Previous",
+      "next": "Next",
       "share": "Share this article",
       "success": "Your comment was posted successfully! Thank you!",
       "success_moderated": "Your comment was posted successfully. We will publish it in a little while, as our blog is moderated."
@@ -110,7 +113,10 @@
       "filter_label": "Filter articles by topic",
       "author": "Author",
       "published": "Published",
-      "category": "Category"
+      "category": "Category",
+      "latest_heading": "The Latest",
+      "learn_more": "Learn more",
+      "empty": "No articles yet."
     }
   },
   "onboarding": {
@@ -285,6 +291,9 @@
     }
   },
   "sections": {
+    "faq": {
+      "select_category": "Select category"
+    },
     "announcements": {
       "previous_announcement": "Previous announcement",
       "next_announcement": "Next announcement",

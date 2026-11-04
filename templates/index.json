@@ -339,15 +339,15 @@
         "button_1_arrow": true,
         "button_2_label": "Join the launch",
         "button_2_link": "",
-        "button_2_style": "btn-dark-gradient",
+        "button_2_style": "btn-glass-gradient",
         "button_2_arrow": false,
         "texture_image": "shopify://shop_images/Section_5.png",
         "show_gradient": false,
         "color_scheme": "scheme-6",
         "padding_top": 100,
         "padding_bottom": 100,
-        "padding_top_mobile": 55,
-        "padding_bottom_mobile": 55,
+        "padding_top_mobile": 80,
+        "padding_bottom_mobile": 80,
         "custom_class": ""
       }
     }

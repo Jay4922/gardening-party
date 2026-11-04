@@ -138,6 +138,8 @@
         "eyebrow": "Partner with us",
         "heading": "Built for more than one aisle.",
         "heading_tag": "h2",
+        "button_label": "Become a Partner",
+        "button_link": "/pages/contact",
         "columns_desktop": "3",
         "color_scheme": "scheme-7",
         "padding_top": 100,

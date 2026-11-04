@@ -48,8 +48,8 @@
             </div>
           {%- endif -%}
           {%- if section.settings.quote != blank -%}
-            <div class="founder-story__quote content content-large content-white">
-              <p>{{ section.settings.quote | escape }}</p>
+            <div class="founder-story__quote content content-white">
+              <p>{{ section.settings.quote | escape | newline_to_br }}</p>
             </div>
           {%- endif -%}
           {%- if section.settings.attribution != blank -%}
@@ -61,7 +61,8 @@
       </div>
     {%- endif -%}
 
-    <div class="founder-story__media relative min-w-0 aspect-[505/333] rounded-20 overflow-hidden bg-white/10">
+    {%- comment -%} 3 columns: image stretches to the text column's height (Figma 23:15256: 505 x 415) {%- endcomment -%}
+    <div class="founder-story__media relative min-w-0 aspect-[505/333] rounded-20 overflow-hidden bg-white/10 1199:aspect-auto 1199:self-stretch">
       {%- if image != blank -%}
         {{
           image
@@ -80,7 +81,7 @@
 
     {%- if section.settings.statement != blank -%}
       <div class="founder-story__statement min-w-0 flex flex-col gap-20 990:col-span-2 990:max-w-500 1199:col-span-1 1199:max-w-none">
-        <div class="content content-large content-white">
+        <div class="content content-xlarge content-white">
           <p>{{ section.settings.statement | escape | newline_to_br }}</p>
         </div>
         {%- if section.settings.show_statement_line -%}
@@ -122,7 +123,7 @@
       ]
     },
     {
-      "type": "text",
+      "type": "textarea",
       "id": "quote",
       "label": "Quote",
       "default": "“I was on a mission to eat healthier.”"

@@ -1,0 +1,150 @@
+{% comment %}
+  Article — Figma "Section 1" 23:12558 (IP - Learn Article 23:12547), no mobile frame.
+  Back to blog, then a centered 1000 column (690 x 500 image, title, meta, body, Shop now), then Previous / Next.
+  All content comes from the article in the admin; only padding and an extra class are editable.
+  Used by templates/article.json.
+{% endcomment %}
+{%- liquid
+  assign title_id = 'ArticleTitle-' | append: section.id
+  assign prev_article = blog.previous_article
+  assign next_article = blog.next_article
+-%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="article-page section-{{ section.id }}-padding color-scheme-7 gradient {{ section.settings.custom_class }}">
+  <div class="article-page__inner">
+    <a href="{{ blog.url }}" class="ctm-button btn-dark-gradient article-page__back">
+      <span class="article-page__icon-back">{{- 'icon-arrow-right.svg' | inline_asset_content -}}</span>
+      {{- 'blogs.article.back_to_blog' | t -}}
+    </a>
+
+    <article class="article-page__body" aria-labelledby="{{ title_id }}">
+      {%- if article.image != blank -%}
+        <div class="article-page__media">
+          {{
+            article.image
+            | image_url: width: 1380
+            | image_tag:
+              class: 'img-fluid-cover',
+              widths: '375, 550, 690, 1000, 1380',
+              sizes: '(min-width: 750px) 690px, calc(100vw - 40px)',
+              loading: 'eager',
+              fetchpriority: 'high',
+              alt: article.image.alt
+          }}
+        </div>
+      {%- endif -%}
+
+      <div class="ctm-title title-black">
+        <h1 class="h3 article-page__title" id="{{ title_id }}">{{ article.title | escape }}</h1>
+      </div>
+
+      {% render 'article-meta', article: article, class: 'article-meta--spread article-page__meta' %}
+
+      <div class="content content-black article-page__content">
+        {{ article.content }}
+      </div>
+
+      <a href="{{ routes.all_products_collection_url }}" class="ctm-button btn-outline-gradient">
+        {{- 'blogs.article.shop_now' | t -}}
+        {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+      </a>
+    </article>
+
+    {%- if prev_article or next_article -%}
+      <nav class="article-page__pager" aria-label="{{ 'general.pagination.label' | t }}">
+        {%- if prev_article -%}
+          <a href="{{ prev_article.url }}" class="ctm-button btn-outline-gradient" rel="prev">
+            <span class="article-page__icon-back">{{- 'icon-arrow-right.svg' | inline_asset_content -}}</span>
+            {{- 'blogs.article.previous' | t -}}
+          </a>
+        {%- endif -%}
+        {%- if next_article -%}
+          <a href="{{ next_article.url }}" class="ctm-button btn-dark-gradient article-page__next" rel="next">
+            {{- 'blogs.article.next' | t -}}
+            {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+          </a>
+        {%- endif -%}
+      </nav>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": {
+    "templates": ["article"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Extra CSS Class"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Article"
+    }
+  ]
+}
+{% endschema %}

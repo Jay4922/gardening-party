@@ -111,13 +111,27 @@
                   class="partner-cards__button ctm-button ctm-button-full btn-outline-gradient"
                 >
                   {{- block.settings.button_label | escape -}}
-                  {{- 'icon-arrow-right.svg' | inline_asset_content -}}
                 </a>
               {%- endif -%}
             </div>
           </li>
         {%- endfor -%}
       </ul>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      {%- comment -%} Figma 23:15926: centered pill with arrow, 40 below the cards {%- endcomment -%}
+      <a
+        {% if section.settings.button_link != blank %}
+          href="{{ section.settings.button_link }}"
+        {% else %}
+          role="link" aria-disabled="true"
+        {% endif %}
+        class="partner-cards__cta ctm-button btn-outline-gradient self-center"
+      >
+        {{- section.settings.button_label | escape -}}
+        {{- 'icon-arrow-right.svg' | inline_asset_content -}}
+      </a>
     {%- endif -%}
   </div>
 </div>
@@ -153,6 +167,13 @@
         { "value": "h3", "label": "H3" }
       ]
     },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "info": "Centered button below the cards. Leave blank to hide."
+    },
+    { "type": "url", "id": "button_link", "label": "Button link" },
     { "type": "header", "content": "Layout" },
     {
       "type": "select",

@@ -3,9 +3,10 @@
 /* ===== Dawn header (sections/header.liquid) — Figma 3:378, states 3:11654, mobile 3:8748 / 3:11934 ===== */
 /* Dawn loads header CSS inside the section (after this file), so every rule is scoped under .header-wrapper. */
 
-/* Gutter: 20 mobile, 55 desktop (Dawn forces 5rem at 990+) */
+/* Gutter: shared tokens, 20 mobile / 55 desktop (Figma 23:7940 / 23:17441). Same specificity as Dawn's
+   .header:not(.drawer-menu).page-width but loads later; vertical 20 / 14 comes from the section padding settings. */
 .header-wrapper .header.page-width {
-  @apply px-20 990:px-55;
+  @apply px-(--page-gutter-mobile) 990:px-(--page-gutter);
 }
 
 /* Logo: 70 x 55 mobile, 92 x 73 desktop. Dawn's 7.5px link padding would make the bar 127 tall instead of Figma's 112.6 (20 + 72.6 + 20). */
@@ -99,8 +100,9 @@
 .header-wrapper .search-modal.modal__content {
   @apply top-full left-0 right-0 990:left-auto w-full 990:w-496 h-auto min-h-0 border-0 rounded-b-20;
 }
+/* 28 padding on both mobile (23:21315) and desktop */
 .header-wrapper .search-modal__content {
-  @apply relative p-20 990:p-28 justify-start;
+  @apply relative p-28 justify-start;
 }
 .header-wrapper .search-modal__form {
   @apply w-full 990:w-440;
@@ -122,15 +124,15 @@
   @apply hidden;
 }
 .header-wrapper .search-modal__close-button {
-  @apply right-40 990:right-48 top-1/2 -translate-y-1/2 size-20 text-white;
+  @apply right-48 top-1/2 -translate-y-1/2 size-20 text-white;
 }
 
-/* Mobile drawer (3:11934): white list, 20px gutter, Products opens in place as a cream accordion */
+/* Mobile drawer (23:21247): white list with 20 below the last link, rows padded 20, Products opens in place as a cream accordion */
 .header-wrapper .menu-drawer__navigation {
-  @apply p-0;
+  @apply p-0 pb-20;
 }
 .header-wrapper .menu-drawer__menu-item {
-  @apply px-20 py-19 font-body font-medium text-16 leading-figma no-underline;
+  @apply p-20 font-body font-medium text-16 leading-figma no-underline;
   color: rgb(var(--color-foreground));
 }
 .header-wrapper .menu-drawer__menu-item--active {
@@ -141,6 +143,10 @@
 }
 .header-wrapper .menu-drawer details[open] > .menu-drawer__menu-item .icon-caret {
   @apply rotate-180;
+}
+/* Open Products row turns cream with its dropdown (23:21306) */
+.header-wrapper .menu-drawer details[open] > .menu-drawer__menu-item {
+  @apply bg-cream;
 }
 .js .header-wrapper .menu-drawer .menu-drawer__submenu {
   @apply static hidden translate-x-0 visible z-auto bg-cream;
@@ -196,7 +202,7 @@
   @apply w-full max-w-none;
 }
 .footer .footer__newsletter-input {
-  @apply block w-full h-44 px-20 rounded-48 border-2 border-white bg-white/20 font-body text-16 text-white placeholder:text-white outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange;
+  @apply block w-full h-39 px-20 rounded-48 border-2 border-white bg-white/20 font-body text-16 text-white placeholder:text-white outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange;
 }
 .footer .footer__newsletter-button {
   @apply m-0;

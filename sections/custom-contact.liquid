@@ -123,7 +123,7 @@
         {%- if section.settings.map_link != blank -%}
           <a
             href="{{ section.settings.map_link }}"
-            class="contact__map relative block min-w-0 aspect-[604/253] 990:aspect-auto 990:flex-1 990:min-h-200 rounded-10 overflow-hidden"
+            class="contact__map relative block min-w-0 aspect-[604/253] 990:aspect-auto 990:flex-1 990:min-h-253 rounded-10 overflow-hidden"
             target="_blank"
             rel="noopener"
             aria-label="Open map in a new tab"
@@ -131,7 +131,7 @@
             {{- map_tag -}}
           </a>
         {%- else -%}
-          <div class="contact__map relative min-w-0 aspect-[604/253] 990:aspect-auto 990:flex-1 990:min-h-200 rounded-10 overflow-hidden">
+          <div class="contact__map relative min-w-0 aspect-[604/253] 990:aspect-auto 990:flex-1 990:min-h-253 rounded-10 overflow-hidden">
             {{- map_tag -}}
           </div>
         {%- endif -%}
