@@ -1,0 +1,368 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "eyebrow": {
+          "type": "eyebrow",
+          "settings": {
+            "text": ""
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "pack_label": "6-Pack"
+          }
+        },
+        "rating": {
+          "type": "rating",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "product_stats": {
+          "type": "product_stats",
+          "settings": {
+            "padding_top": 20,
+            "padding_bottom": 20,
+            "padding_top_mobile": 20,
+            "padding_bottom_mobile": 20
+          }
+        },
+        "function_flavor": {
+          "type": "function_flavor",
+          "settings": {
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_top_mobile": 0,
+            "padding_bottom_mobile": 0
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false,
+            "show_gift_card_recipient": true,
+            "find_in_stores_label": "Find in stores",
+            "find_in_stores_link": "/pages/retailers-partners"
+          }
+        },
+        "product_faq": {
+          "type": "product_faq",
+          "settings": {
+            "placement": "media",
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_top_mobile": 0,
+            "padding_bottom_mobile": 0
+          }
+        }
+      },
+      "block_order": [
+        "eyebrow",
+        "title",
+        "price",
+        "rating",
+        "description",
+        "product_stats",
+        "function_flavor",
+        "quantity_selector",
+        "buy_buttons",
+        "product_faq"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-7",
+        "media_size": "large",
+        "constrain_to_viewport": false,
+        "media_fit": "contain",
+        "gallery_layout": "thumbnail",
+        "mobile_thumbnails": "hide",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40,
+        "custom_class": ""
+      }
+    },
+    "community_videos": {
+      "type": "custom-community-videos",
+      "blocks": {
+        "video_1": {
+          "type": "video",
+          "settings": {
+            "video": "shopify://files/videos/file_example_MP4_480_1_5MG.mp4",
+            "poster": "shopify://shop_images/Card_8.png",
+            "handle": "NameGoesHere",
+            "handle_link": "",
+            "product": "chocolate-brownie-batter",
+            "show_product": true
+          }
+        },
+        "video_2": {
+          "type": "video",
+          "settings": {
+            "video": "shopify://files/videos/file_example_MP4_480_1_5MG.mp4",
+            "poster": "shopify://shop_images/Card_8_1.png",
+            "handle": "NameGoesHere",
+            "handle_link": "",
+            "product": "mocha-caffeine",
+            "show_product": true
+          }
+        },
+        "video_3": {
+          "type": "video",
+          "settings": {
+            "video": "shopify://files/videos/file_example_MP4_480_1_5MG.mp4",
+            "poster": "shopify://shop_images/Card_8_2.png",
+            "handle": "NameGoesHere",
+            "handle_link": "",
+            "product": "chocolate-peanut-butter-creatine",
+            "show_product": true
+          }
+        }
+      },
+      "block_order": [
+        "video_1",
+        "video_2",
+        "video_3"
+      ],
+      "settings": {
+        "eyebrow": "From the community",
+        "heading": "Rockets in the wild.",
+        "cards_per_view_desktop": 3,
+        "autoplay": false,
+        "autoplay_delay": 5,
+        "modal_show_product": true,
+        "color_scheme": "scheme-2",
+        "use_cream_fade": true,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 80,
+        "padding_bottom_mobile": 80,
+        "custom_class": ""
+      }
+    },
+    "function_flavor_band": {
+      "type": "custom-function-flavor",
+      "blocks": {
+        "stat_1": {
+          "type": "stat",
+          "settings": {
+            "value": "10G",
+            "label": "Plant-Based Protein",
+            "accent_color": "#ff6f00"
+          }
+        },
+        "stat_2": {
+          "type": "stat",
+          "settings": {
+            "value": "4G",
+            "label": "Sugar",
+            "accent_color": "#d11771"
+          }
+        },
+        "stat_3": {
+          "type": "stat",
+          "settings": {
+            "value": "120",
+            "label": "Calories",
+            "accent_color": "#3e41d7"
+          }
+        }
+      },
+      "block_order": [
+        "stat_1",
+        "stat_2",
+        "stat_3"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/Section_2.png",
+        "mirror_image": false,
+        "eyebrow": "Why Ruby Rockets",
+        "heading": "All the fudge. All the function.",
+        "body": "<p>Deep chocolate flavor. A creamy, fudgy bite. And 10g of plant-based protein in every bar.</p><p>Who says your daily protein has to taste like a protein shake?</p>",
+        "button_label": "Learn more",
+        "button_link": "",
+        "color_scheme": "scheme-3",
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 80,
+        "padding_bottom_mobile": 0,
+        "custom_class": ""
+      }
+    },
+    "product_faq_section": {
+      "type": "custom-faq",
+      "blocks": {
+        "question_1": {
+          "type": "question",
+          "settings": {
+            "question": "What type of protein?",
+            "answer": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet</p>"
+          }
+        },
+        "question_2": {
+          "type": "question",
+          "settings": {
+            "question": "How much sugar?",
+            "answer": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet</p>"
+          }
+        },
+        "question_3": {
+          "type": "question",
+          "settings": {
+            "question": "Vegan/dairy-free?",
+            "answer": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet</p>"
+          }
+        },
+        "question_4": {
+          "type": "question",
+          "settings": {
+            "question": "Peanuts/tree nuts?",
+            "answer": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet</p>"
+          }
+        },
+        "question_5": {
+          "type": "question",
+          "settings": {
+            "question": "Where to buy?",
+            "answer": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet</p>"
+          }
+        }
+      },
+      "block_order": [
+        "question_1",
+        "question_2",
+        "question_3",
+        "question_4",
+        "question_5"
+      ],
+      "settings": {
+        "layout": "card",
+        "eyebrow": "",
+        "heading": "Frequently asked questions",
+        "heading_tag": "h2",
+        "subheading": "",
+        "show_search": false,
+        "search_placeholder": "Search",
+        "no_results_text": "No questions match your search.",
+        "open_first": true,
+        "card_image": "shopify://shop_images/iMAGE_0f869852-d542-40de-8ab2-102c76836660.png",
+        "card_gradient": true,
+        "card_heading": "Still curious?",
+        "card_button_label": "View all FAQs",
+        "card_button_link": "shopify://pages/faq",
+        "card_link_1_label": "Products",
+        "card_link_1_url": "/collections/all",
+        "card_link_2_label": "Shipping information",
+        "card_link_2_url": "/policies/shipping-policy",
+        "color_scheme": "scheme-7",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60,
+        "custom_class": ""
+      }
+    },
+    "reviews": {
+      "type": "custom-reviews",
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "My new freezer staple",
+            "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet",
+            "author": "Alex P.",
+            "verified": true,
+            "product": "chocolate-brownie-batter",
+            "tag_label": "Daily protein",
+            "tag_color": "#ff6f00"
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Exactly what I needed",
+            "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet",
+            "author": "Taylor M.",
+            "verified": true,
+            "product": "mocha-caffeine",
+            "tag_label": "Energy",
+            "tag_color": "#d11771"
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Actually tasted good",
+            "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum efficitur consectetur velit nec consectetur. Mauris iaculis dictum ultrices. Maecenas aliquet",
+            "author": "Jordan K.",
+            "verified": true,
+            "product": "chocolate-peanut-butter-creatine",
+            "tag_label": "Recovery",
+            "tag_color": "#45158c"
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3"
+      ],
+      "settings": {
+        "eyebrow": "Real people. Real reviews.",
+        "heading": "Your words. Not ours.",
+        "subheading": "See what people are saying about the coldest part of their routine.",
+        "rating_value": "5.0",
+        "rating_label": "Based on customer reviews",
+        "link_label": "Write a review",
+        "link_url": "/pages/contact",
+        "show_arrows": true,
+        "autoplay": false,
+        "autoplay_delay": 6,
+        "color_scheme": "scheme-3",
+        "show_glows": true,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 80,
+        "padding_bottom_mobile": 80,
+        "custom_class": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "community_videos",
+    "function_flavor_band",
+    "product_faq_section",
+    "reviews"
+  ]
+}

@@ -634,3 +634,51 @@ if (!customElements.get('custom-contact-form')) {
     },
   );
 }
+
+/* ===== cart-drawer (top offset) =====
+   The cart drawer drops down from the header (Figma 23:21026), so it must start at the header's
+   current bottom edge (announcement bar, sticky / scrolled-away header). Sets --cart-drawer-top
+   on <html> each time Dawn's <cart-drawer> opens; the CSS falls back to --header-height. */
+customElements.whenDefined('cart-drawer').then(() => {
+  const CartDrawer = customElements.get('cart-drawer');
+  if (!CartDrawer || CartDrawer.prototype.__ctmTopPatched) {
+    return;
+  }
+  const originalOpen = CartDrawer.prototype.open;
+  CartDrawer.prototype.open = function (...args) {
+    const header = document.querySelector('.section-header');
+    const bottom = header ? Math.max(0, Math.round(header.getBoundingClientRect().bottom)) : 0;
+    document.documentElement.style.setProperty('--cart-drawer-top', `${bottom}px`);
+    return originalOpen.apply(this, args);
+  };
+  CartDrawer.prototype.__ctmTopPatched = true;
+});
+
+/* ===== cart-drawer (title sync) =====
+   Dawn's CartItems.onCartUpdate (cart:update events from other sources) swaps only the drawer's
+   items and footer, so the "Shopping cart (N items)" title would go stale. After it runs, copy the
+   freshly rendered title from the cart-drawer section. */
+customElements.whenDefined('cart-drawer-items').then(() => {
+  const CartDrawerItems = customElements.get('cart-drawer-items');
+  if (!CartDrawerItems || CartDrawerItems.prototype.__ctmTitlePatched) {
+    return;
+  }
+  const originalUpdate = CartDrawerItems.prototype.onCartUpdate;
+  CartDrawerItems.prototype.onCartUpdate = function (...args) {
+    return Promise.resolve(originalUpdate.apply(this, args)).then((result) => {
+      fetch(`${routes.cart_url}?section_id=cart-drawer`)
+        .then((response) => response.text())
+        .then((text) => {
+          const html = new DOMParser().parseFromString(text, 'text/html');
+          const source = html.querySelector('cart-drawer .drawer__header .ctm-title');
+          const target = document.querySelector('cart-drawer .drawer__header .ctm-title');
+          if (source && target) {
+            target.replaceWith(source);
+          }
+        })
+        .catch(() => {});
+      return result;
+    });
+  };
+  CartDrawerItems.prototype.__ctmTitlePatched = true;
+});

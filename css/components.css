@@ -443,12 +443,66 @@
 .hero-slide__bg {
   @apply absolute inset-0 w-full h-full object-cover;
 }
-/* Product boxes: mobile 323 x 209 at x 60 / y 197 on the 376 frame; desktop 760 x 492 anchored bottom-right */
+/* Slide layers stack in DOM order (bg → gradient behind → person → gradient over → product → copy).
+   Gradient = the slide's color_background (--hero-gradient, inline) over the same dark scrim as .overlay-brand-photo,
+   so the default slide looks exactly like the old fixed overlay; inline opacity = section strength x slide strength. */
+.hero-slide__gradient {
+  @apply absolute inset-0 pointer-events-none;
+  background: linear-gradient(
+    270deg,
+    rgb(0 0 0 / 0.6) 12.98%,
+    rgb(0 0 0 / 0.42) 40.87%,
+    rgb(0 0 0 / 0.42) 59.62%,
+    rgb(0 0 0 / 0.6) 86.06%
+  );
+}
+.hero-slide__gradient::after {
+  @apply absolute inset-0;
+  content: '';
+  background: var(--hero-gradient);
+}
+/* Person cut-out: bottom-anchored, full height, object-contain. Mobile: kept in the photo area above the copy panel
+   (panel ≈ the bottom 45% of the 700 slide, 23:20201). Desktop: full slide height, left / center / right inside the
+   1512 container gutter. */
+.hero-slide__person {
+  @apply absolute left-0 right-0 top-0 bottom-[45%] pointer-events-none 990:bottom-0;
+}
+@variant 990 {
+  .hero-slide__person {
+    padding-inline: max(55px, calc((100% - 1512px) / 2 + 55px));
+  }
+}
+.hero-slide__person picture {
+  @apply block w-full h-full;
+}
+.hero-slide__person-img {
+  @apply block w-full h-full object-contain object-bottom;
+}
+@variant 990 {
+  .hero-slide__person--left .hero-slide__person-img {
+    object-position: left bottom;
+  }
+  .hero-slide__person--right .hero-slide__person-img {
+    object-position: right bottom;
+  }
+}
+/* Product boxes: mobile 323 x 209 at x 60 / y 197 on the 376 frame; desktop 760 x 492 at x 756 / y 170 (23:8043),
+   i.e. 4 past the right edge and 22 past the bottom, clipped by the slide */
 .hero-slide__product {
-  @apply absolute pointer-events-none top-197 990:top-auto 990:right-0 990:-bottom-22;
+  @apply absolute pointer-events-none top-197 990:top-auto 990:-right-4 990:-bottom-22;
   left: 16%;
   width: 86%;
   filter: drop-shadow(0 4px 20px rgb(0 0 0 / 0.4));
+}
+/* Tablet 600–989 (no Figma frame): 86% would make the box ~660 x 427 at 768 and push half of it under the copy panel
+   (panel top ≈ 340–394 at 768). Cap it at 360 wide and lift it so it ends at the panel like the 376 frame (23:20201). */
+@media screen and (min-width: 600px) and (max-width: 989px) {
+  .hero-slide__product {
+    top: 110px;
+    left: auto;
+    right: 4%;
+    width: 360px;
+  }
 }
 @variant 990 {
   .hero-slide__product {
@@ -487,15 +541,17 @@
     left: max(28px, calc((100% - 1512px) / 2 + 28px));
   }
   /* Copy column = the space left of the product box (+55 right pad, − box width): 700 at 1512 like Figma 23:8017,
-     narrower below so it never runs under the box. The title may overhang the column by 75 (775 vs 700), as in Figma. */
+     narrower below so it never runs under the box. The title may overhang the column by 75 (775 vs 700) as in Figma,
+     but only at 1512: the overhang shrinks to 0 by 1437 so the title can't run into the product box at 990–1437. */
   .hero-slide__content {
     --hero-col: min(700px, calc(100% + 55px - min(760px, 50.3vw)));
+    --hero-overhang: clamp(0px, calc(100vw - 1437px), 75px);
   }
   .hero-slide__copy {
-    max-width: calc(var(--hero-col) + 75px);
+    max-width: calc(var(--hero-col) + var(--hero-overhang));
   }
   .hero-slide__copy > .content {
-    max-width: calc(100% - 75px);
+    max-width: calc(100% - var(--hero-overhang));
   }
   .hero-slide__buttons {
     @apply flex-wrap;
@@ -740,7 +796,22 @@ a.instagram-feed__link:hover .instagram-feed__img {
   @apply m-0 p-0 list-none flex flex-col gap-20 990:flex-row 990:justify-between;
 }
 .function-flavor__stat {
-  @apply flex items-stretch gap-10 990:flex-col 990:items-center 990:w-232;
+  @apply flex items-stretch gap-10 990:flex-col 990:items-center 990:flex-1 990:min-w-0 990:max-w-232;
+}
+/* 990–1512 (no Figma frame): at 1512 (23:8337) the artwork's bar + glow ends ~x620 and the 745 text column starts at 667.
+   Below that the right-anchored column would sit on the bar, so the column narrows to leave ≥360 on the left (min 520 at 990)
+   and the artwork slides left by the same amount, keeping the 1512 bar → text distance. Both reach Figma values at 1512. */
+@variant 990 {
+  .function-flavor {
+    --ff-col: min(745px, calc(100vw - 470px));
+    --ff-shift: min(0px, calc(100vw - 767px - var(--ff-col)));
+  }
+  .function-flavor__content {
+    width: var(--ff-col);
+  }
+  .function-flavor__media--desktop .function-flavor__image {
+    translate: var(--ff-shift) 0;
+  }
 }
 .function-flavor__stat-bar {
   @apply block shrink-0 w-4 rounded-20 990:order-last 990:w-60 990:h-4;
@@ -799,11 +870,12 @@ a.instagram-feed__link:hover .instagram-feed__img {
   @apply size-20;
 }
 .product-faq__item[open] .product-faq__icon {
-  @apply rotate-180 text-orange;
+  @apply rotate-180;
+  color: var(--color-orange);
 }
-/* Open row: title turns orange (Figma 23:12089) */
+/* Open row: title + caret always orange #FF6F00 (Figma 23:12089 on Energy 23:11940, whose accent is magenta), not the product accent; closed rows stay black */
 .product-faq__item[open] .product-faq__question {
-  @apply text-orange;
+  color: var(--color-orange);
 }
 .product-faq__answer {
   @apply pt-20;
@@ -848,6 +920,27 @@ a.instagram-feed__link:hover .instagram-feed__img {
 }
 .main-product .product-media-container .media {
   @apply bg-transparent;
+}
+/* Product FAQ block placed "Under the gallery" (Figma Products 4, 23:11267): 680 wide, 55 below the images.
+   750+ is two columns (Dawn grid--2-col-tablet, then our 990 grid), so it stays under the gallery there.
+   Below 750 (single column) the media wrapper dissolves (display: contents) so the FAQ follows the info column (order 1). */
+.main-product__media-faq {
+  @apply w-full 750:mt-55;
+}
+@media screen and (max-width: 749px) {
+  .main-product .product:has(.main-product__media-faq) > .product__media-wrapper {
+    display: contents;
+  }
+  .main-product .product:has(.main-product__media-faq) > .product__media-wrapper > media-gallery {
+    @apply w-full;
+  }
+  .main-product__media-faq {
+    order: 1;
+  }
+}
+/* Per-product accent (custom.accent_color metafield → --product-accent): panel takes the accent at the card-tint .28 */
+.main-product--accent .product-media-container {
+  background-color: color-mix(in srgb, var(--product-accent) 28%, transparent);
 }
 .main-product .product-media-container .media img {
   @apply object-contain! p-20;
@@ -906,7 +999,7 @@ a.instagram-feed__link:hover .instagram-feed__img {
   @apply -mt-18!;
 }
 .main-product__eyebrow {
-  @apply text-orange;
+  color: var(--product-accent, var(--color-orange));
 }
 .main-product .product__title h1 {
   @apply m-0 font-heading font-bold uppercase tracking-heading text-ink text-32 leading-40 990:text-48 990:leading-60 break-words;
@@ -927,7 +1020,8 @@ a.instagram-feed__link:hover .instagram-feed__img {
   @apply flex items-center gap-10;
 }
 .main-product__stars {
-  @apply flex items-center gap-3 text-orange;
+  @apply flex items-center gap-3;
+  color: var(--product-accent, var(--color-orange));
 }
 .main-product__star {
   @apply flex size-24 990:size-28;
@@ -959,8 +1053,12 @@ a.instagram-feed__link:hover .instagram-feed__img {
 .main-product .product-stats__label.content p {
   @apply text-14 990:text-16;
 }
-.main-product .product-stats__list:has(> :nth-child(4)) .content-stat p {
+.main-product .product-stats__list--compact .content-stat p {
   @apply 990:text-44;
+}
+/* Labels fill the item so the 60 x 4 bars line up when one label wraps to 2 lines (Figma 4-stat rows: all bars at y 113 / 118) */
+.main-product .product-stats__label {
+  @apply grow;
 }
 
 /* Quantity: "QUANTITY" beside a white pill — Figma 160 x 40 with an inside stroke, so 18/8 padding + 2px border; 20 gap */
@@ -1086,6 +1184,11 @@ a.product-function__card:focus-visible {
 .community-videos__list {
   @apply m-0 p-0 list-none;
 }
+/* Mobile 23:17898: the centered 320 card shows its neighbours at the screen edges (x 0–12 / 364–376), outside the
+   20 gutter, so the track is not clipped there (the section's overflow-hidden stops page scroll) */
+.community-videos__swiper {
+  @apply overflow-visible 990:overflow-hidden;
+}
 .community-videos .swiper-slide.community-card {
   @apply flex flex-col gap-20 w-320 990:w-auto h-auto;
 }
@@ -1180,8 +1283,9 @@ a.product-function__card:focus-visible {
 .reviews__intro {
   @apply flex flex-col 990:gap-4 990:flex-1 990:pl-68 990:justify-center;
 }
+/* Solid white: 1px under the copy on mobile (23:17998), 2px vertical on desktop (23:8526) */
 .reviews__header-divider {
-  @apply block w-full h-px bg-white/40 990:w-2 990:h-auto 990:bg-white/40;
+  @apply block w-full h-px bg-white 990:w-2 990:h-auto;
 }
 .reviews__summary {
   @apply flex flex-col items-center gap-20 990:items-stretch 990:justify-center 990:pr-68;
@@ -1199,7 +1303,7 @@ a.product-function__card:focus-visible {
   @apply block size-20 990:size-28;
 }
 .reviews__summary-divider {
-  @apply block w-px h-27 bg-white/40 990:hidden;
+  @apply block w-px h-27 bg-white 990:hidden;
 }
 .reviews__link {
   @apply inline-flex items-center justify-center gap-10 py-10 border-b-2 border-white font-body font-medium text-16 leading-figma uppercase text-white no-underline hover:text-light-orange 990:w-full;
@@ -1239,9 +1343,10 @@ a.product-function__card:focus-visible {
 .review-card .ctm-title.title-review h3 {
   @apply max-990:tracking-normal;
 }
-/* Stars → title: 6 mobile (23:18012), 20 desktop (23:8554); title → quote stays the body's 10 */
+/* Stars → title: 6 mobile (23:18012), 20 desktop (23:8554); title → quote stays the body's 10.
+   Wraps so the nowrap tag drops under the stars when 3 cards are narrow (990–1365: ~178–300 inner vs ~312 row). */
 .review-card__rating {
-  @apply flex items-center justify-between gap-10 -mb-4 990:mb-10;
+  @apply flex flex-wrap items-center justify-between gap-10 -mb-4 990:mb-10;
 }
 .review-card__stars {
   @apply flex items-center gap-3;
@@ -1264,14 +1369,16 @@ a.product-function__card:focus-visible {
 .review-card__footer {
   @apply flex flex-col gap-10 990:gap-20;
 }
+/* Card rule black 30% (23:8573 / 23:18040); name | Verified divider solid black (23:8577) */
 .review-card__divider {
-  @apply block w-full h-px bg-black/20;
+  @apply block w-full h-px bg-black/30;
 }
+/* Wraps on narrow 990–1199 cards so author + "Verified Buyer" never overflow */
 .review-card__meta {
-  @apply flex items-center gap-20;
+  @apply flex flex-wrap items-center gap-x-20 gap-y-10;
 }
 .review-card__meta-divider {
-  @apply block self-stretch w-px bg-black/20;
+  @apply block self-stretch w-px bg-black;
 }
 .review-card__verified {
   @apply inline-flex items-center gap-8 font-body text-16 leading-figma text-black whitespace-nowrap;
@@ -1508,11 +1615,12 @@ a.search-pagination__page:hover {
   @apply flex-1 min-w-0;
 }
 .blog-featured__tools {
-  @apply flex items-end gap-20 990:flex-1 990:justify-end;
+  @apply flex items-end gap-20 990:flex-1 990:min-w-0 990:justify-end;
 }
-/* Search pill reuses .search-results__form; grows to fill the row beside Filter below 768 */
+/* Search pill reuses .search-results__form; grows to fill the row beside Filter below 768, caps at 410 above,
+   and shrinks (min-w-0) at 990–1150 so heading + search + Filter share the row without overflowing */
 .blog-featured__search {
-  @apply flex-1 768:flex-none 768:w-410 768:ml-0;
+  @apply flex-1 min-w-0 768:max-w-410 768:ml-0;
 }
 .blog-filter {
   @apply relative shrink-0;
@@ -1641,12 +1749,196 @@ a.search-pagination__page:hover {
 .article-page__content p {
   @apply text-16 leading-figma;
 }
+/* Body images replace the featured image when present (user), so they take its Figma slot: max 690 wide, radius 10 */
 .article-page__content img {
-  @apply max-w-full h-auto mx-auto rounded-10;
+  @apply block w-auto max-w-[min(100%,690px)] h-auto mx-auto rounded-10;
 }
 .article-page__pager {
   @apply flex flex-wrap items-center justify-between gap-20;
 }
 .article-page__next {
   @apply ml-auto;
+}
+
+/* ===== Cart drawer (snippets/cart-drawer.liquid) — Figma "Cart" 23:21026, desktop only =====
+   Restyles Dawn's drawer on top of component-cart-drawer.css (loads after this file, so selectors start with
+   cart-drawer.cart-drawer-ctm to win). Black 580 panel dropping from the header's bottom edge (--cart-drawer-top from
+   assets/custom.js, falls back to --header-height), radius 0 0 20 20, p-28, gap 40; the whole panel scrolls. */
+cart-drawer.cart-drawer-ctm {
+  top: var(--cart-drawer-top, var(--header-height, 0px));
+  height: calc(100% - var(--cart-drawer-top, var(--header-height, 0px)));
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__overlay {
+  top: var(--cart-drawer-top, var(--header-height, 0px));
+}
+cart-drawer.cart-drawer-ctm #CartDrawer {
+  @apply w-full max-w-580;
+}
+cart-drawer.cart-drawer-ctm .drawer__inner {
+  @apply relative w-full max-w-full h-auto max-h-full flex flex-col gap-40 p-20 750:p-28 overflow-x-hidden overflow-y-auto bg-black text-white border-0 rounded-b-20;
+  /* Slides in from the right edge (user), under the header */
+  transform: translateX(100%);
+  transition: transform var(--duration-default) ease;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.3) transparent;
+}
+cart-drawer.cart-drawer-ctm.active .drawer__inner {
+  transform: none;
+}
+/* Empty: only Dawn's empty block shows (Dawn switches the panel to a padless grid) */
+cart-drawer.cart-drawer-ctm.is-empty .drawer__inner {
+  @apply flex p-20 750:p-28;
+}
+cart-drawer.cart-drawer-ctm.is-empty .drawer__inner > :not(.drawer__inner-empty) {
+  @apply hidden!;
+}
+cart-drawer.cart-drawer-ctm .drawer__inner-empty {
+  @apply h-auto p-0 flex flex-col items-start gap-40 overflow-visible;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__login {
+  @apply flex flex-col gap-10;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__login-title {
+  @apply font-heading font-bold uppercase text-16 tracking-heading;
+}
+
+/* Title (h3 style via .ctm-title.title-white) + minimal 20px close, 32 hit area */
+cart-drawer.cart-drawer-ctm .cart-drawer__header {
+  @apply w-full p-0 flex items-start justify-between gap-20;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__header h2 {
+  @apply m-0;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__close {
+  @apply static shrink-0 flex items-center justify-center size-32 min-w-0 min-h-0 -m-6 p-6 bg-transparent border-0 text-white cursor-pointer hover:text-orange focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__close svg {
+  @apply size-20;
+}
+
+/* Items: the whole panel scrolls, so Dawn's own scroller is switched off */
+cart-drawer.cart-drawer-ctm cart-drawer-items {
+  @apply flex-none overflow-visible;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__form {
+  @apply block;
+}
+/* 1px white/20 rule above and below the list, rows 20 apart */
+cart-drawer.cart-drawer-ctm .cart-drawer__items {
+  @apply flex flex-col gap-20 py-20 px-0 border-y border-white/20;
+}
+cart-drawer.cart-drawer-ctm .cart-item {
+  @apply flex items-start gap-20 m-0 px-14;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__media {
+  @apply block shrink-0 size-126 rounded-4 overflow-hidden bg-white;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__image {
+  @apply block size-full object-contain;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__copy {
+  @apply flex-1 min-w-0 flex flex-col items-start gap-15;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__titles {
+  @apply flex flex-col gap-4 w-full;
+}
+/* Function label: product accent (custom.accent_color, like the PDP eyebrow), orange token fallback */
+cart-drawer.cart-drawer-ctm .cart-drawer__label {
+  @apply m-0 font-body font-medium text-16 leading-figma uppercase;
+  color: var(--product-accent, var(--color-orange));
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__name {
+  @apply font-heading font-bold text-16 leading-figma uppercase tracking-normal text-white no-underline break-words hover:underline;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__options {
+  @apply m-0 font-body text-12 leading-figma text-white/70;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__option {
+  @apply flex flex-wrap gap-4;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__option dd {
+  @apply m-0 break-words;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__price {
+  @apply flex flex-wrap items-baseline gap-10 font-body font-medium text-16 leading-figma text-white;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__price-old {
+  @apply opacity-60;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__price .unit-price {
+  @apply basis-full m-0 text-12 text-white/70;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__discounts {
+  @apply m-0 p-0 text-12 text-white;
+}
+
+/* Quantity pill: white/10, 2px white, px20 py10, gap 20 (same build as the PDP pill, inverted) */
+cart-drawer.cart-drawer-ctm .cart-drawer__quantity {
+  @apply block;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__qty {
+  @apply w-auto min-h-0 inline-flex items-center gap-20 px-20 py-10 rounded-50 border-2 border-white bg-white/10;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__qty::before,
+cart-drawer.cart-drawer-ctm .cart-drawer__qty::after {
+  @apply hidden!;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__qty .quantity__button {
+  @apply size-20 w-20 p-0 text-white disabled:opacity-40;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__qty .quantity__button:focus-visible {
+  @apply outline-2 outline-offset-2 outline-orange;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__qty .quantity__input {
+  @apply w-24 h-auto p-0 bg-transparent font-heading font-bold text-16 leading-figma text-center text-white opacity-100;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__qty-info {
+  @apply mt-10 text-12 text-white;
+}
+cart-drawer.cart-drawer-ctm .cart-item__error {
+  @apply mt-10 text-12 text-white;
+}
+
+/* "Remove": Inter Medium 12, underlined, top-right of the row */
+cart-drawer.cart-drawer-ctm .cart-drawer__remove {
+  @apply flex shrink-0 self-start m-0;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__remove-button {
+  @apply p-0 bg-transparent border-0 font-body font-medium text-12 leading-figma text-white underline underline-offset-2 cursor-pointer hover:text-orange focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange;
+}
+
+/* Footer: "Subtotal (n items)" PJS 24 / 6% + Inter 12 tax note | Inter Medium 24 amount; 40 to the full-width Check out */
+cart-drawer.cart-drawer-ctm .cart-drawer__foot {
+  @apply flex flex-col gap-40 p-0 border-0;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__foot > details {
+  @apply m-0 border-b border-white/20;
+}
+/* 23:21231: label stack (30 + 15, no gap) and the amount are vertically centred (amount sits at y8 of 45) */
+cart-drawer.cart-drawer-ctm .cart-drawer__totals {
+  @apply flex items-center justify-between gap-20 m-0;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__totals * {
+  line-height: normal;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__totals-copy {
+  @apply flex flex-col gap-0 min-w-0;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__subtotal {
+  @apply m-0 font-heading font-bold text-24 tracking-heading-wide uppercase text-white;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__tax-note {
+  @apply m-0 font-body text-12 text-left text-white;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__tax-note a {
+  @apply text-white underline;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__total {
+  @apply m-0! shrink-0 font-body font-medium text-24 text-white whitespace-nowrap;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__ctas {
+  @apply m-0;
+}
+cart-drawer.cart-drawer-ctm .cart-drawer__checkout {
+  @apply w-full max-w-none disabled:opacity-50 disabled:pointer-events-none;
 }

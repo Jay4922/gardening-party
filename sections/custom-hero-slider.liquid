@@ -1,6 +1,8 @@
 {%- comment -%}
-  Hero slider — Figma "Video Header" 3:454 (desktop) / 3:8808 (mobile).
+  Hero slider — Figma "Video Header" 23:8016 (desktop) / 23:20201 (mobile).
   One slide per block; Swiper is initialised by <custom-hero-slider> in assets/custom.js.
+  Slide layers, bottom → top: background image/video → gradient (behind) → person → gradient (over, default)
+  → product box → copy/buttons → pagination.
 {%- endcomment -%}
 
 {%- liquid
@@ -17,10 +19,6 @@
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
-  }
-  /* .hero-slider */
-  .hero-slider-{{ section.id }} {
-    --overlay-opacity: {% if section.settings.show_gradient_overlay %}{{ section.settings.overlay_opacity | divided_by: 100.0 }}{% else %}0{% endif %};
   }
   /* .hero-slider__swiper */
   .hero-slider-{{ section.id }} .hero-slider__swiper {
@@ -60,9 +58,17 @@
                 assign is_eager = true
               endif
               assign mobile_image = block.settings.mobile_image | default: block.settings.image
+              assign person_mobile = block.settings.person_image_mobile | default: block.settings.person_image
+
+              # Gradient strength = section master (on/off x strength) x the slide's own strength
+              assign gradient_opacity = 0
+              if section.settings.show_gradient_overlay and block.settings.gradient != blank
+                assign gradient_opacity = section.settings.overlay_opacity | times: block.settings.gradient_opacity | divided_by: 10000.0
+              endif
+              assign gradient_layer = block.settings.gradient_layer | default: 'over_person'
             -%}
             <div class="swiper-slide hero-slide relative overflow-hidden" {{ block.shopify_attributes }}>
-              <div class="hero-slide__media overlay-brand-photo">
+              <div class="hero-slide__media">
                 {%- if block.settings.video != blank -%}
                   {%- if block.settings.image != blank -%}
                     {%- assign poster = block.settings.image | image_url: width: 1500 -%}
@@ -119,6 +125,62 @@
                   {{ 'lifestyle-1' | placeholder_svg_tag: 'hero-slide__bg' }}
                 {%- endif -%}
               </div>
+
+              {%- capture gradient_markup -%}
+                {%- if gradient_opacity > 0 -%}
+                  <div
+                    class="hero-slide__gradient"
+                    style="--hero-gradient: {{ block.settings.gradient }}; opacity: {{ gradient_opacity }};"
+                    aria-hidden="true"
+                  ></div>
+                {%- endif -%}
+              {%- endcapture -%}
+
+              {%- if gradient_layer == 'behind_person' -%}
+                {{ gradient_markup }}
+              {%- endif -%}
+
+              {%- if block.settings.person_image != blank -%}
+                <div class="hero-slide__person hero-slide__person--{{ block.settings.person_position | default: 'center' }}">
+                  <picture>
+                    {%- if block.settings.person_image_mobile != blank -%}
+                      <source
+                        media="(max-width: 989px)"
+                        srcset="{{ person_mobile | image_url: width: 375 }} 375w, {{ person_mobile | image_url: width: 750 }} 750w, {{ person_mobile | image_url: width: 1100 }} 1100w"
+                        sizes="100vw"
+                      >
+                    {%- endif -%}
+                    {%- if is_eager -%}
+                      {{
+                        block.settings.person_image
+                        | image_url: width: 1800
+                        | image_tag:
+                          class: 'hero-slide__person-img',
+                          widths: '375, 750, 1100, 1500, 1800',
+                          sizes: '(min-width: 990px) 60vw, 100vw',
+                          loading: 'eager',
+                          fetchpriority: 'high',
+                          alt: block.settings.person_image.alt
+                      }}
+                    {%- else -%}
+                      {{
+                        block.settings.person_image
+                        | image_url: width: 1800
+                        | image_tag:
+                          class: 'hero-slide__person-img',
+                          widths: '375, 750, 1100, 1500, 1800',
+                          sizes: '(min-width: 990px) 60vw, 100vw',
+                          loading: 'lazy',
+                          alt: block.settings.person_image.alt
+                      }}
+                    {%- endif -%}
+                  </picture>
+                </div>
+              {%- endif -%}
+
+              {%- if gradient_layer != 'behind_person' -%}
+                {{ gradient_markup }}
+              {%- endif -%}
 
               {%- if block.settings.product_image != blank -%}
                 <div class="hero-slide__product">
@@ -263,13 +325,14 @@
     {
       "type": "checkbox",
       "id": "show_gradient_overlay",
-      "label": "Show brand gradient over background",
-      "default": true
+      "label": "Show slide gradients",
+      "default": true,
+      "info": "Master switch for every slide's gradient."
     },
     {
       "type": "range",
       "id": "overlay_opacity",
-      "label": "Gradient overlay strength",
+      "label": "Gradient strength (all slides)",
       "min": 0,
       "max": 100,
       "step": 5,
@@ -338,6 +401,56 @@
           "id": "mobile_image",
           "label": "Background image (mobile)",
           "info": "Optional. Falls back to the background image."
+        },
+        {
+          "type": "image_picker",
+          "id": "person_image",
+          "label": "Person image",
+          "info": "Transparent PNG cut-out, shown above the background"
+        },
+        {
+          "type": "image_picker",
+          "id": "person_image_mobile",
+          "label": "Person image (mobile)",
+          "info": "Optional. Falls back to the person image."
+        },
+        {
+          "type": "color_background",
+          "id": "gradient",
+          "label": "Gradient",
+          "default": "linear-gradient(100deg, rgba(251, 139, 48, 1) 2%, rgba(249, 91, 29, 0.4) 19%, rgba(228, 66, 54, 0.2) 40%, rgba(214, 47, 79, 0.2) 59%, rgba(134, 33, 118, 0.4) 79%, rgba(63, 27, 125, 1) 99%)",
+          "info": "Leave blank for no gradient. Also uses the section's gradient on/off and strength."
+        },
+        {
+          "type": "range",
+          "id": "gradient_opacity",
+          "label": "Gradient strength",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 100
+        },
+        {
+          "type": "select",
+          "id": "gradient_layer",
+          "label": "Gradient position",
+          "default": "over_person",
+          "options": [
+            { "value": "over_person", "label": "Over the person" },
+            { "value": "behind_person", "label": "Behind the person" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "person_position",
+          "label": "Person position (desktop)",
+          "default": "center",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ]
         },
         {
           "type": "image_picker",

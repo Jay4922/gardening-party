@@ -1,6 +1,20 @@
+{%- comment -%}
+  Per-product accent (Figma Products 1–4: eyebrow, stars, gallery panel tint) from the product metafield
+  custom.accent_color (type: color). A color metafield's .value is a color object; append: '' makes it a string,
+  so an unset metafield is blank and nothing is output (CSS falls back to the orange token + cream panel).
+{%- endcomment -%}
+{%- liquid
+  assign product_accent = product.metafields.custom.accent_color.value | append: ''
+  if product_accent != blank
+    assign product_accent = product_accent | color_to_hex
+  endif
+-%}
 <product-info
   id="MainProduct-{{ section.id }}"
-  class="main-product section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }} {{ section.settings.custom_class }}"
+  class="main-product section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}{% if product_accent != blank %} main-product--accent{% endif %} {{ section.settings.custom_class }}"
+  {% if product_accent != blank %}
+    style="--product-accent: {{ product_accent }};"
+  {% endif %}
   data-section="{{ section.id }}"
   data-product-id="{{ product.id }}"
   data-update-url="true"
@@ -78,6 +92,14 @@
       <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
         <div class="grid__item product__media-wrapper">
           {% render 'product-media-gallery', variant_images: variant_images %}
+          {%- comment -%} Product FAQ placed "Under the gallery" (Figma Products 4, 23:11267): 55 below the images on desktop {%- endcomment -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'product_faq' and block.settings.placement == 'media' -%}
+              <div class="main-product__media-faq">
+                {% render 'product-faq', block: block, product: product %}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
         </div>
         <div class="product__info-wrapper grid__item{% if settings.page_width > 1400 and section.settings.media_size == "small" %} product__info-wrapper--extra-padding{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
           <section
@@ -203,7 +225,9 @@
                 {%- when 'product_stats' -%}
                   {% render 'product-stats', block: block, product: product %}
                 {%- when 'product_faq' -%}
-                  {% render 'product-faq', block: block, product: product %}
+                  {%- unless block.settings.placement == 'media' -%}
+                    {% render 'product-faq', block: block, product: product %}
+                  {%- endunless -%}
                 {%- when 'function_flavor' -%}
                   {% render 'product-function', block: block, product: product %}
                 {%- when 'description' -%}
@@ -1093,6 +1117,17 @@
         {
           "type": "paragraph",
           "content": "Questions and answers come from the product metafield \"Product FAQ\" (custom.product_faq). To edit them: Shopify admin → Products → choose the product → Metafields (bottom of the page) → Product FAQ. Each entry becomes one dropdown row. In the editor preview, the block shows a link that opens the product you're previewing."
+        },
+        {
+          "type": "select",
+          "id": "placement",
+          "label": "Placement",
+          "options": [
+            { "value": "info", "label": "Product info column" },
+            { "value": "media", "label": "Under the gallery" }
+          ],
+          "default": "info",
+          "info": "\"Under the gallery\" shows the dropdowns below the product images on tablet and desktop; on mobile they stay at the end of the product info."
         },
         { "type": "header", "content": "Desktop Padding" },
         {

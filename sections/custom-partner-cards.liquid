@@ -62,57 +62,63 @@
       >
         {%- for block in section.blocks -%}
           {%- assign image = block.settings.image -%}
+          {%- comment -%}
+            Side-by-side only when the card's inner width fits two halves of ~170 (the nowrap "Learn more" pill + 20 gap):
+            a container query, since viewport breakpoints let the pill overflow at ~750–850 (2-up) and ~1200–1250 (3-up).
+          {%- endcomment -%}
           <li
-            class="partner-cards__card min-w-0 flex flex-col 480:flex-row gap-20 p-20 border-2 border-black/20 rounded-20"
+            class="partner-cards__card @container min-w-0 p-20 border-2 border-black/20 rounded-20"
             {{ block.shopify_attributes }}
           >
-            <div class="partner-cards__media relative min-w-0 aspect-[200/227] 480:aspect-auto 480:flex-1 480:min-h-227 rounded-10 overflow-hidden bg-black/5">
-              {%- if image != blank -%}
-                {{
-                  image
-                  | image_url: width: 600
-                  | image_tag:
-                    class: 'partner-cards__img absolute inset-0 img-fluid-cover',
-                    widths: '300, 400, 600',
-                    sizes: '(min-width: 1512px) 200px, (min-width: 1199px) 15vw, (min-width: 750px) 25vw, (min-width: 480px) 50vw, 100vw',
-                    loading: 'lazy',
-                    alt: image.alt
-                }}
-              {%- else -%}
-                {{ 'image' | placeholder_svg_tag: 'partner-cards__placeholder absolute inset-0 w-full h-full' }}
-              {%- endif -%}
-            </div>
+            <div class="partner-cards__card-inner h-full flex flex-col @min-[360px]:flex-row gap-20">
+              <div class="partner-cards__media relative min-w-0 aspect-[200/227] @min-[360px]:aspect-auto @min-[360px]:flex-1 @min-[360px]:min-h-227 rounded-10 overflow-hidden bg-black/5">
+                {%- if image != blank -%}
+                  {{
+                    image
+                    | image_url: width: 600
+                    | image_tag:
+                      class: 'partner-cards__img absolute inset-0 img-fluid-cover',
+                      widths: '300, 400, 600',
+                      sizes: '(min-width: 1512px) 200px, (min-width: 1320px) 15vw, (min-width: 1199px) 30vw, (min-width: 750px) 45vw, (min-width: 480px) 50vw, 100vw',
+                      loading: 'lazy',
+                      alt: image.alt
+                  }}
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag: 'partner-cards__placeholder absolute inset-0 w-full h-full' }}
+                {%- endif -%}
+              </div>
 
-            <div class="partner-cards__content min-w-0 480:flex-1 flex flex-col justify-between gap-28">
-              {%- if block.settings.title != blank or block.settings.text != blank -%}
-                <div class="partner-cards__copy flex flex-col gap-10">
-                  {%- if block.settings.title != blank -%}
-                    <div class="ctm-title title-black">
-                      <{{ title_tag }} class="partner-cards__title h5">
-                        {{- block.settings.title | escape -}}
-                      </{{ title_tag }}>
-                    </div>
-                  {%- endif -%}
-                  {%- if block.settings.text != blank -%}
-                    <div class="partner-cards__text content content-black">
-                      <p>{{ block.settings.text | escape | newline_to_br }}</p>
-                    </div>
-                  {%- endif -%}
-                </div>
-              {%- endif -%}
+              <div class="partner-cards__content min-w-0 @min-[360px]:flex-1 flex flex-col justify-between gap-28">
+                {%- if block.settings.title != blank or block.settings.text != blank -%}
+                  <div class="partner-cards__copy flex flex-col gap-10">
+                    {%- if block.settings.title != blank -%}
+                      <div class="ctm-title title-black">
+                        <{{ title_tag }} class="partner-cards__title h5">
+                          {{- block.settings.title | escape -}}
+                        </{{ title_tag }}>
+                      </div>
+                    {%- endif -%}
+                    {%- if block.settings.text != blank -%}
+                      <div class="partner-cards__text content content-black">
+                        <p>{{ block.settings.text | escape | newline_to_br }}</p>
+                      </div>
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
 
-              {%- if block.settings.button_label != blank -%}
-                <a
-                  {% if block.settings.button_link != blank %}
-                    href="{{ block.settings.button_link }}"
-                  {% else %}
-                    role="link" aria-disabled="true"
-                  {% endif %}
-                  class="partner-cards__button ctm-button ctm-button-full btn-outline-gradient"
-                >
-                  {{- block.settings.button_label | escape -}}
-                </a>
-              {%- endif -%}
+                {%- if block.settings.button_label != blank -%}
+                  <a
+                    {% if block.settings.button_link != blank %}
+                      href="{{ block.settings.button_link }}"
+                    {% else %}
+                      role="link" aria-disabled="true"
+                    {% endif %}
+                    class="partner-cards__button ctm-button ctm-button-full btn-outline-gradient"
+                  >
+                    {{- block.settings.button_label | escape -}}
+                  </a>
+                {%- endif -%}
+              </div>
             </div>
           </li>
         {%- endfor -%}

@@ -312,6 +312,16 @@
     },
     "cart": {
       "title": "Your cart",
+      "drawer_title": {
+        "one": "Shopping cart ({{ count }} item)",
+        "other": "Shopping cart ({{ count }} items)"
+      },
+      "subtotal_count": {
+        "one": "Subtotal ({{ count }} item)",
+        "other": "Subtotal ({{ count }} items)"
+      },
+      "remove": "Remove",
+      "taxes_shipping_at_checkout": "Taxes and shipping calculated at checkout.",
       "caption": "Cart items",
       "remove_title": "Remove {{ title }}",
       "estimated_total": "Estimated total",

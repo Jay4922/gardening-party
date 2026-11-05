@@ -1,6 +1,7 @@
 {% comment %}
   Article — Figma "Section 1" 23:12558 (IP - Learn Article 23:12547), no mobile frame.
   Back to blog, then a centered 1000 column (690 x 500 image, title, meta, body, Shop now), then Previous / Next.
+  The featured image is skipped when the body already contains an image (body images win).
   All content comes from the article in the admin; only padding and an extra class are editable.
   Used by templates/article.json.
 {% endcomment %}
@@ -8,6 +9,16 @@
   assign title_id = 'ArticleTitle-' | append: section.id
   assign prev_article = blog.previous_article
   assign next_article = blog.next_article
+
+  # Images placed in the article body win (user). The featured image (still used by blog cards)
+  # only shows here as a fallback when the body has no image, so it never renders twice.
+  assign show_featured = false
+  if article.image != blank
+    assign show_featured = true
+    if article.content contains '<img'
+      assign show_featured = false
+    endif
+  endif
 -%}
 
 {%- style -%}
@@ -31,7 +42,7 @@
     </a>
 
     <article class="article-page__body" aria-labelledby="{{ title_id }}">
-      {%- if article.image != blank -%}
+      {%- if show_featured -%}
         <div class="article-page__media">
           {{
             article.image

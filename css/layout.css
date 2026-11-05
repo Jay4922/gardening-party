@@ -62,6 +62,28 @@
   @apply opacity-100;
 }
 
+/* 990–1365 (no Figma frame): logo + 6 links (861) + CTA + icons (339) = 1200 of container (= viewport − 110, so ≥1310
+   viewport; 1366 leaves 56 spare, 1512 leaves 202 like Figma), so below 1366
+   the menu tightens (logo gap 55 → 28, link gap 27 → 10, link padding 10 → 6 sides): 1040 at 1199 (1089 available).
+   990–1198 also drops the header CTA (the hero carries the same "Join the launch" button): 805 in 880. 1366+ is Figma 23:20969 unchanged. */
+@media screen and (min-width: 990px) and (max-width: 1365px) {
+  .header-wrapper .header--middle-left .header__inline-menu {
+    margin-left: 28px;
+  }
+  .header-wrapper .header__inline-menu .list-menu--inline {
+    gap: 10px;
+  }
+  .header-wrapper .header__inline-menu > .list-menu > li > .header__menu-item,
+  .header-wrapper .header__inline-menu > .list-menu > li > header-menu > details > .header__menu-item {
+    padding-inline: 6px;
+  }
+}
+@media screen and (min-width: 990px) and (max-width: 1198px) {
+  .header-wrapper .header-cta {
+    display: none;
+  }
+}
+
 /* Products dropdown: black, 280 wide, bottom corners 20, 13px between centered links */
 .header-wrapper .header__inline-menu .header__submenu.list-menu--disclosure {
   @apply left-1/2 -translate-x-1/2 mt-20 w-280 min-w-0 flex flex-col gap-13 pt-10 pb-28 px-28 border-0 shadow-none rounded-b-20;
@@ -96,13 +118,22 @@
   @apply text-orange;
 }
 
-/* Search panel: black, right-aligned under the icons, bottom corners 20, 440px pill input */
+/* Search panel: black, right-aligned under the icons, bottom corners 20, 440px pill input.
+   Dawn's .modal__content also sets bottom: 0 — with top: 100% that collapsed the panel to 0 height (no black panel,
+   field spilling over the header), so bottom is reset to auto. 990+: flush with the right edge of the 1512 frame
+   like 23:20989, so on wider screens it stays under the icons instead of drifting to the viewport edge. */
 .header-wrapper .search-modal.modal__content {
-  @apply top-full left-0 right-0 990:left-auto w-full 990:w-496 h-auto min-h-0 border-0 rounded-b-20;
+  @apply top-full bottom-auto left-0 right-0 990:left-auto w-full 990:w-496 h-auto min-h-0 border-0 rounded-b-20;
+  background-color: rgb(var(--color-background));
 }
-/* 28 padding on both mobile (23:21315) and desktop */
+@media screen and (min-width: 990px) {
+  .header-wrapper .search-modal.modal__content {
+    right: max(0px, calc((100% - var(--page-max)) / 2));
+  }
+}
+/* 28 padding on both mobile (23:21315) and desktop; Dawn's height 100% + top/bottom input-offset nudges removed */
 .header-wrapper .search-modal__content {
-  @apply relative p-28 justify-start;
+  @apply relative inset-auto h-auto p-28 justify-start items-start;
 }
 .header-wrapper .search-modal__form {
   @apply w-full 990:w-440;
@@ -111,11 +142,22 @@
 .header-wrapper .search-modal .field::after {
   @apply hidden;
 }
-.header-wrapper .search-modal .field__input {
-  @apply h-44 rounded-48 border-2 border-white bg-white/20 pl-50 pr-50 font-body text-16 text-white shadow-none;
+/* Field: 440 x 40 desktop (23:20994), white/20 fill, 2px white ring, r48; icon 20 at 20 + 10 gap → text at 50.
+   Static "Search" placeholder like Figma: Dawn's floating label is visually hidden (kept for screen readers) and
+   Dawn's focus / not-placeholder-shown padding shift is neutralised. */
+.header-wrapper .search-modal .field__input,
+.header-wrapper .search-modal .field__input:focus,
+.header-wrapper .search-modal .field__input:not(:placeholder-shown) {
+  @apply m-0 h-44 990:h-40 py-0 pl-50 pr-50 rounded-48 border-2 border-white bg-white/20 font-body text-16 leading-figma text-white shadow-none outline-none;
+}
+.header-wrapper .search-modal .field__input:focus-visible {
+  @apply border-orange;
+}
+.header-wrapper .search-modal .field__input::placeholder {
+  @apply text-white opacity-100;
 }
 .header-wrapper .search-modal .field__label {
-  @apply left-50 font-body text-16 text-white;
+  @apply sr-only;
 }
 .header-wrapper .search-modal .search__button {
   @apply absolute left-20 right-auto top-1/2 -translate-y-1/2 size-20 text-white;
@@ -123,8 +165,42 @@
 .header-wrapper .search-modal .reset__button {
   @apply hidden;
 }
+/* Field icons are 20 in Figma (bitcoin-icons:search-outline = icon-header-search.svg, carbon:close-large);
+   Dawn draws them at 18 / 17 */
+.header-wrapper .search-modal .search__button .svg-wrapper,
+.header-wrapper .search-modal .search__button svg,
+.header-wrapper .search-modal__close-button .svg-wrapper,
+.header-wrapper .search-modal__close-button svg {
+  @apply size-20;
+}
+/* Close X sits inside the field, 20 from its right edge (panel x 428 of 496). Dawn makes it position: initial at 990+,
+   which pushed it outside the field, so it is pinned absolute; top = 28 pad + (field − 20) / 2, so results below
+   don't move it. */
 .header-wrapper .search-modal__close-button {
-  @apply right-48 top-1/2 -translate-y-1/2 size-20 text-white;
+  @apply absolute right-48 top-40 990:top-38 size-20 m-0 text-white;
+}
+/* The header toggle keeps its search icon (orange when open, 23:20982) instead of Dawn's swap to an X */
+.header-wrapper .header__icon--search .header__icon-close {
+  @apply hidden;
+}
+/* Dropdown, not a modal: no dimmed backdrop (click outside still closes via details-modal) */
+.header-wrapper details[open] .search-modal .modal-overlay::after {
+  @apply bg-transparent;
+}
+/* Predictive results flow under the field inside the same black panel */
+.header-wrapper .search-modal .predictive-search--header {
+  @apply static w-full mt-20 max-h-[60vh] border-0 rounded-none shadow-none bg-transparent;
+}
+.header-wrapper .search-modal .predictive-search__results-groups-wrapper,
+.header-wrapper .search-modal .predictive-search__search-for-button {
+  @apply border-white/20;
+}
+
+/* Cart count (23:21026): 10px rocket-red circle at the icon's bottom-right (18 / 17.7 in the 28 icon box;
+   same spot on the 20 mobile icon centred in its 32 box), Inter Medium 8 white */
+.header-wrapper .cart-count-bubble {
+  @apply size-10 left-19 top-[18.6px] bottom-auto bg-rocket-red text-white font-body font-medium leading-none 990:left-18 990:top-[17.7px];
+  font-size: 8px;
 }
 
 /* Mobile drawer (23:21247): white list with 20 below the last link, rows padded 20, Products opens in place as a cream accordion */
@@ -141,8 +217,15 @@
 .header-wrapper .menu-drawer__menu-item > .svg-wrapper:first-of-type {
   @apply hidden;
 }
-.header-wrapper .menu-drawer details[open] > .menu-drawer__menu-item .icon-caret {
-  @apply rotate-180;
+/* Products caret: 20px solid black triangle 20 from the right edge (23:21255), flipped when open (23:21253) */
+.header-wrapper .menu-drawer__menu-item > .menu-drawer__caret {
+  @apply flex size-20 right-20 text-black transition-transform duration-300;
+}
+.header-wrapper .menu-drawer__caret svg {
+  @apply size-20;
+}
+.header-wrapper .menu-drawer details[open] > .menu-drawer__menu-item > .menu-drawer__caret {
+  @apply -scale-y-100;
 }
 /* Open Products row turns cream with its dropdown (23:21306) */
 .header-wrapper .menu-drawer details[open] > .menu-drawer__menu-item {
@@ -182,7 +265,7 @@
   @apply block w-full h-auto;
 }
 .footer .footer__content-top {
-  @apply flex w-full flex-col gap-40 p-0 990:flex-row 990:items-start 990:gap-80;
+  @apply flex w-full flex-col gap-40 p-0 990:flex-row 990:items-start 990:gap-80 1366:items-center;
 }
 
 /* Newsletter: 440 wide; 20 gap heading → field → button (10 field → button on mobile) */
@@ -208,9 +291,10 @@
   @apply m-0;
 }
 
-/* Link columns: spread across the remaining width; Plus Jakarta Bold 20 headings, Inter Medium 16 links, 20 gap */
+/* Link columns: spread across the remaining width; Plus Jakarta Bold 20 headings, Inter Medium 16 links, 20 gap.
+   990–1366 (no Figma frame): 4 columns don't fit next to the 440 newsletter (~360px left at 990), so 2 x 2 until 1367. */
 .footer .footer__blocks-wrapper {
-  @apply flex w-full flex-col gap-20 990:flex-1 990:flex-row 990:justify-between 990:gap-40;
+  @apply flex w-full flex-col gap-20 990:grid 990:flex-1 990:min-w-0 990:grid-cols-2 990:gap-40 1366:flex 1366:flex-row 1366:justify-between;
 }
 .footer .footer-block {
   @apply m-0 w-full 990:w-auto;
@@ -251,7 +335,7 @@
   @apply bg-gradient-brand;
 }
 .footer .footer__bar-inner {
-  @apply flex flex-col items-center gap-20 p-20 990:mx-auto 990:max-w-1512 990:flex-row 990:justify-between 990:px-55 990:py-10;
+  @apply flex flex-col items-center gap-20 p-20 990:mx-auto 990:max-w-1512 990:flex-row 990:items-start 990:justify-between 990:px-55 990:py-10;
 }
 .footer .footer__list-social.list-social {
   @apply m-0 flex gap-10 p-0;

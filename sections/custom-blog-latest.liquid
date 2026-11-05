@@ -21,16 +21,43 @@
   }
 {%- endstyle -%}
 
-{%- paginate blog.articles by 6 -%}
+{%- comment -%}
+  The newest article is already shown by Blog featured (blog.articles.first), so this grid starts at the
+  second article and shows 3 per page (Figma 3 x 424). Shopify's paginate can't offset by one, so paginate is
+  used only to read the current page + filtered total; cards render from the unpaginated list with an offset.
+  Unpaginated blog.articles is capped at 50 by Shopify, so pages stop at article 50 (16 pages).
+{%- endcomment -%}
+{%- assign per_page = 3 -%}
+{%- paginate blog.articles by per_page -%}
+  {%- assign latest_page = paginate.current_page -%}
+  {%- assign total_items = paginate.items -%}
+{%- endpaginate -%}
+{%- liquid
+  if total_items > 50
+    assign total_items = 50
+  endif
+  assign remaining = total_items | minus: 1
+  assign total_pages = remaining | plus: 2 | divided_by: per_page
+  assign offset = latest_page | minus: 1 | times: per_page | plus: 1
+  assign page_base = request.path | append: '?page='
+  assign prev_page = latest_page | minus: 1
+  assign next_page = latest_page | plus: 1
+  assign near_start = latest_page | minus: 1
+  assign near_end = latest_page | plus: 1
+  assign gap_before = 2
+  assign gap_after = total_pages | minus: 1
+-%}
+
+{%- if total_items != 1 -%}
   <div class="blog-latest section-{{ section.id }}-padding color-scheme-3 {{ section.settings.custom_class }}">
     <div class="blog-latest__inner">
       <div class="ctm-title title-white">
         <h2 id="{{ heading_id }}">{{ 'blogs.learn.latest_heading' | t }}</h2>
       </div>
 
-      {%- if blog.articles.size > 0 -%}
+      {%- if remaining > 0 and latest_page <= total_pages -%}
         <ul class="blog-latest__grid list-none m-0 p-0" role="list" aria-labelledby="{{ heading_id }}">
-          {%- for article in blog.articles -%}
+          {%- for article in blog.articles offset: offset limit: per_page -%}
             {%- liquid
               assign title_id = 'BlogLatest-' | append: section.id | append: '-' | append: forloop.index
             -%}
@@ -69,13 +96,13 @@
         </div>
       {%- endif -%}
 
-      {%- if paginate.pages > 1 -%}
+      {%- if total_pages > 1 -%}
         <nav class="search-pagination search-pagination--dark" aria-label="{{ 'general.pagination.label' | t }}">
           <ul class="search-pagination__list list-none m-0 p-0" role="list">
             <li>
-              {%- if paginate.previous -%}
+              {%- if latest_page > 1 and latest_page <= total_pages -%}
                 <a
-                  href="{{ paginate.previous.url }}"
+                  href="{{ page_base }}{{ prev_page }}"
                   class="search-pagination__arrow search-pagination__arrow--prev"
                   aria-label="{{ 'general.pagination.previous' | t }}"
                 >
@@ -87,27 +114,34 @@
                 </span>
               {%- endif -%}
             </li>
-            {%- for part in paginate.parts -%}
-              <li>
-                {%- if part.is_link -%}
-                  <a
-                    href="{{ part.url }}"
-                    class="search-pagination__page"
-                    aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
-                  >
-                    {{- part.title -}}
-                  </a>
-                {%- elsif part.title == paginate.current_page -%}
-                  <span class="search-pagination__page is-current" aria-current="page">{{ part.title }}</span>
-                {%- else -%}
-                  <span class="search-pagination__gap">{{ part.title }}</span>
-                {%- endif -%}
-              </li>
+            {%- for page_number in (1..total_pages) -%}
+              {%- comment -%} Liquid reads and/or right to left: first OR last OR (near_start..near_end) {%- endcomment -%}
+              {%- if page_number == 1
+                or page_number == total_pages
+                or page_number >= near_start
+                and page_number <= near_end
+              -%}
+                <li>
+                  {%- if page_number == latest_page -%}
+                    <span class="search-pagination__page is-current" aria-current="page">{{ page_number }}</span>
+                  {%- else -%}
+                    <a
+                      href="{{ page_base }}{{ page_number }}"
+                      class="search-pagination__page"
+                      aria-label="{{ 'general.pagination.page' | t: number: page_number }}"
+                    >
+                      {{- page_number -}}
+                    </a>
+                  {%- endif -%}
+                </li>
+              {%- elsif page_number == gap_before or page_number == gap_after -%}
+                <li><span class="search-pagination__gap">&hellip;</span></li>
+              {%- endif -%}
             {%- endfor -%}
             <li>
-              {%- if paginate.next -%}
+              {%- if latest_page < total_pages -%}
                 <a
-                  href="{{ paginate.next.url }}"
+                  href="{{ page_base }}{{ next_page }}"
                   class="search-pagination__arrow"
                   aria-label="{{ 'general.pagination.next' | t }}"
                 >
@@ -124,7 +158,7 @@
       {%- endif -%}
     </div>
   </div>
-{%- endpaginate -%}
+{%- endif -%}
 
 {% schema %}
 {

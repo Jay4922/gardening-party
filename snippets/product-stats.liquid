@@ -25,7 +25,20 @@
   {%- endstyle -%}
   <div class="product-stats product-stats-{{ block.id }}" {{ block.shopify_attributes }}>
     {%- if stat_entries.size > 0 -%}
-      <ul class="product-stats__list" role="list">
+      {%- liquid
+        # Figma: 4-stat rows drop values to 44 only when a value is 4+ characters ("90MG", 23:11940); "3G" stays 48 (23:11596)
+        assign stats_compact = false
+        if stat_entries.size > 3
+          for entry in stat_entries
+            assign compact_value = entry.number_text.value | default: entry.number_and_text.value | strip
+            if compact_value.size > 3
+              assign stats_compact = true
+              break
+            endif
+          endfor
+        endif
+      -%}
+      <ul class="product-stats__list{% if stats_compact %} product-stats__list--compact{% endif %}" role="list">
         {%- for entry in stat_entries -%}
           {%- liquid
             assign stat_value = entry.number_text.value | default: entry.number_and_text.value

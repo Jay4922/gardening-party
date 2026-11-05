@@ -1,0 +1,226 @@
+{% comment %}
+  Feature Grid — Figma "Section 8" 23:15788 (Retailers & Partners, "Made to stand out"), desktop only; mobile inferred.
+  Bordered box: heading, then feature blocks (60px gradient icon tile + title + text) in 2 columns, read across the rows.
+{% endcomment %}
+{%- liquid
+  assign heading_tag = section.settings.heading_tag
+  if heading_tag == 'h3'
+    assign title_tag = 'h4'
+  else
+    assign title_tag = 'h3'
+  endif
+-%}
+
+{%- style -%}
+  /* .feature-grid */
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="feature-grid section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient {{ section.settings.custom_class }}">
+  <div class="feature-grid__inner max-w-1512 mx-auto px-20 990:px-55 1366:px-100">
+    <div class="feature-grid__box flex flex-col items-start gap-40 p-20 990:p-40 border-2 border-black/30 rounded-20">
+      {%- if section.settings.heading != blank -%}
+        <div class="ctm-title title-black">
+          <{{ heading_tag }} class="feature-grid__heading h2">
+            {{- section.settings.heading | escape | newline_to_br -}}
+          </{{ heading_tag }}>
+        </div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        {%- comment -%} Figma: two 50% columns with no gap between them, 55 between rows {%- endcomment -%}
+        <ul
+          class="feature-grid__list w-full list-none m-0 p-0 d-grid grid-cols-1 gap-40 990:grid-cols-2 990:gap-x-0 990:gap-y-55"
+          role="list"
+        >
+          {%- for block in section.blocks -%}
+            <li
+              class="feature-grid__item min-w-0 flex flex-col items-start gap-20 990:pr-40"
+              {{ block.shopify_attributes }}
+            >
+              <span
+                class="feature-grid__icon flex size-60 shrink-0 items-center justify-center rounded-10 bg-gradient-brand"
+                aria-hidden="true"
+              >
+                {%- if block.settings.icon != blank -%}
+                  {{
+                    block.settings.icon
+                    | image_url: width: 80
+                    | image_tag:
+                      class: 'feature-grid__icon-img block size-40 object-contain',
+                      width: 40,
+                      height: 40,
+                      loading: 'lazy',
+                      alt: ''
+                  }}
+                {%- endif -%}
+              </span>
+
+              {%- if block.settings.title != blank or block.settings.text != blank -%}
+                <div class="feature-grid__copy w-full flex flex-col gap-10">
+                  {%- if block.settings.title != blank -%}
+                    <div class="ctm-title title-black">
+                      <{{ title_tag }} class="feature-grid__title h5">
+                        {{- block.settings.title | escape -}}
+                      </{{ title_tag }}>
+                    </div>
+                  {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <div class="feature-grid__text content content-quote content-black">
+                      <p>{{ block.settings.text | escape }}</p>
+                    </div>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Feature Grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Press Enter to force a line break.",
+      "default": "made to stand out. built to stock."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "default": "h2",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ]
+    },
+    { "type": "header", "content": "Background" },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Scheme 7 is the cream → white gradient from Figma.",
+      "default": "scheme-7"
+    },
+    { "type": "header", "content": "Desktop Padding" },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    { "type": "header", "content": "Mobile Padding" },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Extra CSS Class"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon",
+          "info": "White icon on a transparent background (SVG or PNG), shown 40 × 40px on the gradient tile."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Three Functional Varieties"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Distint products with clear consumption occasions"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Feature Grid",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Three Functional Varieties",
+            "text": "Distint products with clear consumption occasions"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": { "title": "Plant-Based Protein", "text": "At least 10g protein per bar" }
+        },
+        {
+          "type": "feature",
+          "settings": { "title": "Frozen Convenience", "text": "Single-serve 3oz bars" }
+        },
+        {
+          "type": "feature",
+          "settings": { "title": "Multiple Channels", "text": "Grocery, convenience, campus, and more" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

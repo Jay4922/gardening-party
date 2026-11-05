@@ -1854,6 +1854,26 @@ Cream→white gradient (scheme-7), p-100. Gallery 680 (four 120×120 thumbs, 20 
 - Verified: Theme Check clean (only Dawn's existing `seo_media` UnusedAssign), `/products/chocolate-brownie-batter` 200 with 0 Liquid errors. Eyebrow, pack label, rating and Find in stores don't render on the dev product yet — their data (metafield, variants, review metafields, link) is empty. **Visual check deferred** — user will check.
 - **Open:** review source (app vs standard metafields), "6-PACK" source, Find in stores destination.
 
+### Per-product accent colour (Figma Products 1–4: 23:10276 orange, 23:11940 Energy magenta, 23:11596 Recovery deep purple, 23:11267)
+
+**Create this metafield definition in Shopify admin** (Settings → Custom data → Products → Add definition):
+
+| Field     | Value                                                                  |
+| --------- | ---------------------------------------------------------------------- |
+| Name      | Accent color                                                           |
+| Namespace | `custom`                                                               |
+| Key       | `accent_color`                                                         |
+| Type      | Color (single value)                                                   |
+| Usage     | Eyebrow, review stars, gallery panel tint (28%); open FAQ stays orange |
+
+- Code: main-product reads `product.metafields.custom.accent_color.value`; when set it adds `.main-product--accent` and `style="--product-accent: #hex"` on the wrapper. Empty = no output; CSS falls back to the orange token (eyebrow/stars) and the cream/28% panel.
+- Values (Figma variables): Daily Protein = orange `#FF6F00`, Energy / Mocha = magenta `#D11771`, Recovery = deep purple `#45158C` ("Chocolate Peanut Butter/Deep Purple", same as `--color-deep-purple`). Closed FAQ titles stay black on every product.
+
+### FAQ under the gallery (Figma Products 4, 23:11267)
+
+- Product FAQ block has a `placement` setting: "Product info column" (default, Products 1–3) or "Under the gallery" (680 wide, 55 below the images from 750 up, where the PDP is two columns; below 750 it follows the product info).
+- Alternate template **`templates/product.faq-under-gallery.json`** = product.json with only `product_faq.settings.placement: "media"`. Figma mocks it with **Chocolate Brownie Batter** (Daily Protein); assign it per product in admin (Products → product → Theme template → `faq-under-gallery`) for whichever products the client wants in this layout. Keep the two templates' other blocks/sections in sync if product.json changes.
+
 ---
 
 ## Learn — page layout (blog + article)

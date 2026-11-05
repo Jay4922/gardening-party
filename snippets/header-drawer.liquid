@@ -37,8 +37,9 @@
                         <span class="svg-wrapper">
                           {{- 'icon-arrow.svg' | inline_asset_content -}}
                         </span>
-                        <span class="svg-wrapper">
-                          {{- 'icon-caret.svg' | inline_asset_content -}}
+                        {%- comment -%} Figma 23:21255 bxs:down-arrow, 20px solid triangle (same glyph as the FAQ caret) {%- endcomment -%}
+                        <span class="svg-wrapper menu-drawer__caret">
+                          {{- 'icon-faq-caret.svg' | inline_asset_content -}}
                         </span>
                       </summary>
                       <div
